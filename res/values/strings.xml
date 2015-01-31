@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="EUR_SYMBOL">€</string>
+    <string name="app_name">SuperMarket</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="STR_Header_SortBy">Ordina per:</string>
+    <string name="STR_CMB_SortBy_Shop">Negozio</string>
+    <string name="STR_CMB_SortBy_Date">Data</string>
+    <string name="STR_CMB_SortBy_Cost">Importo</string>
+    <string name="STR_Header_expenseListView">Lista spese eseguite</string>
+    <string name="STR_Header_expenseItems">Lista articoli della spesa</string>
+    <string name="STR_Label_multiplicationSign"> x € </string>
+    <string name="STR_MENU_SETTINGS">Impostazioni</string>
+    <string name="STR_MENU_ADD_EXPENSE">Aggiungi spesa</string>
+    <string name="STR_MENU_EXPORT_DB">Esporta DB</string>
+    <string name="STR_MENU_IMPORT_DB">Importa DB</string>
+    <string name="STR_DIALOG_BACK">Indietro</string>
+    <string name="EMPTY_STRING"></string>
+    <string name="title_activity_super_market_expense_detail">Articoli della spesa</string>
+    <string name="STR_MENU_ADD_ARTICLE"></string>
+    <string name="STR_MENU_VALIDATE_EXPENSE">Articoli della spesa</string>
+    <string name="SUPERMARKET_CATEGORY_LABEL">Categoria: </string>
+    <string name="SUPERMARKET_BRAND_LABEL">Marca: </string>
+    <string name="SUPERMARKET_DESCRIPTION_LABEL">Descrizione: </string>
+    <string name="SUPERMARKET_SINGLE_ARTICLE_PRICE_LABEL">Prezzo unitario: </string>
+    <string name="SUPERMARKET_ARTICLES_NUMBER_LABEL">Num. articoli: </string>
+    <string name="STR_MENU_ADD_OBJECT">Aggiungi&#8230;</string>
+    <string name="STR_MENU_SELECT_OBJECT_TO_SHOW">Mostra&#8230;</string>
+    <string name="STR_MENU_SHOW_CATEGORIES">Categorie</string>
+    <string name="STR_MENU_SHOW_SHOPS">Negozi</string>
+    <string name="STR_MENU_SHOW_BRANDS">Marche</string>
+    <string name="STR_MENU_DEL_OBJECT">Rimuovi</string>
+    <string name="STR_SHOW_OBJECTS">Gestisci dati</string>
+    <string name="STR_SELECT_RADIO_TV">Seleziona gli oggetti dai radio button!</string>
+    <string name="STR_CREATE_DRAFT_EXPENSE">Crea bozza di spesa</string>
+</resources>

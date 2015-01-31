@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Fragment expense list -->
+    <!-- Edittext hints -->
+    <string name="HINT_FRG_EXP_LIST_FILTER_SHOPNAME">Filter for shop name...</string>
+    <string name="HINT_FRG_EXP_LIST_FILTER_DATE">Filter for expense date...</string>
+
+    <!-- Progress dialog strings -->
+    <string name="PROGRESS_DIALOG_EXPENSE_LIST_LOADING_TITLE">Loading expenses</string>
+    <string name="PROGRESS_DIALOG_EXPENSE_LIST_LOADING_TEXT">Loading expenses, please wait...</string>
+</resources>

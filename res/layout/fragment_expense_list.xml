@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <!-- Layout con le view per il filtro sulla lista -->
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <!-- edittext di filtro per il negozio della spesa -->
+        <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/frg_exp_list_filter_shop"
+                android:hint="@string/HINT_FRG_EXP_LIST_FILTER_SHOPNAME"/>
+
+        <!-- edittext di filtro per la data della spesa -->
+        <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/frg_exp_list_filter_date"
+                android:hint="@string/HINT_FRG_EXP_LIST_FILTER_SHOPNAME"/>
+
+    </LinearLayout>
+
+
+    <!-- Layout con le view per la lista delle spese eseguite -->
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <ListView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/frg_exp_list_listview"/>
+
+    </LinearLayout>
+
+</LinearLayout>

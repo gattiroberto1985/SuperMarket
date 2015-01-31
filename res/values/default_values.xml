@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="STR_DEFAULT_CATEGORY">Categoria dell\'articolo&#8230;</string>
+    <string name="STR_DEFAULT_DESCRIPTION">Descrizione dell\'articolo&#8230;</string>
+    <string name="STR_DEFAULT_BRAND">marca dell\'articolo&#8230;</string>
+    <string name="STR_DEFAULT_QUANTITY">1</string>
+    <string name="STR_DEFAULT_PRICE">1.0</string>
+    <string name="STR_DEFAULT_TOTAL_PRICE">Prezzo totale dell\'articolo: &#8364;</string>  
+    <string name="STR_HINT_ART_NUMBER">numero di articoli/kg&#8230;</string>
+    <string name="STR_HINT_SINGLE_PRICE">prezzo unitario/al kg&#8230;</string>
+</resources>

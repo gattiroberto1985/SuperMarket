@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <string-array name="STRARR_CMB_sortBy">
+        <item android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/STR_CMB_SortBy_date">Data</item>
+        <item android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/STR_CMB_SortBy_cost">Importo</item>
+        <item android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/STR_CMB_SortBy_shop">Negozio</item>
+    </string-array>
+    
+</resources>

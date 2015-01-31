@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+    <!-- Data della spesa -->
+    <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/view_exp_header_date"/>
+
+
+    <!-- Negozio della spesa -->
+
+    <!-- MEMO: inserire nei tag della edittext l'oggetto shopbean
+               relativo -->
+    <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/view_exp_header_shop"/>
+
+
+    <!-- Importo totale della spesa -->
+    <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/view_exp_header_cost"/>
+
+</LinearLayout>
