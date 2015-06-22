@@ -76,14 +76,14 @@ public class AdapterExpenseArticles extends ArrayAdapter<ExpenseArticleBean>
         }
 	    if (rowView == null) 
 	    {
-	        rowView = ApplicationSM.getLayoutInflater().inflate(R.layout.layout_single_item, null);
+	        rowView = ApplicationSM.getLayoutInflater().inflate(R.layout.view_expense_detail_item, null);
 	        ViewHolder viewHolder = new ViewHolder();
-	        viewHolder.category = (TextView) rowView.findViewById(R.id.TV_ItemCategory);
-	        viewHolder.brand	 = (TextView) rowView.findViewById(R.id.TV_ItemBrand);
-	        viewHolder.description = (TextView) rowView.findViewById(R.id.TV_ItemDescription);
-	        viewHolder.unitCost = (TextView) rowView.findViewById(R.id.TV_ItemSinglePrice);
-	        viewHolder.quantity = (TextView) rowView.findViewById(R.id.TV_ItemQuantity);
-	        viewHolder.totalCost = (TextView) rowView.findViewById(R.id.TV_Label_ItemTotalCost);
+	        viewHolder.category = (TextView) rowView.findViewById(R.id.view_exp_item_category);
+	        viewHolder.brand	 = (TextView) rowView.findViewById(R.id.view_exp_item_brand);
+	        viewHolder.description = (TextView) rowView.findViewById(R.id.view_exp_item_desc);
+	        viewHolder.unitCost = (TextView) rowView.findViewById(R.id.view_exp_item_single_price);
+	        viewHolder.quantity = (TextView) rowView.findViewById(R.id.view_exp_item_quantity);
+	        viewHolder.totalCost = (TextView) rowView.findViewById(R.id.view_exp_item_total_price);
             // Setting tags...
             viewHolder.category.setTag(ea.getArticle().getCategory());
             viewHolder.brand.setTag(ea.getArticle().getBrand());

@@ -93,7 +93,7 @@ public class DBConstants
                 FIELD_SHOP_DESCRIPTION };
 
 
-    private final static String[] PROJECTION_EXPENSE_ARTICLE_LIST = new String[] {
+    public final static String[] PROJECTION_EXPENSE_ARTICLE_LIST = new String[] {
                 FIELD_DEFAULT_ID,                           // id della spesa
                 FIELD_ARTICLE_CATEGORY_ID,                  // id della categoria articolo
                 FIELD_CATEGORY_DESCRIPTION,                 // descrizione categoria

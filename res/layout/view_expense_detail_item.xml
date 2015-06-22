@@ -5,4 +5,43 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+    <!-- Descrizione articolo -->
+    <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/view_exp_item_desc"/>
+
+
+    <!-- Brand dell'articolo -->
+
+    <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/view_exp_item_brand"/>
+
+
+    <!-- Categoria dell'articolo -->
+    <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/view_exp_item_category"/>
+
+    <!-- Prezzo unitario dell'articolo -->
+    <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/view_exp_item_single_price"/>
+
+    <!-- Quantita' dell'articolo -->
+    <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/view_exp_item_quantity"/>
+
+    <!-- Prezzo totale dell'articolo -->
+    <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/view_exp_item_total_price"/>
+
 </LinearLayout>

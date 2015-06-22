@@ -70,7 +70,7 @@ public class FragmentExpenseDetail extends Fragment
 			this.expenseSelected = (ExpenseBean) this.getActivity().getIntent().getSerializableExtra(Constants.KEY_SELECTED_EXPENSE);
 		}
 		Logger.lfc_log("Avvio thread di recupero articoli di spesa...");
-        this.task = new ATRetrieveExpenseArticles();
+        this.task = new ATRetrieveExpenseArticles(this.expenseSelected);
 		//this.task.execute();
 
 		/*this.lvAdapter = new AdapterExpenseArticles(this.getActivity(), R.layout.layout_single_item, this.expenseSelected.getArticlesList());
