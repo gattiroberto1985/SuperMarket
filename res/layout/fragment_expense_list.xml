@@ -5,27 +5,12 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <!-- Layout con le view per il filtro sulla lista -->
-    <LinearLayout
+    <SearchView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:id="@+id/frg_exp_list_search">
 
-        <!-- edittext di filtro per il negozio della spesa -->
-        <EditText
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/frg_exp_list_filter_shop"
-                android:hint="@string/HINT_FRG_EXP_LIST_FILTER_SHOPNAME"/>
-
-        <!-- edittext di filtro per la data della spesa -->
-        <EditText
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/frg_exp_list_filter_date"
-                android:hint="@string/HINT_FRG_EXP_LIST_FILTER_SHOPNAME"/>
-
-    </LinearLayout>
+    </SearchView>
 
 
     <!-- Layout con le view per la lista delle spese eseguite -->

@@ -26,19 +26,16 @@ package org.bob.android.supermarket.persistence.cp;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
-import android.util.Log;
-import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import org.bob.android.supermarket.logger.Logger;
 import org.bob.android.supermarket.persistence.beans.*;
-import org.bob.android.supermarket.test.TestPersistence;
 import org.bob.android.supermarket.utilities.DBConstants;
 
 import java.sql.SQLException;
+
+//import org.bob.android.supermarket.test.TestPersistence;
 
 /**
  * Classe dbHelper per il database dell'applicazione.
@@ -83,7 +80,7 @@ public class SMDBHelper extends OrmLiteSqliteOpenHelper
             TableUtils.createTable(cs, ExpenseBean.class);
             TableUtils.createTable(cs, ExpenseArticleBean.class);
             Logger.dtb_log("Calling test data insert...");
-            TestPersistence.createTestDatas();
+            //TestPersistence.createTestDatas();
         }
         catch (SQLException e)
         {

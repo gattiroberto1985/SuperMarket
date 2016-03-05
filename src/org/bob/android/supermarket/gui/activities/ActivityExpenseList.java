@@ -3,10 +3,7 @@ package org.bob.android.supermarket.gui.activities;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import org.bob.android.supermarket.R;
 import org.bob.android.supermarket.gui.fragments.FragmentExpenseList;
 import org.bob.android.supermarket.logger.Logger;
@@ -43,7 +40,10 @@ public class ActivityExpenseList extends Activity
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        return super.onCreateOptionsMenu(menu);
+        super.onCreateOptionsMenu(menu)
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+        return true;
     }
 
     /**

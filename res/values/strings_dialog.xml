@@ -1,3 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="TITLE_ACTIONBAR_SEARCH_BAR">Search for shop or date...</string>
 </resources>

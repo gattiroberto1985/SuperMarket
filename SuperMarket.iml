@@ -23,9 +23,9 @@
       <sourceFolder url="file://$MODULE_DIR$/src/org/bob/android/supermarket/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/res" type="java-resource" />
     </content>
-    <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android SDK" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="ormlite" level="project" />
+    <orderEntry type="library" name="libs" level="project" />
   </component>
 </module>
-
