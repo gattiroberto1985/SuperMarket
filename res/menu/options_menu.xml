@@ -29,4 +29,9 @@
           android:icon="@android:drawable/ic_menu_search"
           android:showAsAction="collapseActionView|ifRoom"
           android:actionViewClass="android.widget.SearchView" />
+
+    <item android:id="@+id/menu_add_expense"
+        android:title="@string/TITLE_ACTIONBAR_ADD_EXPENSE"
+        android:icon="@android:drawable/ic_menu_add"
+        android:showAsAction="collapseActionView|ifRoom" />
 </menu>

@@ -25,6 +25,7 @@
 package org.bob.android.supermarket.gui.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListFragment;
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -34,7 +35,9 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import org.bob.android.supermarket.R;
 import org.bob.android.supermarket.gui.adapters.AdapterExpenses;
+import org.bob.android.supermarket.gui.dialogs.DialogFactory;
 import org.bob.android.supermarket.logger.Logger;
+import org.bob.android.supermarket.persistence.beans.ExpenseBean;
 import org.bob.android.supermarket.tasks.ATRetrieveExpenses;
 import org.bob.android.supermarket.utilities.Constants;
 
@@ -216,13 +219,14 @@ public class FragmentExpenseList extends ListFragment
     {
         Logger.app_log("OnOptionsItemSelected listfragment");
         // Handle item selection
-        /*switch (item.getItemId()) {
-            case R.id.:
-                AlertDialog dialog = DialogFactory.showNewContactDialog(this);
+        switch (item.getItemId()) {
+            case R.id.menu_add_expense:
+                AlertDialog dialog = DialogFactory.updateExpenseDialog(this, null);
                 dialog.show();
                 return true;
-            default:*/
+            default:
                 return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -249,6 +253,7 @@ class OnExpenseLongClickListener implements OnItemLongClickListener
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l)
     {
+        ExpenseBean expenseToRemove = (ExpenseBean) view.getTag();
         return false;
     }
 }
