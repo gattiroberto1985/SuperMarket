@@ -26,12 +26,15 @@ package org.bob.android.supermarket.gui.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.ListFragment;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import org.bob.android.supermarket.R;
+import org.bob.android.supermarket.gui.dialogs.interfaces.OnExpenseUpdate;
+import org.bob.android.supermarket.gui.fragments.FragmentExpenseList;
 import org.bob.android.supermarket.gui.watchers.DateTextWatcher;
 import org.bob.android.supermarket.logger.Logger;
 import org.bob.android.supermarket.persistence.beans.ExpenseBean;
@@ -69,6 +72,7 @@ public class DialogFactory {
             date.setText(expense.getFormattedDate().toString());
         }
         // Setting alert dialog by cascade calling of 'set' methods . . .
+        OnExpenseUpdate oeu = new OnExpenseUpdate( (FragmentExpenseList) frg, expense);
         builder
                 // Setting view . . .
                 .setView(dialogView)
@@ -77,18 +81,9 @@ public class DialogFactory {
                 // Setting title . . .
                 .setTitle(R.string.DIALOG_ADD_EXPENSE_TITLE)
                         // Setting OK button . . .
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Validate fields and, eventually, create expense
-                        // open expense
-                    }
-                })
+                .setPositiveButton(android.R.string.ok, oeu)
                         // Setting KO button . . .
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Close the dialog
-                    }
-                });
+                .setNegativeButton(android.R.string.cancel, oeu);
 
         return builder.create();
     }

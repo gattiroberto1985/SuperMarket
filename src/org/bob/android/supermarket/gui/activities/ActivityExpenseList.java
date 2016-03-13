@@ -26,19 +26,20 @@ package org.bob.android.supermarket.gui.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.view.*;
 import org.bob.android.supermarket.R;
 import org.bob.android.supermarket.gui.fragments.FragmentExpenseList;
 import org.bob.android.supermarket.logger.Logger;
+import org.bob.android.supermarket.persistence.beans.ExpenseBean;
 
 /**
  * Main Activity dell'applicazione.
  * @author roberto.gatti
  *
  */
-public class ActivityExpenseList extends Activity
-
+public class ActivityExpenseList extends Activity implements FragmentExpenseList.OnExpenseSelectedListener
 {
 
     /* ********************************************************************* */
@@ -165,5 +166,13 @@ public class ActivityExpenseList extends Activity
         setContentView(R.layout.activity_expense_list);
     }
 
+    /* ********************************************************************* */
+    /*                           IMPLEMENT METHODS                           */
+    /* ********************************************************************* */
+
+    @Override
+    public void onExpenseSelected(ExpenseBean eb) {
+        Logger.lfc_log("Opening expense '" + eb.toString() + ". . .");
+    }
 
 }

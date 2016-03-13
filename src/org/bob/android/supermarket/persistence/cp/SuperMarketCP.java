@@ -27,6 +27,8 @@ package org.bob.android.supermarket.persistence.cp;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import com.j256.ormlite.android.AndroidDatabaseResults;
 import com.j256.ormlite.dao.CloseableIterator;
@@ -85,19 +87,19 @@ public class SuperMarketCP extends ContentProvider
 		int match = DBConstants.sURIMatcher.match(uri);
 		switch ( match )
 		{
-            case DBConstants.URI_INDICATOR_ARTICLES: return DBConstants.CONTENT_ITEM_TYPE_ARTICLE;
-            case DBConstants.URI_INDICATOR_ARTICLES_COLLECTION   : return DBConstants.CONTENT_TYPE_ARTICLE;
+            case DBConstants.URI_INDICATOR_ARTICLES                   : return DBConstants.CONTENT_ITEM_TYPE_ARTICLE;
+            case DBConstants.URI_INDICATOR_ARTICLES_COLLECTION        : return DBConstants.CONTENT_TYPE_ARTICLE;
             /*case DBConstants.URI_INDICATOR_ARTICLES_DISTINCT_BRAND_ID : return DBConstants.CONTENT_ITEM_TYPE;
 			case DBConstants.URI_INDICATOR_ARTICLES_DISTINCT_CATEGORY_ID: return DBConstants.CONTENT_;*/
-			case DBConstants.URI_INDICATOR_BRANDS: return DBConstants.CONTENT_ITEM_TYPE_BRAND;
-			case DBConstants.URI_INDICATOR_BRANDS_COLLECTION            : return DBConstants.CONTENT_TYPE_BRAND;
-			case DBConstants.URI_INDICATOR_CATEGORIES: return DBConstants.CONTENT_ITEM_TYPE_CATEGORY;
-			case DBConstants.URI_INDICATOR_CATEGORIES_COLLECTION: return DBConstants.CONTENT_TYPE_CATEGORY;
+			case DBConstants.URI_INDICATOR_BRANDS                      : return DBConstants.CONTENT_ITEM_TYPE_BRAND;
+			case DBConstants.URI_INDICATOR_BRANDS_COLLECTION           : return DBConstants.CONTENT_TYPE_BRAND;
+			case DBConstants.URI_INDICATOR_CATEGORIES                  : return DBConstants.CONTENT_ITEM_TYPE_CATEGORY;
+			case DBConstants.URI_INDICATOR_CATEGORIES_COLLECTION       : return DBConstants.CONTENT_TYPE_CATEGORY;
 			//case DBConstants.URI_INDICATOR_CATEGORIES_DISTINCT_APPLY_TO: return DBConstants.CONTENT_JOIN_SHOP_ITEM_TYPE;
-			case DBConstants.URI_INDICATOR_EXPENSE_ARTICLES: return DBConstants.CONTENT_ITEM_TYPE_EXPENSE_ARTICLE;
-			case DBConstants.URI_INDICATOR_EXPENSE_ARTICLES_COLLECTION        : return DBConstants.CONTENT_TYPE_EXPENSE_ARTICLE;
-			case DBConstants.URI_INDICATOR_EXPENSES: return DBConstants.CONTENT_ITEM_TYPE_EXPENSE;
-			case DBConstants.URI_INDICATOR_EXPENSES_COLLECTION: return DBConstants.CONTENT_TYPE_EXPENSE;
+			case DBConstants.URI_INDICATOR_EXPENSE_ARTICLES            : return DBConstants.CONTENT_ITEM_TYPE_EXPENSE_ARTICLE;
+			case DBConstants.URI_INDICATOR_EXPENSE_ARTICLES_COLLECTION : return DBConstants.CONTENT_TYPE_EXPENSE_ARTICLE;
+			case DBConstants.URI_INDICATOR_EXPENSES                    : return DBConstants.CONTENT_ITEM_TYPE_EXPENSE;
+			case DBConstants.URI_INDICATOR_EXPENSES_COLLECTION         : return DBConstants.CONTENT_TYPE_EXPENSE;
 			//case DBConstants.URI_INDICATOR_EXPENSES_DISTINCT_DATE: return DBConstants.CONTENT_TYPE;
 			//case DBConstants.URI_INDICATOR_EXPENSES_DISTINCT_SHOP: return DBConstants.CONTENT_ITEM_TYPE;
 			//case DBConstants.URI_INDICATOR_EXPENSES_JOIN_EXPENSE_ARTICLE: return DBConstants.CONTENT_ITEM_TYPE;
@@ -428,35 +430,108 @@ public class SuperMarketCP extends ContentProvider
 	public Cursor query(Uri uri, String[] projection, String whereClauses, String[] whereValues, String sortOrder)
 	{
         Logger.dtb_log("Content Provider: query");
+		Cursor outCursor = null;
+		if ( this.isClassURI(uri) )
+		{
+			outCursor = this.queryClassURI(uri, projection, whereClauses, whereValues, sortOrder);
+		}
+		else
+			outCursor = this.queryNonClassURI(uri, projection, whereClauses, whereValues, sortOrder);
+		return outCursor;
 
-        Cursor cursor = null; // this.checkForNonStandardUri(uri,projection, whereClauses, whereValues, sortOrder)
-        Class clazz = this.getClassFromURI(uri);
-        //if ( cursor != null ) return cursor;
-        try
-        {
-            Dao<Object, Integer> red = this.dbh.getDao(clazz);
-            QueryBuilder<Object, Integer> qb = red.queryBuilder();
-
-            if ( whereClauses != null )
-                qb.where().eq(whereClauses, whereValues[0]);
-
-            if ( sortOrder != null )
-                qb.orderBy(sortOrder, true);
-
-            //RuntimeExceptionDao<Class, String> red = this.dbh.getRuntimeExceptionDao(clazz);
-            //QueryBuilder<Class, String> qb = red.queryBuilder();
-            CloseableIterator<Object> iterator = null;
-            iterator = red.iterator(qb.prepare());
-            AndroidDatabaseResults results = (AndroidDatabaseResults) iterator.getRawResults();
-            cursor = results.getRawCursor();
-            cursor.setNotificationUri(this.getContext().getContentResolver(), uri);
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-        return cursor;
+        //Cursor cursor = this.checkForNonClassURI(uri, projection, whereClauses, whereValues, sortOrder)
 	}
+
+	/**
+	 * Class URI are setted with integer indicator ending in 0 or 1. Thus, the
+	 * rest of a /10 division is 0 or 1. Otherwise, the uri did not point
+	 * to a class object.
+	 *
+	 * @return true if the uri points to an object URI, false otherwise.
+	 *
+	 */
+	private boolean isClassURI(Uri uri)
+	{
+		int remainder =  ( DBConstants.sURIMatcher.match(uri) ) % 10;
+		if ( remainder < 0 )
+			throw new RuntimeException("ERROR: controllare gli uri! UriMatcher.match(" + uri.toString() + ") % 10 ha dato resto " + remainder + "!");
+
+		if ( remainder > 1 )
+			return false;
+		return true;
+	}
+
+	/**
+	 * The method queries for a non class uri, typically for a database view.
+	 *
+	 * @param uri
+	 * @param projection
+	 * @param whereClauses
+	 * @param whereValues
+	 * @param sortOrder
+	 * @return
+	 */
+	public Cursor queryNonClassURI(Uri uri, String[] projection, String whereClauses, String[] whereValues, String sortOrder)
+	{
+		switch ( DBConstants.sURIMatcher.match(uri) )
+		{
+			case DBConstants.URI_INDICATOR_EXPENSES_JOIN_SHOP:
+				return this.queryExpenseJoinShop(uri, projection, whereClauses, whereValues, sortOrder);
+			default:
+				throw new RuntimeException("ERROR!");
+		}
+	}
+
+	public Cursor queryExpenseJoinShop(Uri uri, String[] projection, String whereClauses, String[] whereValues, String sortOrder)
+	{
+		SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+		queryBuilder.setTables(DBConstants.VIEW_EXPENSE_SHOP_NAME);
+		SQLiteDatabase db = this.dbh.getReadableDatabase();
+		sortOrder = DBConstants.FIELD_EXPENSE_DATE + " ASC";
+		Cursor cursor = queryBuilder.query(db, projection, whereClauses, whereValues, null, null, sortOrder);
+		return cursor;
+	}
+
+	/**
+	 * The method query for a standard object.
+	 *
+	 * @param uri
+	 * @param projection
+	 * @param whereClauses
+	 * @param whereValues
+	 * @param sortOrder
+	 * @return
+	 */
+	private Cursor queryClassURI(Uri uri, String[] projection, String whereClauses, String[] whereValues, String sortOrder)
+	{
+		Cursor cursor = null;
+		Class clazz = this.getClassFromURI(uri);
+		try
+		{
+			Dao<Object, Integer> red = this.dbh.getDao(clazz);
+			QueryBuilder<Object, Integer> qb = red.queryBuilder();
+
+			if ( whereClauses != null )
+				qb.where().eq(whereClauses, whereValues[0]);
+
+			if ( sortOrder != null )
+				qb.orderBy(sortOrder, true);
+
+			//RuntimeExceptionDao<Class, String> red = this.dbh.getRuntimeExceptionDao(clazz);
+			//QueryBuilder<Class, String> qb = red.queryBuilder();
+			CloseableIterator<Object> iterator = null;
+			iterator = red.iterator(qb.prepare());
+			AndroidDatabaseResults results = (AndroidDatabaseResults) iterator.getRawResults();
+			cursor = results.getRawCursor();
+			cursor.setNotificationUri(this.getContext().getContentResolver(), uri);
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return cursor;
+	}
+
 
 	/**
 	 * Override del metodo update.
@@ -464,7 +539,7 @@ public class SuperMarketCP extends ContentProvider
 	@Override
 	public int update(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs)
 	{
-        Logger.dtb_log(  "Content Provider: update");
+        Logger.dtb_log("Content Provider: update");
         Class clazz = this.getClassFromURI(uri);
         int output = -1;
         try

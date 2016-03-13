@@ -79,6 +79,7 @@ public class BrandBean extends BaseSMBean
     /*                       GETTER AND SETTER METHODS                       */
     /* ********************************************************************* */
 
+    @Override
     public final void setId(int id) { this.id = id; }
     public final void setDescription(String description) { this.description = description; }
 

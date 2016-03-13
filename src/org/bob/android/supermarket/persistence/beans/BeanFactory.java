@@ -28,6 +28,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
+import org.bob.android.supermarket.ApplicationSM;
 import org.bob.android.supermarket.exceptions.SuperMarketException;
 import org.bob.android.supermarket.logger.Logger;
 import org.bob.android.supermarket.persistence.cp.SuperMarketCP;
@@ -44,8 +45,101 @@ import java.util.List;
 public class BeanFactory
 {
 
+
+    /**
+     * Insert method for a bean of the application.
+     *
+     * @param bean2insert
+     * @return
+     * @throws SuperMarketException
+     */
+    public static BaseSMBean insertBean(BaseSMBean bean2insert) throws SuperMarketException
+    {
+        Uri uri = null;
+        if ( bean2insert instanceof ExpenseBean )
+            uri = DBConstants.URI_EXPENSES_CONTENT;
+
+        if ( uri == null )
+            throw new SuperMarketException("ERROR: insertBean not implemented for class '" + bean2insert.getClass().getName() + "'!");
+
+        Uri newIns = ApplicationSM.getInstance().getContentResolver().insert(uri, bean2insert.getContentValues());
+        int newId = Integer.parseInt(newIns.getLastPathSegment().toString());
+        bean2insert.setId(newId);
+        return bean2insert;
+    }
+
+
+    /**
+     * Update method for the bean of the application.
+     *
+     * @param bean2update
+     * @return
+     * @throws SuperMarketException
+     */
+    public static int updateBean(BaseSMBean bean2update) throws SuperMarketException
+    {
+        int rowsUpdated = -1;
+        Uri uri = null;
+        if ( bean2update instanceof ExpenseBean )
+            uri = DBConstants.URI_EXPENSES_CONTENT;
+
+        if ( uri == null )
+            throw new SuperMarketException("ERROR: updateBean not implemented for class '" + bean2update.getClass().getName() + "'!");
+
+        // Executing update...
+        return ApplicationSM
+                    .getInstance()
+                    .getContentResolver()
+                    .update(uri,
+                            bean2update.getContentValues(),
+                            DBConstants.FIELD_DEFAULT_ID + " = ?",
+                            new String[]{String.valueOf(bean2update.getId())}
+                    );
+    }
+
+    /* ********************************************************************* */
+    /*                        APPLICATION LAYER METHODS                      */
+    /* ********************************************************************* */
+
+    /**
+     * The method get a shop from the database. If the shop exists, his details
+     * are retreived, otherwise it will be inserted in the database.
+     *
+     * @param shopName The shop name to search/create.
+     * @return a shop object (or null if shopNotFound)
+     * @throws SuperMarketException when something strange happens
+     */
+    public static ShopBean getShop(String shopName) throws SuperMarketException
+    {
+        ShopBean sb = null;
+        try
+        {
+            sb = new ShopBean(-1, shopName);
+            Cursor c = ApplicationSM.getInstance().getContentResolver().query(DBConstants.URI_SHOPS_CONTENT, DBConstants.PROJECTION_SHOP_BEAN, DBConstants.FIELD_SHOP_DESCRIPTION + " = ?", new String[ ] { shopName }, null);
+            if ( ! c.moveToFirst() )
+            {
+                Logger.dtb_log("Inserting shop '" + shopName + "' in database . . .");
+                Uri newIns = ApplicationSM.getInstance().getContentResolver().insert(DBConstants.URI_SHOPS_CONTENT, sb.getContentValues());
+                sb.setId( Integer.parseInt(newIns.getLastPathSegment()) );
+            }
+            else
+                sb = BeanFactory.createShopBean(c);
+        }
+        catch ( Exception ex )
+        {
+
+        }
+        return sb;
+    }
+
+
+    /* ********************************************************************* */
+    /*                        DATABASE LAYER METHODS                         */
+    /* ********************************************************************* */
+
     /**
      * Il metodo ritorna, a partire da un contentValues, un oggetto di tipo SMBaseBean.
+     *
      * @param cv il content values da cui recuperare l'istanza
      * @return
      */
@@ -86,7 +180,7 @@ public class BeanFactory
     public final static BaseSMBean createSMBean(Uri uri, Cursor cursor) throws SuperMarketException
     {
         // junit.framework.Assert.assertNotNull(cursor);
-        Logger.app_log("Creazione bean massiva: controllo cursore...");
+        Logger.app_log("Creazione bean: controllo cursore...");
         if ( cursor == null ) throw new SuperMarketException("ERRORE: nessun dato recuperato, il cursor e' null!");
 
         Logger.dtb_log("Traduzione oggetto da riga di cursore");
@@ -157,6 +251,30 @@ public class BeanFactory
             Logger.app_log("ERRORE: eccezione in fase di creazione spesa da cursore!", Logger.Level.ERROR);
             Logger.app_log("Messaggio: " + ex.getMessage(), Logger.Level.ERROR);
             throw new SuperMarketException("Impossibile creare il bean ExpenseBean: " + ex.getMessage(), ex);
+        }
+    }
+
+    /**
+     * This methods create, starting from a cursor, a ShopBean object.
+     *
+     * @param cursor the cursor with datas.
+     * @return a shopbean
+     * @throws SuperMarketException if something strange happens
+     */
+    private static ShopBean createShopBean(Cursor cursor) throws SuperMarketException
+    {
+        Logger.app_log("Trying creating a ShopBean from cursor . . .", Logger.Level.VERBOSE);
+        try
+        {
+            int shopId = cursor.getInt(cursor.getColumnIndex(DBConstants.FIELD_DEFAULT_ID));
+            String shopDesc = cursor.getString(cursor.getColumnIndex(DBConstants.FIELD_SHOP_DESCRIPTION));
+            return new ShopBean(shopId, shopDesc);
+        }
+        catch ( Exception ex )
+        {
+            Logger.app_log("ERRORE: eccezione in fase di creazione spesa da cursore!", Logger.Level.ERROR);
+            Logger.app_log("Messaggio: " + ex.getMessage(), Logger.Level.ERROR);
+            throw new SuperMarketException("Impossibile recuperare il negozio: " + ex.getMessage(), ex);
         }
     }
 }

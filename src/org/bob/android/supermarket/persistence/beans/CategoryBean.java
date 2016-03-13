@@ -82,6 +82,7 @@ public class CategoryBean extends BaseSMBean
     /*                       GETTER AND SETTER METHODS                       */
     /* ********************************************************************* */
 
+    @Override
     public final void setId(int id) { this.id = id; }
     public final void setDescription(String description) { this.description = description; }
     public final void setAppliesTo(char appliesTo) { this.appliesTo = Character.toUpperCase(appliesTo); }

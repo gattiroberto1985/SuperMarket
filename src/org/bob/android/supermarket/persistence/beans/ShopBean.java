@@ -27,6 +27,7 @@ package org.bob.android.supermarket.persistence.beans;
 import android.content.ContentValues;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.bob.android.supermarket.ApplicationSM;
 import org.bob.android.supermarket.logger.Logger;
 import org.bob.android.supermarket.utilities.Constants;
 import org.bob.android.supermarket.utilities.DBConstants;
@@ -79,6 +80,7 @@ public class ShopBean extends BaseSMBean
     /*                       GETTER AND SETTER METHODS                       */
     /* ********************************************************************* */
 
+    @Override
     public final void setId(int id) { this.id = id; }
     public final void setDescription(String description) { this.description = description; }
 
@@ -106,4 +108,17 @@ public class ShopBean extends BaseSMBean
         return cv;
     }
 
+    @Override
+    public boolean equals(Object o) {
+
+        if ( ! ( o instanceof ShopBean ) )
+            return false;
+
+        ShopBean sb = ( ShopBean ) o;
+
+        if ( !sb.getDescription().equals(this.getDescription()) )
+            return false;
+
+        return true;
+    }
 }

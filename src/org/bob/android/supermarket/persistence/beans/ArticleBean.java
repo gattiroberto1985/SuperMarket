@@ -91,6 +91,7 @@ public class ArticleBean extends BaseSMBean
     /*                       GETTER AND SETTER METHODS                       */
     /* ********************************************************************* */
 
+    @Override
     public final void setId(int id) { this.id = id; }
     public final void setDescription(String description) { this.description = description; }
     public final void setBrand(BrandBean b) { this.brand = b; this.brandId = this.getBrand().getId(); }

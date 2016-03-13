@@ -22,20 +22,10 @@
  * IN THE SOFTWARE.
  */
 
-package org.bob.android.supermarket.persistence.beans;
-
-import android.content.ContentValues;
-
-import java.io.Serializable;
+package org.bob.android.supermarket.gui.dialogs.interfaces;
 
 /**
- * Created by roberto.gatti on 22/01/2015.
+ * Created by roberto.gatti on 07/03/2016.
  */
-public abstract class BaseSMBean implements Serializable
-{
-
-    public abstract void setId(int id);
-    public abstract int getId();
-    public abstract ContentValues getContentValues();
-
+public class OnArticleUpdate {
 }

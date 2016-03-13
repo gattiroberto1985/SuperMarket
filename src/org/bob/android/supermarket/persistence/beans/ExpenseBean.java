@@ -131,6 +131,7 @@ public class ExpenseBean extends BaseSMBean
     /*                       GETTER AND SETTER METHODS                       */
     /* ********************************************************************* */
 
+    @Override
     public final void setId(int id) { this.id = id; }
     @Deprecated
     public final void setDate(Date date) { this.date = date.getTime(); }
@@ -164,7 +165,7 @@ public class ExpenseBean extends BaseSMBean
     public final ShopBean getShop() { return this.shop; }
     public final int getShopId() { return this.shopId; }
     public final List<ExpenseArticleBean> getArticles() { return this.articles; }
-    public final double getCost() { return this.getCost(); }
+    public final double getCost() { return this.cost; }
 
 
 
@@ -189,4 +190,30 @@ public class ExpenseBean extends BaseSMBean
         return cv;
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+
+        if ( ! ( o instanceof ExpenseBean ) )
+            return false;
+
+        ExpenseBean eb = ( ExpenseBean ) o;
+
+        // Se id e' -1 --> false
+        if ( eb.getId() == -1 )
+            return false;
+
+        // se il negozio e' null --> false
+        if ( eb.getShop() == null || this.getShop() == null )
+            return false;
+
+        ShopBean osb = eb.getShop();
+        ShopBean  sb = this.getShop();
+        if ( ! osb.equals(sb) )
+            return false;
+
+
+        return true;
+    }
 }
+

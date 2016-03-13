@@ -33,13 +33,18 @@ import android.view.*;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+import org.bob.android.supermarket.ApplicationSM;
 import org.bob.android.supermarket.R;
+import org.bob.android.supermarket.exceptions.SuperMarketException;
+import org.bob.android.supermarket.gui.GuiUtils;
 import org.bob.android.supermarket.gui.adapters.AdapterExpenses;
 import org.bob.android.supermarket.gui.dialogs.DialogFactory;
 import org.bob.android.supermarket.logger.Logger;
 import org.bob.android.supermarket.persistence.beans.ExpenseBean;
 import org.bob.android.supermarket.tasks.ATRetrieveExpenses;
 import org.bob.android.supermarket.utilities.Constants;
+import org.bob.android.supermarket.utilities.DBConstants;
+import org.bob.android.supermarket.utilities.Utilities;
 
 /**
 
@@ -66,6 +71,14 @@ public class FragmentExpenseList extends ListFragment
      * Istanza della listview.
      */
     private ListView expenseLV = null;
+
+    /**
+     * Interfaccia di gestione selezione contatto sulla expandablelistview.
+     */
+    public interface OnExpenseSelectedListener
+    {
+        public void onExpenseSelected(ExpenseBean eb);
+    }
 
     /* ********************************************************************* */
     /*                               CLASS METHODS                           */
@@ -250,10 +263,22 @@ public class FragmentExpenseList extends ListFragment
 class OnExpenseLongClickListener implements OnItemLongClickListener
 {
 
+
+
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l)
     {
-        ExpenseBean expenseToRemove = (ExpenseBean) view.getTag();
+        try {
+            ExpenseBean expenseToRemove = GuiUtils.getExpenseBeanFromView(view);
+            ApplicationSM.getInstance().getContentResolver().delete(
+                            DBConstants.URI_EXPENSES_CONTENT,
+                            DBConstants.FIELD_DEFAULT_ID + " = ?",
+                            new String [] { String.valueOf(expenseToRemove.getId()) });
+        }
+        catch ( SuperMarketException ex )
+        {
+
+        }
         return false;
     }
 }

@@ -94,6 +94,7 @@ public class ExpenseArticleBean extends BaseSMBean
     /*                       GETTER AND SETTER METHODS                       */
     /* ********************************************************************* */
 
+    @Override
     public final void setId(int id)                       { this.id = id; }
     public final void setExpenseId(int e_id)              { this.expenseId = e_id; }
     public final void setArticle(ArticleBean a)           { this.article = a;  this.articleId = this.getArticle().getId(); }

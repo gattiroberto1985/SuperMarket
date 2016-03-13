@@ -56,6 +56,7 @@ public class AdapterExpenses extends ArrayAdapter<ExpenseBean>
 	 */
 	static class VHExpense
 	{
+        public TextView expId;
 	    public TextView date;
 	    public TextView shop;
 	    public TextView cost;
@@ -117,6 +118,8 @@ public class AdapterExpenses extends ArrayAdapter<ExpenseBean>
         {
             vh = new VHExpense();
             convertView = ApplicationSM.getLayoutInflater().inflate(R.layout.view_expense_header, parent, false);
+            vh.expId = (TextView) convertView.findViewById(R.id.view_exp_header_id);
+            vh.expId.setTag(expense);
             vh.cost = (EditText) convertView.findViewById(R.id.view_exp_header_cost);
             vh.shop = (EditText) convertView.findViewById(R.id.view_exp_header_shop);
             vh.shop.setTag(expense.getShop());
@@ -124,7 +127,8 @@ public class AdapterExpenses extends ArrayAdapter<ExpenseBean>
             convertView.setTag(vh);
         }
         vh = (VHExpense) convertView.getTag();
-        vh.cost.setText(String.valueOf(expense.getId()));
+        vh.expId.setText(String.valueOf(expense.getId()));
+        vh.cost.setText(String.valueOf(expense.getCost()));
         vh.shop.setText(String.valueOf(   ( (ShopBean)vh.shop.getTag()).getId()));
         vh.date.setText( Constants.DM_FORMATTER.format( expense.getFormattedDate() ) );
         return convertView;

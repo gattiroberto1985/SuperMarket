@@ -29,12 +29,20 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+    <!-- Expense Id (if available) -->
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/dialog_update_expense_expense_id"/>
+
+    <!-- Shop Actv -->
     <AutoCompleteTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/STR_SET_SHOP"
             android:id="@+id/dialog_update_expense_actv_shop"/>
 
+    <!-- Date field -->
     <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,5 +52,6 @@
     <CheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/dialog_update_expense_flag_open"
             android:text="@string/STR_OPEN_EXPENSE_AFTER_EDIT"/>
 </LinearLayout>

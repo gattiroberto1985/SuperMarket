@@ -54,7 +54,7 @@ public class SMDBHelper extends OrmLiteSqliteOpenHelper
 	 * Intero con la versione del database
 	 */
 	private static final int DATABASE_VERSION = DBConstants.DATABASE_VERSION;
-	
+
 	/**
 	 * Costruttore di classe a singolo parametro.
 	 * @param context
@@ -79,6 +79,7 @@ public class SMDBHelper extends OrmLiteSqliteOpenHelper
             TableUtils.createTable(cs, ArticleBean.class);
             TableUtils.createTable(cs, ExpenseBean.class);
             TableUtils.createTable(cs, ExpenseArticleBean.class);
+            db.execSQL("CREATE VIEW " + DBConstants.VIEW_EXPENSE_SHOP_NAME + " AS " + DBConstants.VIEW_EXPENSE_SHOP);
             Logger.dtb_log("Calling test data insert...");
             //TestPersistence.createTestDatas();
         }

@@ -24,14 +24,24 @@
 
 package org.bob.android.supermarket.utilities;
 
+import android.app.AlertDialog;
+import android.view.View;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
+import android.widget.TextView;
+import org.bob.android.supermarket.R;
+import org.bob.android.supermarket.exceptions.SuperMarketException;
 import org.bob.android.supermarket.logger.Logger;
+import org.bob.android.supermarket.persistence.beans.BeanFactory;
+import org.bob.android.supermarket.persistence.beans.ExpenseArticleBean;
+import org.bob.android.supermarket.persistence.beans.ExpenseBean;
+import org.bob.android.supermarket.persistence.beans.ShopBean;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Classe con costanti di utilita' per l'applicazione.
@@ -115,6 +125,21 @@ public final class Utilities
 	        Logger.app_log("ERROR: exception caught on file copy: " + e.getMessage(), Logger.Level.ERROR);
 	        return false;
 	    }
+	}
+
+	/**
+	 * This method check a string to be a well-formed date string.
+	 *
+	 * TODO: called a deprecated method: review the logic !
+	 *
+	 * @param dateStr the string date to check
+	 *
+	 * @return a Date object
+     */
+	public static Date checkDate(String dateStr)
+	{
+		Logger.app_log("Checking date '" + dateStr + "' . . . ", Logger.Level.INFO);
+		return new Date( Date.parse(dateStr) );
 	}
 
 }
