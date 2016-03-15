@@ -37,7 +37,7 @@
             android:visibility="invisible"/>
 
     <!-- Data della spesa -->
-    <EditText
+    <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/view_exp_header_date"/>
@@ -47,14 +47,14 @@
 
     <!-- MEMO: inserire nei tag della edittext l'oggetto shopbean
                relativo -->
-    <EditText
+    <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/view_exp_header_shop"/>
 
 
     <!-- Importo totale della spesa -->
-    <EditText
+    <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/view_exp_header_cost"/>

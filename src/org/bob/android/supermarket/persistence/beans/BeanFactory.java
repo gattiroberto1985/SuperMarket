@@ -45,6 +45,51 @@ import java.util.List;
 public class BeanFactory
 {
 
+    public static int deleteBean(BaseSMBean bean2delete) throws SuperMarketException
+    {
+        if ( bean2delete instanceof ExpenseBean )
+            return BeanFactory.deleteExpenseBean((ExpenseBean) bean2delete);
+
+        throw new SuperMarketException("ERROR: method 'deleteBean' not yet implemented for class '" + bean2delete.getClass().getName() + "'!");
+    }
+
+
+    private static int deleteExpenseBean(ExpenseBean eb) throws SuperMarketException
+    {
+        if ( eb == null )
+            throw new SuperMarketException("ERROR: eb is null!");
+
+        if ( eb.getId() < 0 )
+            throw new SuperMarketException("ERROR: id is not valid: '" + eb.getId() + "'!");
+
+        // Proceeding with the removal of the expense . . .
+        return ApplicationSM.getInstance().getContentResolver().delete(
+                Uri.parse(DBConstants.URI_EXPENSES_CONTENT + "/" + String.valueOf(eb.getId())), null, null);
+    }
+
+    public static Object insertOrUpdateBean(BaseSMBean bean) throws SuperMarketException
+    {
+        if ( bean.getId() == -1 )
+            return BeanFactory.insertBean(bean);
+        else
+            return BeanFactory.updateBean(bean);
+    }
+
+    /**
+     * Method to query a bean from the db.
+     *
+     * @param bean2query
+     * @return
+     * @throws SuperMarketException
+     *
+     */
+    public static BaseSMBean queryBean(BaseSMBean bean2query) throws SuperMarketException
+    {
+        if ( bean2query instanceof ShopBean )
+            return BeanFactory.getShop((ShopBean) bean2query);
+
+        throw new SuperMarketException("ERROR: method 'queryBean' not yet implemented for class '" + bean2query.getClass().getName() + "'!");
+    }
 
     /**
      * Insert method for a bean of the application.
@@ -57,17 +102,39 @@ public class BeanFactory
     {
         Uri uri = null;
         if ( bean2insert instanceof ExpenseBean )
-            uri = DBConstants.URI_EXPENSES_CONTENT;
+            return BeanFactory.insertExpenseBean((ExpenseBean) bean2insert);
 
-        if ( uri == null )
-            throw new SuperMarketException("ERROR: insertBean not implemented for class '" + bean2insert.getClass().getName() + "'!");
+        if ( bean2insert instanceof ShopBean )
+            return BeanFactory.insertShopBean((ShopBean) bean2insert);
 
-        Uri newIns = ApplicationSM.getInstance().getContentResolver().insert(uri, bean2insert.getContentValues());
+        /*if ( uri == null ) */
+        throw new SuperMarketException("ERROR: insertBean not implemented for class '" + bean2insert.getClass().getName() + "'!");
+
+        /*Uri newIns = ApplicationSM.getInstance().getContentResolver().insert(uri, bean2insert.getContentValues());
         int newId = Integer.parseInt(newIns.getLastPathSegment().toString());
         bean2insert.setId(newId);
-        return bean2insert;
+        return bean2insert;*/
     }
 
+
+    private static ShopBean insertShopBean(ShopBean sb) throws SuperMarketException
+    {
+        Uri newIns = ApplicationSM.getInstance().getContentResolver().insert(DBConstants.URI_SHOPS_CONTENT, sb.getContentValues());
+        int newId = Integer.parseInt(newIns.getLastPathSegment().toString());
+        sb.setId(newId);
+        return sb;
+    }
+
+    private static ExpenseBean insertExpenseBean(ExpenseBean eb) throws SuperMarketException
+    {
+        // Checking shop and inserting it if not existent . . .
+        ShopBean sb = (ShopBean) BeanFactory.queryBean(eb.getShop());
+        eb.setShop(sb);
+        Uri newIns = ApplicationSM.getInstance().getContentResolver().insert(DBConstants.URI_EXPENSES_CONTENT, eb.getContentValues());
+        int newId = Integer.parseInt(newIns.getLastPathSegment().toString());
+        eb.setId(newId);
+        return eb;
+    }
 
     /**
      * Update method for the bean of the application.
@@ -105,29 +172,32 @@ public class BeanFactory
      * The method get a shop from the database. If the shop exists, his details
      * are retreived, otherwise it will be inserted in the database.
      *
-     * @param shopName The shop name to search/create.
+     * @param shop The shop bean to search.
      * @return a shop object (or null if shopNotFound)
      * @throws SuperMarketException when something strange happens
      */
-    public static ShopBean getShop(String shopName) throws SuperMarketException
+    public static ShopBean getShop(ShopBean shop) throws SuperMarketException
     {
         ShopBean sb = null;
+        String shopName = shop.getDescription();
         try
         {
             sb = new ShopBean(-1, shopName);
-            Cursor c = ApplicationSM.getInstance().getContentResolver().query(DBConstants.URI_SHOPS_CONTENT, DBConstants.PROJECTION_SHOP_BEAN, DBConstants.FIELD_SHOP_DESCRIPTION + " = ?", new String[ ] { shopName }, null);
+            Cursor c = ApplicationSM.getInstance().getContentResolver().query(DBConstants.URI_SHOPS_CONTENT, DBConstants.PROJECTION_SHOP_BEAN, DBConstants.FIELD_SHOP_DESCRIPTION, new String[ ] { shopName }, null);
             if ( ! c.moveToFirst() )
             {
-                Logger.dtb_log("Inserting shop '" + shopName + "' in database . . .");
+                /*Logger.dtb_log("Inserting shop '" + shopName + "' in database . . .");
                 Uri newIns = ApplicationSM.getInstance().getContentResolver().insert(DBConstants.URI_SHOPS_CONTENT, sb.getContentValues());
-                sb.setId( Integer.parseInt(newIns.getLastPathSegment()) );
+                sb.setId( Integer.parseInt(newIns.getLastPathSegment()) );*/
+                sb = (ShopBean) BeanFactory.insertBean(sb);
             }
             else
                 sb = BeanFactory.createShopBean(c);
         }
         catch ( Exception ex )
         {
-
+            Logger.app_log("ERRORE: " + ex.getMessage());
+            throw new SuperMarketException(ex);
         }
         return sb;
     }
@@ -220,11 +290,11 @@ public class BeanFactory
             default:
                 throw new SuperMarketException("ERRORE: uri '" + uri.toString() + "' non gestito nel BeanFactory!");
         }
-        do
+        /*do
         {
 
-        } while ( cursor.moveToNext() );
-        return null;
+        } while ( cursor.moveToNext() );*/
+        return output;
     }
 
     /**

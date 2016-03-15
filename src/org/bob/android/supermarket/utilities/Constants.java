@@ -67,7 +67,7 @@ public class Constants
      * Oggetto SimpleDateFormat per la formattazione in stringa della
      * sola data.
      */
-    public static final SimpleDateFormat GLOBAL_DATE_FORMAT = new SimpleDateFormat("d MMMMM yyyy");
+    public static final SimpleDateFormat GLOBAL_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 
     /**
      * Oggetto SimpleDateFormat per il parsing di una data da/in dd-MM-yyyy.

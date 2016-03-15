@@ -26,15 +26,14 @@ package org.bob.android.supermarket.gui;
 
 import android.app.AlertDialog;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.*;
 import org.bob.android.supermarket.R;
 import org.bob.android.supermarket.exceptions.SuperMarketException;
 import org.bob.android.supermarket.logger.Logger;
 import org.bob.android.supermarket.persistence.beans.BeanFactory;
 import org.bob.android.supermarket.persistence.beans.ExpenseBean;
 import org.bob.android.supermarket.persistence.beans.ShopBean;
+import org.bob.android.supermarket.utilities.Constants;
 import org.bob.android.supermarket.utilities.Utilities;
 
 import java.util.Date;
@@ -52,22 +51,27 @@ public class GuiUtils {
      */
     public static ExpenseBean getExpenseBeanFromView(View view) throws SuperMarketException
     {
-        ExpenseBean eb ;
+        ExpenseBean eb;
         try
         {
-            TextView tvId = (TextView) view.findViewById(R.id.dialog_update_expense_expense_id);
-            if ( tvId.getText() == null || tvId.getText().toString().isEmpty() )
+            TextView tvId               = ( TextView )             view.findViewById(R.id.dialog_update_expense_expense_id);
+            EditText etDate             = ( EditText )             view.findViewById(R.id.dialog_update_expense_et_date   );
+            AutoCompleteTextView etShop = ( AutoCompleteTextView ) view.findViewById(R.id.dialog_update_expense_actv_shop );
+            CheckBox             cbOpen = ( CheckBox )             view.findViewById(R.id.dialog_update_expense_flag_open );
+            ShopBean sb = new ShopBean(-1, etShop.getText().toString());
+            Date expDate = Utilities.checkDate(etDate.getText().toString());
+
+            if ( tvId.getTag(R.id.KEY_VIEW_TAG_EXPENSE ) == null )
             {
-                // new expense! Nothing to change!
-                eb = new ExpenseBean();
+                eb = new ExpenseBean(-1, expDate.getTime(), sb, -1.0);
             }
             else
             {
-                int expenseId = Integer.parseInt( tvId.getText().toString() );
-                ShopBean sb = BeanFactory.getShop(((AutoCompleteTextView) view.findViewById(R.id.dialog_update_expense_actv_shop)).getText().toString());
-                Date expenseDate = Utilities.checkDate(((EditText) view.findViewById(R.id.dialog_update_expense_et_date)).getText().toString());
-                eb = new ExpenseBean(expenseId, expenseDate.getTime(),sb, 0);
+                // Expense already exists! Changing datas . . .
+                eb = (ExpenseBean) tvId.getTag(R.id.KEY_VIEW_TAG_EXPENSE);
             }
+            eb.setShop(sb);
+            eb.setDate(expDate.getTime());
             return eb;
         }
         catch ( NullPointerException ex )
@@ -92,22 +96,27 @@ public class GuiUtils {
      */
     public static ExpenseBean getExpenseBeanFromView(AlertDialog view) throws SuperMarketException
     {
-        ExpenseBean eb ;
+        ExpenseBean eb;
         try
         {
-            TextView tvId = (TextView) view.findViewById(R.id.dialog_update_expense_expense_id);
-            if ( tvId.getText() == null || tvId.getText().toString().isEmpty() )
+            TextView tvId               = ( TextView )             view.findViewById(R.id.dialog_update_expense_expense_id);
+            EditText etDate             = ( EditText )             view.findViewById(R.id.dialog_update_expense_et_date   );
+            AutoCompleteTextView etShop = ( AutoCompleteTextView ) view.findViewById(R.id.dialog_update_expense_actv_shop );
+            CheckBox             cbOpen = ( CheckBox )             view.findViewById(R.id.dialog_update_expense_flag_open );
+            ShopBean sb = new ShopBean(-1, etShop.getText().toString());
+            Date expDate = Utilities.checkDate(etDate.getText().toString());
+
+            if ( tvId.getTag(R.id.KEY_VIEW_TAG_EXPENSE ) == null )
             {
-                // new expense! Nothing to change!
-                eb = new ExpenseBean();
+                eb = new ExpenseBean(-1, expDate.getTime(), sb, -1.0);
             }
             else
             {
-                int expenseId = Integer.parseInt( tvId.getText().toString() );
-                ShopBean sb = BeanFactory.getShop(((AutoCompleteTextView) view.findViewById(R.id.dialog_update_expense_actv_shop)).getText().toString());
-                Date expenseDate = Utilities.checkDate(((EditText) view.findViewById(R.id.dialog_update_expense_et_date)).getText().toString());
-                eb = new ExpenseBean(expenseId, expenseDate.getTime(),sb, 0);
+                // Expense already exists! Changing datas . . .
+                eb = (ExpenseBean) tvId.getTag(R.id.KEY_VIEW_TAG_EXPENSE);
             }
+            eb.setShop(sb);
+            eb.setDate(expDate.getTime());
             return eb;
         }
         catch ( NullPointerException ex )

@@ -102,10 +102,8 @@ public class OnExpenseUpdate implements DialogInterface.OnClickListener {
             ExpenseBean newExpBean = GuiUtils.getExpenseBeanFromView(di);
             boolean openAfterEdit = ((CheckBox) di.findViewById(R.id.dialog_update_expense_flag_open)).isChecked();
 
-            if (!newExpBean.equals(this.currentExpense)) {
-                this.updateExpense(newExpBean); // the newExpBean shares the id with the old
-                return;
-            }
+            this.updateExpense(newExpBean); // the newExpBean shares the id with the old
+
             // if openAfterEdit flag is checked, then the expense will be opened
             if (openAfterEdit) {
                 Logger.lfc_log("Opening expense details . . .");
@@ -127,22 +125,10 @@ public class OnExpenseUpdate implements DialogInterface.OnClickListener {
      */
     private void updateExpense(ExpenseBean eb)
     {
-        Logger.app_log("Trying to update expense with id '" + eb.getId() + "' . . .");
-        // Retreiving the shop and, eventually, inserting it . . .
+        //Logger.app_log("Trying to update expense with id '" + eb.getId() + "' . . .");
         try
         {
-            ShopBean sb = BeanFactory.getShop(eb.getShop().getDescription());
-            eb.setShop(sb);
-            if ( eb.getId() == -1 )
-            {
-                // Nuovo inserimento spesa
-                BeanFactory.insertBean(eb);
-            }
-            else
-            {
-                // Aggiornamento spesa esistente
-                BeanFactory.updateBean(eb);
-            }
+            BeanFactory.insertOrUpdateBean(eb);
             // Notifying change to the listview . . .
             this.frg.getListViewAdapter().add(eb);
         }
@@ -155,3 +141,4 @@ public class OnExpenseUpdate implements DialogInterface.OnClickListener {
     }
 
 }
+

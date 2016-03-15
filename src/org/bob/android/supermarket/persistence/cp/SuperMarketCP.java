@@ -296,6 +296,9 @@ public class SuperMarketCP extends ContentProvider
             case DBConstants.URI_INDICATOR_EXPENSE_ARTICLES:
             case DBConstants.URI_INDICATOR_EXPENSE_ARTICLES_COLLECTION: return ExpenseArticleBean.class;
 
+			case DBConstants.URI_INDICATOR_SHOPS:
+			case DBConstants.URI_INDICATOR_SHOPS_COLLECTION: return ShopBean.class;
+
             default: throw new IllegalArgumentException("Uri invalido: '" + uri.toString() + "' -- match: " + match + "!");
         }
     }

@@ -73,7 +73,7 @@ public class ATRetrieveExpenses extends AsyncTask<Void, ExpenseBean, ArrayList<B
         Cursor cursor = ApplicationSM.getInstance().getContentResolver().query(DBConstants.URI_JOIN_EXPENSE_SHOP, DBConstants.PROJECTION_EXPENSE_LIST, null, null, DBConstants.FIELD_EXPENSE_DATE);
         if (cursor == null || cursor.getCount() < 1)
         {
-            Logger.writeLog("Nessun contatto censito!");
+            Logger.writeLog("Nessuna spesa censita!");
             return null;
         }
 

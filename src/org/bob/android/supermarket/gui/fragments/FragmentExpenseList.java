@@ -33,6 +33,7 @@ import android.view.*;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 import org.bob.android.supermarket.ApplicationSM;
 import org.bob.android.supermarket.R;
 import org.bob.android.supermarket.exceptions.SuperMarketException;
@@ -73,12 +74,18 @@ public class FragmentExpenseList extends ListFragment
     private ListView expenseLV = null;
 
     /**
+     * Listener per la selezione della spesa nella lista.
+     */
+    private OnExpenseSelectedListener listener = null;
+
+    /**
      * Interfaccia di gestione selezione contatto sulla expandablelistview.
      */
     public interface OnExpenseSelectedListener
     {
         public void onExpenseSelected(ExpenseBean eb);
     }
+
 
     /* ********************************************************************* */
     /*                               CLASS METHODS                           */
@@ -119,6 +126,14 @@ public class FragmentExpenseList extends ListFragment
         View v = inflater.inflate(R.layout.fragment_expense_list, container);
         this.expenseLV = (ListView) v.findViewById(android.R.id.list);
         this.expenseLV.setAdapter(new AdapterExpenses(this.getActivity()));
+        this.expenseLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Logger.app_log("item selected!");
+            }
+
+        });
+        this.expenseLV.setOnItemLongClickListener(new OnExpenseLongClickListener(this));
         return v;
     }
 
@@ -156,6 +171,10 @@ public class FragmentExpenseList extends ListFragment
     public void onResume()
     {
         Logger.lfc_log( "ListFragment: onResume");
+        if ( this.getActivity() instanceof OnExpenseSelectedListener ) {
+            Logger.lfc_log("attivo il listener");
+            this.listener = (OnExpenseSelectedListener) this.getActivity();
+        }
         super.onResume();
     }
 
@@ -263,22 +282,26 @@ public class FragmentExpenseList extends ListFragment
 class OnExpenseLongClickListener implements OnItemLongClickListener
 {
 
+    private FragmentExpenseList frg;
 
+    public OnExpenseLongClickListener(FragmentExpenseList frg)
+    {
+        this.frg = frg;
+    }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l)
     {
-        try {
-            ExpenseBean expenseToRemove = GuiUtils.getExpenseBeanFromView(view);
-            ApplicationSM.getInstance().getContentResolver().delete(
-                            DBConstants.URI_EXPENSES_CONTENT,
-                            DBConstants.FIELD_DEFAULT_ID + " = ?",
-                            new String [] { String.valueOf(expenseToRemove.getId()) });
-        }
+        //try {
+        TextView idView = (TextView) view.findViewById(R.id.view_exp_header_id);
+            ExpenseBean expenseToRemove = (ExpenseBean)  idView.getTag(R.id.KEY_VIEW_TAG_EXPENSE); //GuiUtils.getExpenseBeanFromView(view);
+            AlertDialog deleteExpDialog = DialogFactory.deleteExpenseDialog(frg, expenseToRemove);
+            deleteExpDialog.show();
+        /*}
         catch ( SuperMarketException ex )
         {
 
-        }
+        }*/
         return false;
     }
 }

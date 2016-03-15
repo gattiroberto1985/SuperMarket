@@ -33,6 +33,7 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import org.bob.android.supermarket.R;
+import org.bob.android.supermarket.gui.dialogs.interfaces.OnExpenseDelete;
 import org.bob.android.supermarket.gui.dialogs.interfaces.OnExpenseUpdate;
 import org.bob.android.supermarket.gui.fragments.FragmentExpenseList;
 import org.bob.android.supermarket.gui.watchers.DateTextWatcher;
@@ -84,6 +85,32 @@ public class DialogFactory {
                 .setPositiveButton(android.R.string.ok, oeu)
                         // Setting KO button . . .
                 .setNegativeButton(android.R.string.cancel, oeu);
+
+        return builder.create();
+    }
+
+
+    public static final AlertDialog deleteExpenseDialog(Fragment frg, ExpenseBean expense)
+    {
+
+        // Checking if expense is to delete . . .
+        if ( expense == null )
+        {
+            Logger.app_log("No expense to delete!");
+            return null;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(frg.getActivity());
+        // Setting alert dialog by cascade calling of 'set' methods . . .
+        OnExpenseDelete oed = new OnExpenseDelete( (FragmentExpenseList) frg, expense);
+        builder
+                        // Setting message . . .
+                .setMessage(R.string.DIALOG_DELETE_EXPENSE_MESSAGE)
+                        // Setting title . . .
+                .setTitle(R.string.DIALOG_DELETE_EXPENSE_TITLE)
+                        // Setting OK button . . .
+                .setPositiveButton(android.R.string.ok, oed)
+                        // Setting KO button . . .
+                .setNegativeButton(android.R.string.cancel, oed);
 
         return builder.create();
     }

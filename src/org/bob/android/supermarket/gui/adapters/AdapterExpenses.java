@@ -95,6 +95,27 @@ public class AdapterExpenses extends ArrayAdapter<ExpenseBean>
     }
 
     @Override
+    public void add(ExpenseBean object) {
+        this.expensesList.add(object);
+        this.notifyDataSetChanged();
+    }
+
+    @Override
+    public void remove(ExpenseBean object) {
+        int i = -1;
+        for ( ExpenseBean eb : this.expensesList )
+        {
+            i++;
+            if ( eb.getId() == object.getId() )
+            {
+                this.expensesList.remove(i);
+                break;
+            }
+        }
+        this.notifyDataSetChanged();
+    }
+
+    @Override
     public int getPosition(ExpenseBean item)
     {
         if ( this.expensesList == null )
@@ -119,18 +140,18 @@ public class AdapterExpenses extends ArrayAdapter<ExpenseBean>
             vh = new VHExpense();
             convertView = ApplicationSM.getLayoutInflater().inflate(R.layout.view_expense_header, parent, false);
             vh.expId = (TextView) convertView.findViewById(R.id.view_exp_header_id);
-            vh.expId.setTag(expense);
-            vh.cost = (EditText) convertView.findViewById(R.id.view_exp_header_cost);
-            vh.shop = (EditText) convertView.findViewById(R.id.view_exp_header_shop);
-            vh.shop.setTag(expense.getShop());
-            vh.date = (EditText) convertView.findViewById(R.id.view_exp_header_date);
-            convertView.setTag(vh);
+            vh.expId.setTag(R.id.KEY_VIEW_TAG_EXPENSE, expense);
+            vh.cost = (TextView) convertView.findViewById(R.id.view_exp_header_cost);
+            vh.shop = (TextView) convertView.findViewById(R.id.view_exp_header_shop);
+            vh.shop.setTag(R.id.KEY_VIEW_TAG_SHOP, expense.getShop());
+            vh.date = (TextView) convertView.findViewById(R.id.view_exp_header_date);
+            convertView.setTag(R.id.KEY_VIEW_HOLDER, vh);
         }
-        vh = (VHExpense) convertView.getTag();
+        vh = (VHExpense) convertView.getTag(R.id.KEY_VIEW_HOLDER);
         vh.expId.setText(String.valueOf(expense.getId()));
         vh.cost.setText(String.valueOf(expense.getCost()));
-        vh.shop.setText(String.valueOf(   ( (ShopBean)vh.shop.getTag()).getId()));
-        vh.date.setText( Constants.DM_FORMATTER.format( expense.getFormattedDate() ) );
+        vh.shop.setText(String.valueOf(   ( (ShopBean)vh.shop.getTag(R.id.KEY_VIEW_TAG_SHOP)).getDescription()));
+        vh.date.setText( Constants.GLOBAL_DATE_FORMAT.format( expense.getFormattedDate() ) );
         return convertView;
     }
 
