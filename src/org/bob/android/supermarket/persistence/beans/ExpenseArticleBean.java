@@ -71,7 +71,16 @@ public class ExpenseArticleBean extends BaseSMBean
     public ExpenseArticleBean(int id, ExpenseBean e, ArticleBean a, double cost, double quantity)
     {
         this.setId(id);
-        this.setExpenseId(e.getId());
+        this.setExpenseId(e != null ? e.getId() : -1);
+        this.setArticle(a);
+        this.setArticleCost(cost);
+        this.setArticleQuantity(quantity);
+    }
+
+    public ExpenseArticleBean(int id, int expenseId, ArticleBean a, double cost, double quantity)
+    {
+        this.setId(id);
+        this.setExpenseId(expenseId);
         this.setArticle(a);
         this.setArticleCost(cost);
         this.setArticleQuantity(quantity);

@@ -31,6 +31,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import org.bob.android.supermarket.logger.Logger;
 import org.bob.android.supermarket.persistence.beans.*;
+import org.bob.android.supermarket.test.TestPersistence;
 import org.bob.android.supermarket.utilities.DBConstants;
 
 import java.sql.SQLException;
@@ -79,9 +80,19 @@ public class SMDBHelper extends OrmLiteSqliteOpenHelper
             TableUtils.createTable(cs, ArticleBean.class);
             TableUtils.createTable(cs, ExpenseBean.class);
             TableUtils.createTable(cs, ExpenseArticleBean.class);
-            db.execSQL("CREATE VIEW " + DBConstants.VIEW_EXPENSE_SHOP_NAME + " AS " + DBConstants.VIEW_EXPENSE_SHOP);
+            // Creating views . . .
+            db.execSQL("CREATE VIEW " +
+                        DBConstants.VIEW_EXPENSE_SHOP_NAME +
+                        " AS " +
+                        DBConstants.VIEW_EXPENSE_SHOP);
+
+            db.execSQL("CREATE VIEW " +
+                        DBConstants.VIEW_EXPENSE_ARTICLE_FULL_DETAILS_NAME +
+                        " AS " +
+                        DBConstants.VIEW_EXPENSE_ARTICLE_FULL_DETAILS);
+
             Logger.dtb_log("Calling test data insert...");
-            //TestPersistence.createTestDatas();
+            TestPersistence.createTestDatas();
         }
         catch (SQLException e)
         {
@@ -93,9 +104,10 @@ public class SMDBHelper extends OrmLiteSqliteOpenHelper
     @Override
     public void onUpgrade(SQLiteDatabase db, ConnectionSource cs, int i, int i2)
     {
-        try
+        this.onCreate(db, cs);
+            /*try
         {
-            Logger.dtb_log("Trying to upgrade the database");
+           Logger.dtb_log("Trying to upgrade the database");
             Logger.dtb_log("Dropping tables...");
             TableUtils.dropTable(cs, CategoryBean.class, true);
             TableUtils.dropTable(cs, BrandBean.class, true);
@@ -109,6 +121,6 @@ public class SMDBHelper extends OrmLiteSqliteOpenHelper
         {
             Logger.dtb_log("ERROR: caught sqlexception: " + e.getMessage());
             throw new RuntimeException(e);
-        }
+        }*/
     }
 }

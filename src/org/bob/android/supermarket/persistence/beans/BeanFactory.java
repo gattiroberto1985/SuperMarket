@@ -287,6 +287,13 @@ public class BeanFactory
                 } while ( cursor.moveToNext() );
                 break;
             }
+            case DBConstants.URI_INDICATOR_JOIN_EXPENSE_ARTICLE:
+            {
+                do {
+                    output.add(BeanFactory.createExpenseArticleBean(cursor));
+                } while ( cursor.moveToNext() );
+                break;
+            }
             default:
                 throw new SuperMarketException("ERRORE: uri '" + uri.toString() + "' non gestito nel BeanFactory!");
         }
@@ -347,4 +354,50 @@ public class BeanFactory
             throw new SuperMarketException("Impossibile recuperare il negozio: " + ex.getMessage(), ex);
         }
     }
+
+    private static ExpenseArticleBean createExpenseArticleBean(Cursor cursor) throws SuperMarketException
+    {
+        try
+        {
+            /*
+                        DBConstants.FIELD_DEFAULT_ID                       ,
+            DBConstants.FIELD_EXPENSE_ARTICLE_EXPENSE_ID       ,
+            DBConstants.FIELD_EXPENSE_ARTICLE_ARTICLE_ID       ,
+            DBConstants.FIELD_EXPENSE_ARTICLE_ARTICLE_COST     ,
+            DBConstants.FIELD_EXPENSE_ARTICLE_ARTICLE_QUANTITY ,
+            DBConstants.FIELD_ARTICLE_DESCRIPTION              ,
+            DBConstants.FIELD_ARTICLE_BRAND_ID                 ,
+            DBConstants.FIELD_BRAND_DESCRIPTION                ,
+            DBConstants.FIELD_ARTICLE_CATEGORY_ID              ,
+            DBConstants.FIELD_CATEGORY_DESCRIPTION
+             */
+            // Getting ids...
+            int expenseArticleId = cursor.getInt(cursor.getColumnIndex(DBConstants.FIELD_DEFAULT_ID));
+            int articleId        = cursor.getInt(cursor.getColumnIndex(DBConstants.FIELD_EXPENSE_ARTICLE_ARTICLE_ID));
+            int brandId          = cursor.getInt(cursor.getColumnIndex(DBConstants.FIELD_ARTICLE_BRAND_ID));
+            int categoryId       = cursor.getInt(cursor.getColumnIndex(DBConstants.FIELD_ARTICLE_CATEGORY_ID));
+            int expenseId        = cursor.getInt(cursor.getColumnIndex(DBConstants.FIELD_EXPENSE_ARTICLE_EXPENSE_ID));
+
+            // Getting string...
+            String articleDesc  = cursor.getString(cursor.getColumnIndex(DBConstants.FIELD_ARTICLE_DESCRIPTION));
+            String brandDesc    = cursor.getString(cursor.getColumnIndex(DBConstants.FIELD_BRAND_DESCRIPTION));
+            String categoryDesc = cursor.getString(cursor.getColumnIndex(DBConstants.FIELD_CATEGORY_DESCRIPTION));
+
+            // Getting expense article details . . .
+            double articleCost = cursor.getDouble(cursor.getColumnIndex(DBConstants.FIELD_EXPENSE_ARTICLE_ARTICLE_COST));
+            double articleQnty = cursor.getDouble(cursor.getColumnIndex(DBConstants.FIELD_EXPENSE_ARTICLE_ARTICLE_QUANTITY));
+
+            CategoryBean cat = new CategoryBean(categoryId, categoryDesc, Constants.DEFAULT_CHAR);
+            BrandBean brn = new BrandBean(brandId, brandDesc);
+            ArticleBean art = new ArticleBean(articleId, brn, cat, articleDesc);
+            return new ExpenseArticleBean(expenseArticleId, expenseId, art, articleCost, articleQnty);
+        }
+        catch ( Exception ex )
+        {
+            Logger.app_log("ERRORE: eccezione in fase di creazione articolo di spesa da cursore!", Logger.Level.ERROR);
+            Logger.app_log("Messaggio: " + ex.getMessage(), Logger.Level.ERROR);
+            throw new SuperMarketException("Impossibile recuperare l'articolo di spesa! Messaggio interno: " + ex.getMessage(), ex);
+        }
+    }
+
 }

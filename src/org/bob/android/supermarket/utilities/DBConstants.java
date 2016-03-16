@@ -38,7 +38,7 @@ public class DBConstants
 
     public final static String AUTHORITY     = "org.bob.android.app.supermarket";
     public final static String DATABASE_NAME = "supermarket_v2.db";
-    public final static int DATABASE_VERSION = 1;
+    public final static int DATABASE_VERSION = 2;
 
 
     /* ********************************************************************* */
@@ -118,13 +118,16 @@ public class DBConstants
 
 
     public final static String[] PROJECTION_EXPENSE_ARTICLE_LIST = new String[] {
-                FIELD_DEFAULT_ID,                           // id della spesa
-                FIELD_ARTICLE_CATEGORY_ID,                  // id della categoria articolo
-                FIELD_CATEGORY_DESCRIPTION,                 // descrizione categoria
-                FIELD_ARTICLE_BRAND_ID,                     // id del brand dell'articolo
-                FIELD_BRAND_DESCRIPTION,                    // descrizione del brand
-                FIELD_EXPENSE_ARTICLE_ARTICLE_COST,         // costo dell'articolo
-                FIELD_EXPENSE_ARTICLE_ARTICLE_QUANTITY      // quantita' dell'articolo
+            DBConstants.FIELD_DEFAULT_ID                       ,
+            DBConstants.FIELD_EXPENSE_ARTICLE_EXPENSE_ID       ,
+            DBConstants.FIELD_EXPENSE_ARTICLE_ARTICLE_ID       ,
+            DBConstants.FIELD_EXPENSE_ARTICLE_ARTICLE_COST     ,
+            DBConstants.FIELD_EXPENSE_ARTICLE_ARTICLE_QUANTITY ,
+            DBConstants.FIELD_ARTICLE_DESCRIPTION              ,
+            DBConstants.FIELD_ARTICLE_BRAND_ID                 ,
+            DBConstants.FIELD_BRAND_DESCRIPTION                ,
+            DBConstants.FIELD_ARTICLE_CATEGORY_ID              ,
+            DBConstants.FIELD_CATEGORY_DESCRIPTION
     };
 
     /* ********************************************************************* */
@@ -138,6 +141,29 @@ public class DBConstants
                                                    ", s." + DBConstants.FIELD_SHOP_DESCRIPTION                                           +
                                                    " FROM " + DBConstants.TABLE_EXPENSES_NAME + " e JOIN " + DBConstants.TABLE_SHOPS_NAME + " s"  +
                                                    " ON e." + DBConstants.FIELD_EXPENSE_SHOP_ID + " = s." + DBConstants.FIELD_DEFAULT_ID;
+
+
+    public static final String VIEW_EXPENSE_ARTICLE_FULL_DETAILS_NAME = "expense_article_details";
+
+    public static final String VIEW_EXPENSE_ARTICLE_FULL_DETAILS =
+        "SELECT " +
+            "ea." + DBConstants.FIELD_DEFAULT_ID                       + ", " +
+            "ea." + DBConstants.FIELD_EXPENSE_ARTICLE_EXPENSE_ID       + ", " +
+            "ea." + DBConstants.FIELD_EXPENSE_ARTICLE_ARTICLE_ID       + ", " +
+            "ea." + DBConstants.FIELD_EXPENSE_ARTICLE_ARTICLE_COST     + ", " +
+            "ea." + DBConstants.FIELD_EXPENSE_ARTICLE_ARTICLE_QUANTITY + ", " +
+            "a."  + DBConstants.FIELD_ARTICLE_DESCRIPTION              + ", " +
+            "a."  + DBConstants.FIELD_ARTICLE_BRAND_ID                 + ", " +
+            "b."  + DBConstants.FIELD_BRAND_DESCRIPTION                + ", " +
+            "a."  + DBConstants.FIELD_ARTICLE_CATEGORY_ID              + ", " +
+            "c."  + DBConstants.FIELD_CATEGORY_DESCRIPTION             + " "  +
+        "FROM " + DBConstants.TABLE_EXPENSE_ARTICLES_NAME + " ea " +
+        "JOIN " + DBConstants.TABLE_ARTICLES_NAME   + " a " +
+            "ON ea." + DBConstants.FIELD_EXPENSE_ARTICLE_ARTICLE_ID + " = a." + DBConstants.FIELD_DEFAULT_ID + " " +
+        "JOIN " + DBConstants.TABLE_BRANDS_NAME     + " b " +
+            "ON a."  + DBConstants.FIELD_ARTICLE_BRAND_ID           + " = b." + DBConstants.FIELD_DEFAULT_ID + " " +
+        "JOIN " + DBConstants.TABLE_CATEGORIES_NAME + " c " +
+            "ON a."  + DBConstants.FIELD_ARTICLE_CATEGORY_ID        + " = c." + DBConstants.FIELD_DEFAULT_ID;
 
 
 
@@ -187,6 +213,7 @@ public class DBConstants
     // uri indicator
     public final static int URI_INDICATOR_EXPENSE_ARTICLES_COLLECTION = 40;
     public final static int URI_INDICATOR_EXPENSE_ARTICLES = 41;
+    public final static int URI_INDICATOR_JOIN_EXPENSE_ARTICLE = 42;
     // uri
     public final static Uri URI_EXPENSE_ARTICLES_CONTENT= Uri.parse("content://" + AUTHORITY + "/" + DBConstants.TABLE_EXPENSE_ARTICLES_NAME);
     // content type
@@ -243,7 +270,7 @@ public class DBConstants
         // join tra expenses e shop
         sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.TABLE_EXPENSES_NAME + "_" + DBConstants.TABLE_SHOPS_NAME, DBConstants.URI_INDICATOR_EXPENSES_JOIN_SHOP);
         // join tra articles ed expenseArticle
-        //sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.TABLE_ARTICLES_NAME + "_" + DBConstants.TABLE_EXPENSE_ARTICLES_NAME, DBConstants.URI_INDICATOR_ARTICLES_JOIN_EXPENSE_ARTICLE);
+        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.TABLE_EXPENSES_NAME + "_" + DBConstants.TABLE_ARTICLES_NAME, DBConstants.URI_INDICATOR_JOIN_EXPENSE_ARTICLE);
 
         // Aggiungo gli uri relativi alle singole righe delle tabelle
         sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.TABLE_ARTICLES_NAME + "/#"        , DBConstants.URI_INDICATOR_ARTICLES);

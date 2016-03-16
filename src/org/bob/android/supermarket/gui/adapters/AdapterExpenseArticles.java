@@ -32,7 +32,9 @@ import android.widget.TextView;
 import org.bob.android.supermarket.ApplicationSM;
 import org.bob.android.supermarket.R;
 import org.bob.android.supermarket.logger.Logger;
+import org.bob.android.supermarket.persistence.beans.BaseSMBean;
 import org.bob.android.supermarket.persistence.beans.ExpenseArticleBean;
+import org.bob.android.supermarket.persistence.beans.ExpenseBean;
 
 import java.util.ArrayList;
 
@@ -72,7 +74,7 @@ public class AdapterExpenseArticles extends ArrayAdapter<ExpenseArticleBean>
 	{
 		super(context, R.layout.view_expense_list_item);
 	}
-	
+
     /* ********************************************************************* */
     /*                           OVERRIDDEN METHODS                          */
     /* ********************************************************************* */
@@ -171,5 +173,31 @@ public class AdapterExpenseArticles extends ArrayAdapter<ExpenseArticleBean>
 		super.insert(eab, position);
 		this.expenseArticleList.add(position, eab);
 	}
+
+
+
+    /* ********************************************************************* */
+    /*                              CLASS METHODS                            */
+    /* ********************************************************************* */
+
+    /**
+     * Il metodo esegue la traduzione di una lista di oggetti generica in una
+     * lista di ugual dimensione necessaria all'adapter per il popolamento della
+     * listview.
+     * @param list
+     */
+    public void translateAndSetList(ArrayList<BaseSMBean> list)
+    {
+        Logger.writeLog("Traduzione lista negli oggetti opportuni");
+        if ( list == null || list.size() == 0 )
+        {
+            Logger.app_log("WARNING: Nessun oggetto nella lista!", Logger.Level.WARNING);
+            return;
+        }
+        this.expenseArticleList = new ArrayList<ExpenseArticleBean>(list.size());
+        for ( BaseSMBean bean : list )
+            this.expenseArticleList.add((ExpenseArticleBean) bean);
+        Logger.app_log("Lista popolata.");
+    }
 
 }

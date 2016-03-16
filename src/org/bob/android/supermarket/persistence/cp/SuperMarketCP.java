@@ -480,6 +480,8 @@ public class SuperMarketCP extends ContentProvider
 		{
 			case DBConstants.URI_INDICATOR_EXPENSES_JOIN_SHOP:
 				return this.queryExpenseJoinShop(uri, projection, whereClauses, whereValues, sortOrder);
+			case DBConstants.URI_INDICATOR_JOIN_EXPENSE_ARTICLE:
+				return this.queryExpenseArticlesDetails(uri, projection, whereClauses, whereValues, sortOrder);
 			default:
 				throw new RuntimeException("ERROR!");
 		}
@@ -491,6 +493,16 @@ public class SuperMarketCP extends ContentProvider
 		queryBuilder.setTables(DBConstants.VIEW_EXPENSE_SHOP_NAME);
 		SQLiteDatabase db = this.dbh.getReadableDatabase();
 		sortOrder = DBConstants.FIELD_EXPENSE_DATE + " ASC";
+		Cursor cursor = queryBuilder.query(db, projection, whereClauses, whereValues, null, null, sortOrder);
+		return cursor;
+	}
+
+	private Cursor queryExpenseArticlesDetails(Uri uri, String[] projection, String whereClauses, String[] whereValues, String sortOrder)
+	{
+		SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+		queryBuilder.setTables(DBConstants.VIEW_EXPENSE_ARTICLE_FULL_DETAILS_NAME);
+		SQLiteDatabase db = this.dbh.getReadableDatabase();
+		sortOrder = DBConstants.FIELD_DEFAULT_ID + " ASC";
 		Cursor cursor = queryBuilder.query(db, projection, whereClauses, whereValues, null, null, sortOrder);
 		return cursor;
 	}

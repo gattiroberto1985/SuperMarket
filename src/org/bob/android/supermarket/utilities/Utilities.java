@@ -67,7 +67,7 @@ public final class Utilities
     {
         // nextInt is normally exclusive of the top value,
         // so add 1 to make it inclusive
-        int randomNum = Utilities.rand.nextInt((max - min) + 1) + min;
+        int randomNum = Utilities.rand.nextInt((max - min)) + min;
         return randomNum;
     }
 

@@ -87,7 +87,7 @@ public class TestPersistence
         {
             ShopBean object = new ShopBean(i + 1, "Negozio " + ( i + 1 ));
             Logger.tst_log("|--> Creating shop '" + object.toString() + "' on database...");
-            ApplicationSM.getInstance().getContentResolver().insert(DBConstants.URI_CATEGORIES_CONTENT, object.getContentValues());
+            ApplicationSM.getInstance().getContentResolver().insert(DBConstants.URI_SHOPS_CONTENT, object.getContentValues());
             shops.add(object);
         }
         Logger.tst_log("shops created!");
@@ -126,7 +126,7 @@ public class TestPersistence
                 ExpenseArticleBean eab = new ExpenseArticleBean(
                         totalIndex++,
                         eb,
-                        articles.get(Utilities.randInt(0, articles.size()) ),
+                        articles.get(Utilities.randInt(0, articles.size() ) ),
                         (double) Utilities.randInt(1,100) / (double) Utilities.randInt(1,20),
                         Utilities.randInt(1,6)
                 );

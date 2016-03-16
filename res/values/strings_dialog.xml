@@ -31,6 +31,9 @@
     <string name="DIALOG_DELETE_EXPENSE_MESSAGE">Proceed with deletion of expense?</string>
     <string name="DIALOG_DELETE_EXPENSE_TITLE"  >Expense deleting</string>
 
+    <string name="PROGRESS_DIALOG_LOAD_EXPENSE_ARTICLE_TITLE">Loading articles...</string>
+    <string name="PROGRESS_DIALOG_LOAD_EXPENSE_ARTICLE_TEXT">Loading articles, please wait...</string>
+
     <string name="STR_SET_SHOP"               >Select a shop . . .</string>
     <string name="STR_SET_DATE"               >Select a date . . .</string>
     <string name="STR_OPEN_EXPENSE_AFTER_EDIT">Open expense on OK </string>

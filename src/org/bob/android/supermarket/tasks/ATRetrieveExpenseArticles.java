@@ -27,35 +27,58 @@ package org.bob.android.supermarket.tasks;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.widget.ListAdapter;
+import android.widget.Toast;
 import org.bob.android.supermarket.ApplicationSM;
+import org.bob.android.supermarket.exceptions.SuperMarketException;
+import org.bob.android.supermarket.gui.adapters.AdapterExpenseArticles;
 import org.bob.android.supermarket.logger.Logger;
+import org.bob.android.supermarket.persistence.beans.BaseSMBean;
+import org.bob.android.supermarket.persistence.beans.BeanFactory;
+import org.bob.android.supermarket.persistence.beans.ExpenseArticleBean;
 import org.bob.android.supermarket.persistence.beans.ExpenseBean;
 import org.bob.android.supermarket.utilities.DBConstants;
+
+import java.util.ArrayList;
 
 /**
  * Created by roberto.gatti on 21/01/2015.
  */
-public class ATRetrieveExpenseArticles extends AsyncTask<Void, Void, Void>
+public class ATRetrieveExpenseArticles extends AsyncTask<Void, ExpenseArticleBean, ArrayList<BaseSMBean>>
 {
+
+    private AdapterExpenseArticles alAdapter = null;
 
     private ExpenseBean eb;
 
-    private boolean task_canceled = false;
+    private boolean failedTask = false;
 
-    public ATRetrieveExpenseArticles(ExpenseBean eb)
+    private String failureMessage = "";
+
+    private int expenseId = -1;
+
+    public ATRetrieveExpenseArticles(ListAdapter aa, int expenseId)
     {
-        this.eb = eb;
+        this.alAdapter = (AdapterExpenseArticles) aa;
+        this.expenseId = expenseId;
     }
 
     @Override
-    protected void onPostExecute(Void aVoid)
+    protected void onPostExecute(ArrayList<BaseSMBean> list)
     {
-        super.onPostExecute(aVoid);
+        Logger.writeLog("Dimensione lista: " + (list == null ? "NULL" : String.valueOf(list.size()) ) );
+        Toast.makeText(ApplicationSM.getInstance().getApplicationContext(), "Articoli recuperati con successo!", Toast.LENGTH_SHORT).show();
+
+        this.alAdapter.translateAndSetList(list);
+        this.alAdapter.notifyDataSetChanged();
     }
 
     @Override
-    protected void onProgressUpdate(Void... values) {
-        super.onProgressUpdate(values);
+    protected void onProgressUpdate(ExpenseArticleBean... values) {
+        if ( values == null )
+            if ( this.failedTask )
+                Toast.makeText(ApplicationSM.getInstance().getApplicationContext(), "Task recupero dati fallito: " + this.failureMessage, Toast.LENGTH_LONG).show();
+
     }
 
     @Override
@@ -65,15 +88,43 @@ public class ATRetrieveExpenseArticles extends AsyncTask<Void, Void, Void>
     }
 
     @Override
-    protected Void doInBackground(Void... voids)
+    protected ArrayList<BaseSMBean> doInBackground(Void... voids)
     {
+        ArrayList<BaseSMBean> output = new ArrayList<BaseSMBean>(0);
         Logger.app_log("Recupero i dati della spesa selezionata");
         Cursor cursor = ApplicationSM.getInstance().getContentResolver().query(
-                Uri.parse(DBConstants.URI_JOIN_EXPENSE_ARTICLE + "/e=" + this.eb.getId()),
+                DBConstants.URI_JOIN_EXPENSE_ARTICLE,
                 DBConstants.PROJECTION_EXPENSE_ARTICLE_LIST,
-                DBConstants.FIELD_DEFAULT_ID + " = ? ",
-                new String[] { String.valueOf(this.eb.getId()) },
+                DBConstants.FIELD_EXPENSE_ARTICLE_EXPENSE_ID + " = ? ",
+                new String[] { String.valueOf(this.expenseId) },
                 DBConstants.FIELD_EXPENSE_ARTICLE_ARTICLE_ID);
-        return null;
+
+        if ( cursor == null || cursor.getCount() < 1 )
+        {
+            Logger.writeLog("Nessun articolo di spesa!");
+            return null;
+        }
+
+        if (cursor.moveToFirst())
+        {
+            Logger.writeLog("MoveToFirst sul cursor ha restituito false: nessun dato presente");
+            return null;
+        }
+
+        try
+        {
+             output = BeanFactory.createBulkSMBean(DBConstants.URI_JOIN_EXPENSE_ARTICLE, cursor);
+            //return null;
+        }
+        catch (SuperMarketException ex)
+        {
+            Logger.app_log("ERRORE: si e' verificato un errore nel recupero degli articoli di spesa!");
+            Logger.app_log("      |--> messaggio eccezione: " + ex.getMessage());
+            this.failedTask = true;
+            this.failureMessage = ex.getMessage();
+            this.publishProgress(null);
+        }
+        cursor.close();
+        return output;
     }
 }

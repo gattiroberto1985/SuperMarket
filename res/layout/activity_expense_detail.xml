@@ -36,7 +36,7 @@
         android:id="@+id/frg_expense_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        class="org.bob.android.supermarket.gui.fragments.ExpenseDetailFragment" />
+        class="org.bob.android.supermarket.gui.fragments.FragmentExpenseDetail" />
 
 
 </LinearLayout>

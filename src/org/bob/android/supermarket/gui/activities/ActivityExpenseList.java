@@ -27,12 +27,15 @@ package org.bob.android.supermarket.gui.activities;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.*;
 import org.bob.android.supermarket.R;
+import org.bob.android.supermarket.gui.fragments.FragmentExpenseDetail;
 import org.bob.android.supermarket.gui.fragments.FragmentExpenseList;
 import org.bob.android.supermarket.logger.Logger;
 import org.bob.android.supermarket.persistence.beans.ExpenseBean;
+import org.bob.android.supermarket.utilities.Constants;
 
 /**
  * Main Activity dell'applicazione.
@@ -173,6 +176,20 @@ public class ActivityExpenseList extends Activity implements FragmentExpenseList
     @Override
     public void onExpenseSelected(ExpenseBean eb) {
         Logger.lfc_log("Opening expense '" + eb.toString() + ". . .");
+
+        // Verifico la presenza del fragment di dettaglio
+        FragmentExpenseDetail fed = (FragmentExpenseDetail) this.getFragmentManager().findFragmentById(R.id.frg_expense_detail);
+        if ( fed == null || ! fed.isVisible() )
+        {
+            // Portrait
+            Intent intent = new Intent(this.getApplicationContext(), ActivityExpenseDetails.class);
+            intent.putExtra(Constants.KEY_SELECTED_EXPENSE, eb);
+            this.startActivity(intent);
+        }
+        else
+        {
+            fed.setSelectedExpense(eb);
+        }
     }
 
 }

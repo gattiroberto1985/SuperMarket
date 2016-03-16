@@ -83,7 +83,7 @@ public class FragmentExpenseList extends ListFragment
      */
     public interface OnExpenseSelectedListener
     {
-        public void onExpenseSelected(ExpenseBean eb);
+        void onExpenseSelected(ExpenseBean eb);
     }
 
 
@@ -106,6 +106,14 @@ public class FragmentExpenseList extends ListFragment
     /* ********************************************************************* */
 
     @Override
+    public void onListItemClick(ListView l, View v, int position, long id)
+    {
+        Logger.app_log("item selected!");
+        ExpenseBean eb = (ExpenseBean) l.getAdapter().getItem(position);
+        this.listener.onExpenseSelected(eb);
+    }
+
+    @Override
     public void onAttach(Activity activity)
     {
         Logger.lfc_log( "ListFragment: onAttach");
@@ -126,13 +134,7 @@ public class FragmentExpenseList extends ListFragment
         View v = inflater.inflate(R.layout.fragment_expense_list, container);
         this.expenseLV = (ListView) v.findViewById(android.R.id.list);
         this.expenseLV.setAdapter(new AdapterExpenses(this.getActivity()));
-        this.expenseLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Logger.app_log("item selected!");
-            }
-
-        });
+        this.expenseLV.setClickable(true);
         this.expenseLV.setOnItemLongClickListener(new OnExpenseLongClickListener(this));
         return v;
     }

@@ -146,7 +146,7 @@ public class ActivityExpenseDetails extends Activity
         ActionBar actionbar = getActionBar();
         actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 
-        setContentView(R.layout.activity_expense_list);
+        setContentView(R.layout.activity_expense_detail);
     }
 
 	@Override
