@@ -30,7 +30,10 @@
               android:layout_height="match_parent">
 
     <!-- Includo la vista con i dettagli della spesa -->
-    <include layout="@layout/view_expense_header" />
+    <include
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/view_expense_header" />
 
     <!-- Lista degli articoli di spesa -->
     <ListView

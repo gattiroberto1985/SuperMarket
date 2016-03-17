@@ -95,7 +95,7 @@ public class ATRetrieveExpenseArticles extends AsyncTask<Void, ExpenseArticleBea
         Cursor cursor = ApplicationSM.getInstance().getContentResolver().query(
                 DBConstants.URI_JOIN_EXPENSE_ARTICLE,
                 DBConstants.PROJECTION_EXPENSE_ARTICLE_LIST,
-                DBConstants.FIELD_EXPENSE_ARTICLE_EXPENSE_ID + " = ? ",
+                DBConstants.FIELD_EXPENSE_ARTICLE_EXPENSE_ID,
                 new String[] { String.valueOf(this.expenseId) },
                 DBConstants.FIELD_EXPENSE_ARTICLE_ARTICLE_ID);
 
@@ -105,7 +105,7 @@ public class ATRetrieveExpenseArticles extends AsyncTask<Void, ExpenseArticleBea
             return null;
         }
 
-        if (cursor.moveToFirst())
+        if (!cursor.moveToFirst())
         {
             Logger.writeLog("MoveToFirst sul cursor ha restituito false: nessun dato presente");
             return null;

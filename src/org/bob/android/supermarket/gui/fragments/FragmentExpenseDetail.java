@@ -72,6 +72,16 @@ public class FragmentExpenseDetail extends ListFragment
 	/*                             CLASS METHODS                             */
 	/* ********************************************************************* */
 
+	public void setExpenseArticlesLoaded()
+	{
+		if ( this.pd != null )
+		{
+			this.pd.dismiss();
+			this.pd = null;
+		}
+		this.flagLoadedExpenseArticles = true;
+	}
+
 	public void setSelectedExpense(ExpenseBean eb)
 	{
 		this.expenseSelected = eb;
@@ -114,6 +124,7 @@ public class FragmentExpenseDetail extends ListFragment
 	{
         Logger.lfc_log("Creazione view del fragment di dettaglio spesa");
 		View v =  inflater.inflate(R.layout.fragment_expense_detail, container, false);
+
         this.articlesLV = (ListView) v.findViewById(android.R.id.list);
 
 		if ( savedInstanceState != null )
@@ -126,11 +137,16 @@ public class FragmentExpenseDetail extends ListFragment
 			Logger.lfc_log("Recupero la spesa dall'intent dell'activity...");
 			this.expenseSelected = (ExpenseBean) this.getActivity().getIntent().getSerializableExtra(Constants.KEY_SELECTED_EXPENSE);
 		}
+		// Setting data of expense header
+		( (TextView) v.findViewById(R.id.view_exp_header_cost)).setText(String.valueOf(this.expenseSelected.getCost())                     );
+		( (TextView) v.findViewById(R.id.view_exp_header_shop)).setText(String.valueOf(this.expenseSelected.getShop().getDescription())    );
+		( (TextView) v.findViewById(R.id.view_exp_header_date)).setText(Constants.GLOBAL_DATE_FORMAT.format(this.expenseSelected.getDate()));
+
 		Logger.lfc_log("Avvio thread di recupero articoli di spesa...");
         this.articlesLV.setAdapter(new AdapterExpenseArticles(this.getActivity()));
         this.articlesLV.setClickable(true);
-        //this.task = new ATRetrieveExpenseArticles(this.articlesLV.getAdapter());
-		//this.task.execute();
+        /*this.task = new ATRetrieveExpenseArticles(this.articlesLV.getAdapter());
+		this.task.execute();*/
 		return v;
 	}
 
@@ -142,12 +158,12 @@ public class FragmentExpenseDetail extends ListFragment
 		this.setRetainInstance(true);
 		if ( ! this.flagLoadedExpenseArticles )
 		{
-			Logger.writeLog("Starting asynctask to retrieve datas from db....");
+			/*Logger.writeLog("Starting asynctask to retrieve datas from db....");
 			this.pd = ProgressDialog.show(
 					this.getActivity(),
 					this.getString(R.string.PROGRESS_DIALOG_LOAD_EXPENSE_ARTICLE_TITLE),
 					this.getString(R.string.PROGRESS_DIALOG_LOAD_EXPENSE_ARTICLE_TEXT),
-					true);
+					true);*/
 			this.task = new ATRetrieveExpenseArticles(this.articlesLV.getAdapter(), this.expenseSelected.getId());
 			task.execute();
 		}

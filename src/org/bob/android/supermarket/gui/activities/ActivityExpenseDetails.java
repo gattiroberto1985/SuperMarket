@@ -34,10 +34,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import org.bob.android.supermarket.R;
+import org.bob.android.supermarket.gui.fragments.FragmentExpenseDetail;
 import org.bob.android.supermarket.logger.Logger;
 
 public class ActivityExpenseDetails extends Activity
 {
+
+    public void setExpenseArticlesLoaded()
+    {
+        FragmentExpenseDetail ed = (FragmentExpenseDetail) this.getFragmentManager().findFragmentById(R.id.frg_expense_detail);
+        ed.setExpenseArticlesLoaded();
+    }
 
     /* ********************************************************************* */
     /*                     ACTIVITY LIFECYCLE OVERRIDE                       */

@@ -77,9 +77,10 @@ public class ATRetrieveExpenses extends AsyncTask<Void, ExpenseBean, ArrayList<B
             return null;
         }
 
-        if (cursor.moveToFirst())
+        if (!cursor.moveToFirst())
         {
             Logger.writeLog("MoveToFirst sul cursor ha restituito false: nessun dato presente");
+            return null;
         }
 
         try

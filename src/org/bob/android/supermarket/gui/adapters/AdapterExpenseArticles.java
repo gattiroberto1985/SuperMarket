@@ -31,6 +31,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import org.bob.android.supermarket.ApplicationSM;
 import org.bob.android.supermarket.R;
+import org.bob.android.supermarket.gui.activities.ActivityExpenseDetails;
 import org.bob.android.supermarket.logger.Logger;
 import org.bob.android.supermarket.persistence.beans.BaseSMBean;
 import org.bob.android.supermarket.persistence.beans.ExpenseArticleBean;
@@ -90,6 +91,7 @@ public class AdapterExpenseArticles extends ArrayAdapter<ExpenseArticleBean>
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
 	    View rowView = convertView;
+		ViewHolder viewHolder;
         ExpenseArticleBean ea;
         if ( position >= 0 )
         {
@@ -102,8 +104,8 @@ public class AdapterExpenseArticles extends ArrayAdapter<ExpenseArticleBean>
         }
 	    if (rowView == null) 
 	    {
-	        rowView = ApplicationSM.getLayoutInflater().inflate(R.layout.view_expense_detail_item, null);
-	        ViewHolder viewHolder = new ViewHolder();
+	        rowView = ApplicationSM.getLayoutInflater().inflate(R.layout.view_expense_detail_item, parent, false);
+			viewHolder = new ViewHolder();
 	        viewHolder.category = (TextView) rowView.findViewById(R.id.view_exp_item_category);
 	        viewHolder.brand	 = (TextView) rowView.findViewById(R.id.view_exp_item_brand);
 	        viewHolder.description = (TextView) rowView.findViewById(R.id.view_exp_item_desc);
@@ -111,17 +113,17 @@ public class AdapterExpenseArticles extends ArrayAdapter<ExpenseArticleBean>
 	        viewHolder.quantity = (TextView) rowView.findViewById(R.id.view_exp_item_quantity);
 	        viewHolder.totalCost = (TextView) rowView.findViewById(R.id.view_exp_item_total_price);
             // Setting tags...
-            viewHolder.category.setTag(ea.getArticle().getCategory());
-            viewHolder.brand.setTag(ea.getArticle().getBrand());
-	        rowView.setTag(viewHolder);
+            viewHolder.category.setTag(R.id.KEY_VIEW_TAG_CATEGORY, ea.getArticle().getCategory());
+            viewHolder.brand.setTag(R.id.KEY_VIEW_TAG_BRAND, ea.getArticle().getBrand());
+	        rowView.setTag(R.id.KEY_VIEW_HOLDER, viewHolder);
 	    }
-	    ViewHolder holder = (ViewHolder) rowView.getTag();
-	    holder.category.setText(ea.getArticle().getCategory().getDescription());
-	    holder.brand.setText(ea.getArticle().getBrand().getDescription());
-	    holder.description.setText(ea.getArticle().getDescription());
-	    holder.unitCost.setText(String.valueOf(ea.getArticleCost()));
-	    holder.quantity.setText(String.valueOf(ea.getArticleQuantity()));
-	    holder.totalCost.setText(this.getContext().getString(R.string.STR_DEFAULT_TOTAL_PRICE) + String.format("%.2f", ea.getFullCost()));
+		viewHolder = (ViewHolder) rowView.getTag(R.id.KEY_VIEW_HOLDER);
+		viewHolder.category.setText(ea.getArticle().getCategory().getDescription());
+		viewHolder.brand.setText(ea.getArticle().getBrand().getDescription());
+		viewHolder.description.setText(ea.getArticle().getDescription());
+		viewHolder.unitCost.setText(String.valueOf(ea.getArticleCost()));
+		viewHolder.quantity.setText(String.valueOf(ea.getArticleQuantity()));
+		viewHolder.totalCost.setText(this.getContext().getString(R.string.STR_DEFAULT_TOTAL_PRICE) + String.format("%.2f", ea.getFullCost()));
 	    return rowView;
 	}
 	
@@ -174,6 +176,19 @@ public class AdapterExpenseArticles extends ArrayAdapter<ExpenseArticleBean>
 		this.expenseArticleList.add(position, eab);
 	}
 
+	@Override
+	public void clear()
+	{
+		this.expenseArticleList.clear();
+		this.notifyDataSetChanged();
+	}
+
+	@Override
+	public void notifyDataSetChanged()
+	{
+		((ActivityExpenseDetails) this.getContext()).setExpenseArticlesLoaded();
+		super.notifyDataSetChanged();
+	}
 
 
     /* ********************************************************************* */

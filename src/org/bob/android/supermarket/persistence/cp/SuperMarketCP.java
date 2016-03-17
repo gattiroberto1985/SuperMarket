@@ -476,15 +476,21 @@ public class SuperMarketCP extends ContentProvider
 	 */
 	public Cursor queryNonClassURI(Uri uri, String[] projection, String whereClauses, String[] whereValues, String sortOrder)
 	{
+		Cursor output = null;
 		switch ( DBConstants.sURIMatcher.match(uri) )
 		{
-			case DBConstants.URI_INDICATOR_EXPENSES_JOIN_SHOP:
-				return this.queryExpenseJoinShop(uri, projection, whereClauses, whereValues, sortOrder);
-			case DBConstants.URI_INDICATOR_JOIN_EXPENSE_ARTICLE:
-				return this.queryExpenseArticlesDetails(uri, projection, whereClauses, whereValues, sortOrder);
+			case DBConstants.URI_INDICATOR_EXPENSES_JOIN_SHOP: {
+				output = this.queryExpenseJoinShop(uri, projection, whereClauses, whereValues, sortOrder);
+				break;
+			}
+			case DBConstants.URI_INDICATOR_JOIN_EXPENSE_ARTICLE: {
+				output = this.queryExpenseArticlesDetails(uri, projection, whereClauses, whereValues, sortOrder);
+				break;
+			}
 			default:
 				throw new RuntimeException("ERROR!");
 		}
+		return output;
 	}
 
 	public Cursor queryExpenseJoinShop(Uri uri, String[] projection, String whereClauses, String[] whereValues, String sortOrder)
@@ -501,9 +507,10 @@ public class SuperMarketCP extends ContentProvider
 	{
 		SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
 		queryBuilder.setTables(DBConstants.VIEW_EXPENSE_ARTICLE_FULL_DETAILS_NAME);
+		queryBuilder.appendWhere(whereClauses + " = " + whereValues[0]);
 		SQLiteDatabase db = this.dbh.getReadableDatabase();
 		sortOrder = DBConstants.FIELD_DEFAULT_ID + " ASC";
-		Cursor cursor = queryBuilder.query(db, projection, whereClauses, whereValues, null, null, sortOrder);
+		Cursor cursor = queryBuilder.query(db, projection, null, null, null, null, sortOrder);
 		return cursor;
 	}
 

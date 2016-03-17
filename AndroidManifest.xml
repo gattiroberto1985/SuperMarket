@@ -60,7 +60,7 @@
         <!-- Dichiarazione activity dettaglio spesa -->
         <activity
                 android:name=".gui.activities.ActivityExpenseDetails"
-                android:label="@string/EMPTY_STRING"/>
+                android:label="@string/app_name"/>
 
         <!-- Dichiarazione activity bozza spesa -->
         <!--activity android:name=".gui.activities.ActivityExpenseDraft" /-->

@@ -55,7 +55,6 @@ public class ActivityExpenseList extends Activity implements FragmentExpenseList
         el.setExpensesLoaded();
     }
 
-
     /* ********************************************************************* */
     /*                     ACTIVITY LIFECYCLE OVERRIDE                       */
     /* ********************************************************************* */

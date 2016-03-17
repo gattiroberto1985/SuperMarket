@@ -40,7 +40,8 @@
     <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/view_exp_header_date"/>
+            android:id="@+id/view_exp_header_date"
+            android:hint="@string/HINT_FRG_EXP_LIST_FILTER_DATE"/>
 
 
     <!-- Negozio della spesa -->
@@ -50,7 +51,8 @@
     <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/view_exp_header_shop"/>
+            android:id="@+id/view_exp_header_shop"
+            android:hint="@string/HINT_FRG_EXP_LIST_FILTER_SHOPNAME"/>
 
 
     <!-- Importo totale della spesa -->
@@ -58,5 +60,6 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/view_exp_header_cost"/>
+
 
 </LinearLayout>

@@ -277,7 +277,7 @@ public class BeanFactory
         Logger.app_log("Procedo con l'identificazione del tipo di oggetto da creare");
         ArrayList<BaseSMBean> output = new ArrayList<BaseSMBean>(cursor.getCount());
 
-        switch ( DBConstants.sURIMatcher.match(DBConstants.URI_JOIN_EXPENSE_SHOP) )
+        switch ( DBConstants.sURIMatcher.match(uri) )
         {
             case DBConstants.URI_INDICATOR_EXPENSES_JOIN_SHOP:
             {
