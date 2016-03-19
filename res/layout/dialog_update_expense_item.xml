@@ -27,6 +27,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:id="@+id/dialog_update_expense_article_view">
+
+
+    <!-- Category Actv -->
+    <AutoCompleteTextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="@string/STR_DEFAULT_CATEGORY"
+          android:id="@+id/dialog_update_expense_article_category"/>
+
+
+    <!-- Brand -->
+    <AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/STR_DEFAULT_BRAND"
+            android:id="@+id/dialog_update_expense_article_brand"/>
+
+    <!-- Article -->
+    <AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/STR_DEFAULT_DESCRIPTION"
+            android:id="@+id/dialog_update_expense_article_article"/>
+
+    <!-- Quantity -->
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/STR_DEFAULT_QUANTITY"
+            android:id="@+id/dialog_update_expense_article_quantity"
+            android:inputType="numberDecimal"/>
+
+    <!-- Price -->
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/STR_DEFAULT_QUANTITY"
+            android:id="@+id/dialog_update_expense_article_cost"
+            android:inputType="numberDecimal"/>
 
 </LinearLayout>

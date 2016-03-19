@@ -33,11 +33,14 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import org.bob.android.supermarket.R;
+import org.bob.android.supermarket.gui.dialogs.interfaces.OnExpenseArticleUpdate;
 import org.bob.android.supermarket.gui.dialogs.interfaces.OnExpenseDelete;
 import org.bob.android.supermarket.gui.dialogs.interfaces.OnExpenseUpdate;
+import org.bob.android.supermarket.gui.fragments.FragmentExpenseDetail;
 import org.bob.android.supermarket.gui.fragments.FragmentExpenseList;
 import org.bob.android.supermarket.gui.watchers.DateTextWatcher;
 import org.bob.android.supermarket.logger.Logger;
+import org.bob.android.supermarket.persistence.beans.ExpenseArticleBean;
 import org.bob.android.supermarket.persistence.beans.ExpenseBean;
 
 /**
@@ -48,6 +51,54 @@ import org.bob.android.supermarket.persistence.beans.ExpenseBean;
  * Created by roberto on 25/01/15.
  */
 public class DialogFactory {
+
+
+    public static final AlertDialog updateExpenseArticleDialog(Fragment frg, ExpenseArticleBean eab)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(frg.getActivity());
+        // Getting layout inflater and creating view with correct layout . . .
+        LayoutInflater inflater = frg.getActivity().getLayoutInflater();
+        // Creating view for the dialog . . .
+        View dialogView = inflater.inflate(R.layout.dialog_update_expense_item, null);
+        // Setting views . . .
+        AutoCompleteTextView actvCategory = (AutoCompleteTextView) dialogView.findViewById(R.id.dialog_update_expense_article_category);
+        AutoCompleteTextView actvBrand    = (AutoCompleteTextView) dialogView.findViewById(R.id.dialog_update_expense_article_brand);
+        AutoCompleteTextView actvArticle  = (AutoCompleteTextView) dialogView.findViewById(R.id.dialog_update_expense_article_article);
+        EditText             etCost       = (AutoCompleteTextView) dialogView.findViewById(R.id.dialog_update_expense_article_cost);
+        EditText             etQnty       = (AutoCompleteTextView) dialogView.findViewById(R.id.dialog_update_expense_article_quantity);
+
+        // Checking if expense article is to modify . . .
+        if ( eab != null )
+        {
+            Logger.app_log("Editing article! Setting values of fields based on selected item. . .");
+            actvArticle .setText(eab.getArticle()              .getDescription());
+            actvCategory.setText(eab.getArticle().getCategory().getDescription());
+            actvBrand   .setText(eab.getArticle().getBrand()   .getDescription());
+            etCost      .setText(String.valueOf(eab.getArticleCost()    )       );
+            etQnty      .setText(String.valueOf(eab.getArticleQuantity())       );
+
+            actvArticle.setTag(R.id.KEY_VIEW_TAG_ARTICLE, eab.getArticle());
+            actvCategory.setTag(R.id.KEY_VIEW_TAG_CATEGORY, eab.getArticle().getCategory());
+            actvBrand.setTag(R.id.KEY_VIEW_TAG_BRAND, eab.getArticle().getBrand());
+            dialogView.setTag(R.id.KEY_VIEW_TAG_EXPENSE_ARTICLE, eab);
+
+        }
+        // Setting alert dialog by cascade calling of 'set' methods . . .
+        OnExpenseArticleUpdate oeau = new OnExpenseArticleUpdate( (FragmentExpenseDetail) frg, eab);
+        builder
+                // Setting view . . .
+                .setView(dialogView)
+                        // Setting message . . .
+                .setMessage(R.string.DIALOG_UPDATE_EXPENSE_ARTICLE_TEXT)
+                        // Setting title . . .
+                .setTitle(R.string.DIALOG_UPDATE_EXPENSE_ARTICLE_TITLE)
+                        // Setting OK button . . .
+                .setPositiveButton(android.R.string.ok, oeau)
+                        // Setting KO button . . .
+                .setNegativeButton(android.R.string.cancel, oeau);
+
+        return builder.create();
+    }
 
     /**
      * Shows a dialog for create/update an expense selected.

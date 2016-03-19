@@ -25,14 +25,13 @@
 package org.bob.android.supermarket.gui;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.view.View;
 import android.widget.*;
 import org.bob.android.supermarket.R;
 import org.bob.android.supermarket.exceptions.SuperMarketException;
 import org.bob.android.supermarket.logger.Logger;
-import org.bob.android.supermarket.persistence.beans.BeanFactory;
-import org.bob.android.supermarket.persistence.beans.ExpenseBean;
-import org.bob.android.supermarket.persistence.beans.ShopBean;
+import org.bob.android.supermarket.persistence.beans.*;
 import org.bob.android.supermarket.utilities.Constants;
 import org.bob.android.supermarket.utilities.Utilities;
 
@@ -42,6 +41,63 @@ import java.util.Date;
  * Created by roberto.gatti on 08/03/2016.
  */
 public class GuiUtils {
+
+
+    /**
+     * The method retreive from a dialog an expenseBean. The previous ExpenseArticleBean should be attached
+     * as tag to the dialog view!
+     *
+     * @param view
+     * @return
+     * @throws SuperMarketException
+     */
+    public static ExpenseArticleBean getExpenseArticleBeanFromView(AlertDialog view) throws SuperMarketException
+    {
+        try
+        {
+            // Setting views . . .
+            View                 container    =                        view.findViewById(R.id.dialog_update_expense_article_view);
+            AutoCompleteTextView actvCategory = (AutoCompleteTextView) view.findViewById(R.id.dialog_update_expense_article_category);
+            AutoCompleteTextView actvBrand    = (AutoCompleteTextView) view.findViewById(R.id.dialog_update_expense_article_brand);
+            AutoCompleteTextView actvArticle  = (AutoCompleteTextView) view.findViewById(R.id.dialog_update_expense_article_article);
+            EditText             etCost       = (EditText)             view.findViewById(R.id.dialog_update_expense_article_cost);
+            EditText             etQnty       = (EditText)             view.findViewById(R.id.dialog_update_expense_article_quantity);
+
+            ExpenseArticleBean eab = (ExpenseArticleBean) container   .getTag(R.id.KEY_VIEW_TAG_EXPENSE_ARTICLE);
+            CategoryBean cat       = (CategoryBean)       actvCategory.getTag(R.id.KEY_VIEW_TAG_CATEGORY       );
+            BrandBean brn          = (BrandBean)          actvBrand   .getTag(R.id.KEY_VIEW_TAG_BRAND          );
+            ArticleBean art        = (ArticleBean)        actvArticle .getTag(R.id.KEY_VIEW_TAG_ARTICLE        );
+
+            if ( cat == null )
+            {
+                cat = new CategoryBean(-1, actvCategory.getText().toString(), Constants.DEFAULT_CHAR );
+            }
+
+            if ( brn == null )
+            {
+                brn = new BrandBean(-1, actvBrand.getText().toString() );
+            }
+
+            if ( art == null )
+            {
+                art = new ArticleBean(-1,brn, cat, actvArticle.getText().toString());
+            }
+
+            return new ExpenseArticleBean(
+                                eab.getId(),
+                                eab.getExpenseId(),
+                                art,
+                                Double.valueOf(etCost.getText().toString()),
+                                Double.valueOf(etQnty.getText().toString()));
+
+        }
+        catch ( Exception ex )
+        {
+            Logger.app_log("ERROR: invalid data for expense bean!", Logger.Level.ERROR);
+            Logger.app_log("      " + ex.getMessage() );
+            throw new SuperMarketException("ERROR: invalid data for expense bean: '" + ex.getMessage() + "'");
+        }
+    }
 
     /**
      * Gets an expense bean from a view.

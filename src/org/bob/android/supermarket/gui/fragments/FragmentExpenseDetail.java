@@ -38,6 +38,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import org.bob.android.supermarket.R;
 import org.bob.android.supermarket.gui.adapters.AdapterExpenseArticles;
+import org.bob.android.supermarket.gui.dialogs.DialogFactory;
 import org.bob.android.supermarket.logger.Logger;
 import org.bob.android.supermarket.persistence.beans.ExpenseArticleBean;
 import org.bob.android.supermarket.persistence.beans.ExpenseBean;
@@ -102,6 +103,14 @@ public class FragmentExpenseDetail extends ListFragment
 	 * --------------------------------------------------------------------- */
 
 	@Override
+	public void onListItemClick(ListView l, View v, int position, long id)
+	{
+		Logger.app_log("Article selected!");
+		ExpenseArticleBean eab = (ExpenseArticleBean) l.getAdapter().getItem(position);
+		DialogFactory.updateExpenseArticleDialog(eab, this);
+	}
+
+	@Override
 	public void onAttach(Activity activity)
 	{
 		super.onAttach(activity);
@@ -126,7 +135,7 @@ public class FragmentExpenseDetail extends ListFragment
 		View v =  inflater.inflate(R.layout.fragment_expense_detail, container, false);
 
         this.articlesLV = (ListView) v.findViewById(android.R.id.list);
-
+		this.articlesLV.setOnItemClickListener(new OnArticleSelectedListener());
 		if ( savedInstanceState != null )
 		{
             Logger.lfc_log("Recupero la spesa dal savedBundle...");

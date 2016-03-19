@@ -54,7 +54,7 @@ public class AdapterExpenses extends ArrayAdapter<ExpenseBean>
 	 * @author elbobehi
 	 *
 	 */
-	static class VHExpense
+	private class VHExpense
 	{
         public TextView expId;
 	    public TextView date;

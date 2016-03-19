@@ -24,8 +24,99 @@
 
 package org.bob.android.supermarket.gui.dialogs.interfaces;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.widget.Toast;
+import org.bob.android.supermarket.R;
+import org.bob.android.supermarket.exceptions.SuperMarketException;
+import org.bob.android.supermarket.gui.GuiUtils;
+import org.bob.android.supermarket.gui.fragments.FragmentExpenseDetail;
+import org.bob.android.supermarket.persistence.beans.BeanFactory;
+import org.bob.android.supermarket.persistence.beans.ExpenseArticleBean;
+
 /**
  * Created by roberto.gatti on 07/03/2016.
  */
-public class OnExpenseArticleUpdate {
+public class OnExpenseArticleUpdate implements DialogInterface.OnClickListener {
+
+    private ExpenseArticleBean oldEab;
+
+    private FragmentExpenseDetail frg;
+
+    public OnExpenseArticleUpdate(FragmentExpenseDetail frg, ExpenseArticleBean eab)
+    {
+        this.frg    = frg;
+        this.oldEab = eab;
+    }
+
+
+    /* ********************************************************************* */
+    /*                         IMPLEMENTS METHODS                            */
+    /* ********************************************************************* */
+
+    @Override
+    public void onClick(DialogInterface dialogInterface, int buttonPressed) {
+        switch (buttonPressed) {
+            case DialogInterface.BUTTON_POSITIVE: {
+                this.handleEdit((AlertDialog) dialogInterface);
+                break;
+            }
+            case DialogInterface.BUTTON_NEGATIVE:
+                break;
+            default:
+                //Log.e(TAG, "Scelta non valida!");
+        }
+        return;
+    }
+
+
+
+
+    /* ********************************************************************* */
+    /*                             CLASS METHODS                             */
+    /* ********************************************************************* */
+
+
+    /**
+     * @param di
+     */
+    public void handleEdit(AlertDialog di)
+    {
+        try {
+
+            ExpenseArticleBean newExpBean = GuiUtils.getExpenseArticleBeanFromView(di);
+            this.updateExpenseArticle(newExpBean); // the newExpBean shares the id with the old
+            // ((ActivityExpenseList) this.frg.getActivity()).onExpenseSelected(newExpBean);
+        }
+        catch (SuperMarketException ex )
+        {
+
+        }
+    }
+
+
+    /**
+     * This method exec the update or insert of a new expense in the database.
+     *
+     * @param eb the expense to update/create.
+     *
+     */
+    private void updateExpense(ExpenseArticleBean eab)
+    {
+        //Logger.app_log("Trying to update expense with id '" + eb.getId() + "' . . .");
+        try
+        {
+            // Not going on BeanFactory cause the expense will be updated manually/by exiting from the
+            // expense!
+            //BeanFactory.insertOrUpdateBean(eab);
+            // Notifying change to the listview . . .
+            this.frg.getListView().getAdapter().add(eab);
+        }
+        catch ( SuperMarketException ex )
+        {
+            Toast.makeText(this.frg.getActivity(), "ERRORE: " + ex.getMessage(), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+    }    
 }
