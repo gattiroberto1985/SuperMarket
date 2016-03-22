@@ -30,6 +30,7 @@ import android.widget.Toast;
 import org.bob.android.supermarket.R;
 import org.bob.android.supermarket.exceptions.SuperMarketException;
 import org.bob.android.supermarket.gui.GuiUtils;
+import org.bob.android.supermarket.gui.adapters.AdapterExpenseArticles;
 import org.bob.android.supermarket.gui.fragments.FragmentExpenseDetail;
 import org.bob.android.supermarket.persistence.beans.BeanFactory;
 import org.bob.android.supermarket.persistence.beans.ExpenseArticleBean;
@@ -96,27 +97,24 @@ public class OnExpenseArticleUpdate implements DialogInterface.OnClickListener {
 
 
     /**
-     * This method exec the update or insert of a new expense in the database.
+     * This method exec the update or insert of a new expense in the list.
      *
-     * @param eb the expense to update/create.
+     * @param eab the expense articled modified/inserted
      *
      */
-    private void updateExpense(ExpenseArticleBean eab)
+    private void updateExpenseArticle(ExpenseArticleBean eab)
     {
-        //Logger.app_log("Trying to update expense with id '" + eb.getId() + "' . . .");
-        try
+        AdapterExpenseArticles aea = (AdapterExpenseArticles) this.frg.getListView().getAdapter();
+
+        int position2update = aea.getPosition(this.oldEab);
+
+        if ( aea.getPosition( eab ) != -1 )
         {
-            // Not going on BeanFactory cause the expense will be updated manually/by exiting from the
-            // expense!
-            //BeanFactory.insertOrUpdateBean(eab);
-            // Notifying change to the listview . . .
-            this.frg.getListView().getAdapter().add(eab);
+            aea.add( eab );
         }
-        catch ( SuperMarketException ex )
-        {
-            Toast.makeText(this.frg.getActivity(), "ERRORE: " + ex.getMessage(), Toast.LENGTH_LONG).show();
-            return;
-        }
+        else
+            Toast.makeText(this.frg.getActivity(), R.string.TOAST_DOUBLE_EXPENSE_ARTICLE, Toast.LENGTH_LONG).show();
+
 
     }    
 }

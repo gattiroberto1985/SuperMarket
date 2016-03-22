@@ -64,8 +64,8 @@ public class DialogFactory {
         AutoCompleteTextView actvCategory = (AutoCompleteTextView) dialogView.findViewById(R.id.dialog_update_expense_article_category);
         AutoCompleteTextView actvBrand    = (AutoCompleteTextView) dialogView.findViewById(R.id.dialog_update_expense_article_brand);
         AutoCompleteTextView actvArticle  = (AutoCompleteTextView) dialogView.findViewById(R.id.dialog_update_expense_article_article);
-        EditText             etCost       = (AutoCompleteTextView) dialogView.findViewById(R.id.dialog_update_expense_article_cost);
-        EditText             etQnty       = (AutoCompleteTextView) dialogView.findViewById(R.id.dialog_update_expense_article_quantity);
+        EditText             etCost       = (EditText)             dialogView.findViewById(R.id.dialog_update_expense_article_cost);
+        EditText             etQnty       = (EditText)             dialogView.findViewById(R.id.dialog_update_expense_article_quantity);
 
         // Checking if expense article is to modify . . .
         if ( eab != null )

@@ -107,7 +107,7 @@ public class FragmentExpenseDetail extends ListFragment
 	{
 		Logger.app_log("Article selected!");
 		ExpenseArticleBean eab = (ExpenseArticleBean) l.getAdapter().getItem(position);
-		DialogFactory.updateExpenseArticleDialog(eab, this);
+		DialogFactory.updateExpenseArticleDialog(this, eab).show();
 	}
 
 	@Override

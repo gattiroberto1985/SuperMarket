@@ -256,7 +256,7 @@ public class BeanFactory
         Logger.dtb_log("Traduzione oggetto da riga di cursore");
         switch ( DBConstants.sURIMatcher.match(uri) )
         {
-            case DBConstants.URI_INDICATOR_EXPENSES_JOIN_SHOP: return BeanFactory.createExpenseShopBean(cursor);
+            case DBConstants.URI_INDICATOR_VIEW_EXPENSE_SHOP: return BeanFactory.createExpenseShopBean(cursor);
             default: return null;
         }
     }
@@ -279,7 +279,7 @@ public class BeanFactory
 
         switch ( DBConstants.sURIMatcher.match(uri) )
         {
-            case DBConstants.URI_INDICATOR_EXPENSES_JOIN_SHOP:
+            case DBConstants.URI_INDICATOR_VIEW_EXPENSE_SHOP:
             {
                 do
                 {
@@ -287,7 +287,7 @@ public class BeanFactory
                 } while ( cursor.moveToNext() );
                 break;
             }
-            case DBConstants.URI_INDICATOR_JOIN_EXPENSE_ARTICLE:
+            case DBConstants.URI_INDICATOR_VIEW_EXPENSE_ARTICLES:
             {
                 do {
                     output.add(BeanFactory.createExpenseArticleBean(cursor));

@@ -479,11 +479,11 @@ public class SuperMarketCP extends ContentProvider
 		Cursor output = null;
 		switch ( DBConstants.sURIMatcher.match(uri) )
 		{
-			case DBConstants.URI_INDICATOR_EXPENSES_JOIN_SHOP: {
+			case DBConstants.URI_INDICATOR_VIEW_EXPENSE_SHOP: {
 				output = this.queryExpenseJoinShop(uri, projection, whereClauses, whereValues, sortOrder);
 				break;
 			}
-			case DBConstants.URI_INDICATOR_JOIN_EXPENSE_ARTICLE: {
+			case DBConstants.URI_INDICATOR_VIEW_EXPENSE_ARTICLES: {
 				output = this.queryExpenseArticlesDetails(uri, projection, whereClauses, whereValues, sortOrder);
 				break;
 			}

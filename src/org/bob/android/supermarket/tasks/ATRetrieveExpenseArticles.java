@@ -93,7 +93,7 @@ public class ATRetrieveExpenseArticles extends AsyncTask<Void, ExpenseArticleBea
         ArrayList<BaseSMBean> output = new ArrayList<BaseSMBean>(0);
         Logger.app_log("Recupero i dati della spesa selezionata");
         Cursor cursor = ApplicationSM.getInstance().getContentResolver().query(
-                DBConstants.URI_JOIN_EXPENSE_ARTICLE,
+                DBConstants.URI_VIEW_EXPENSE_ARTICLES,
                 DBConstants.PROJECTION_EXPENSE_ARTICLE_LIST,
                 DBConstants.FIELD_EXPENSE_ARTICLE_EXPENSE_ID,
                 new String[] { String.valueOf(this.expenseId) },
@@ -113,7 +113,7 @@ public class ATRetrieveExpenseArticles extends AsyncTask<Void, ExpenseArticleBea
 
         try
         {
-             output = BeanFactory.createBulkSMBean(DBConstants.URI_JOIN_EXPENSE_ARTICLE, cursor);
+             output = BeanFactory.createBulkSMBean(DBConstants.URI_VIEW_EXPENSE_ARTICLES, cursor);
             //return null;
         }
         catch (SuperMarketException ex)

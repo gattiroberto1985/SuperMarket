@@ -133,12 +133,25 @@ public class AdapterExpenseArticles extends ArrayAdapter<ExpenseArticleBean>
 	@Override
 	public int getCount()
 	{
-		return this.expenseArticleList == null ? 0 : this.expenseArticleList.size();
+		return this.expenseArticleList.size();
+	}
+
+	@Override
+	public ExpenseArticleBean getItem(int position)
+	{
+		return this.expenseArticleList.get(position);
+	}
+
+	@Override
+	public long getItemId(int position)
+	{
+		return super.getItemId(position);
 	}
 
 	@Override
 	public void add(ExpenseArticleBean eab)
 	{
+		// [ ADD_EXPENSE_ARTICLE ]
 		super.add(eab);
 		Logger.writeLog("Aggiungo articolo di spesa: " + eab.toString());
 		this.expenseArticleList.add(eab);
@@ -189,6 +202,24 @@ public class AdapterExpenseArticles extends ArrayAdapter<ExpenseArticleBean>
 		((ActivityExpenseDetails) this.getContext()).setExpenseArticlesLoaded();
 		super.notifyDataSetChanged();
 	}
+
+    @Override
+    public int getPosition(ExpenseArticleBean item)
+    {
+        // return -1 if the item is not existing
+        if ( item == null )
+            return -1;
+
+        // Checking the list for the item . . .
+        for ( int i = 0; i < this.expenseArticleList.size() ; i++)
+        {
+            if ( this.expenseArticleList.get(i).getArticle().equals(item.getArticle()) )
+                return i;
+        }
+
+        // . . . if item is not in list, then return -1
+        return -1;
+    }
 
 
     /* ********************************************************************* */

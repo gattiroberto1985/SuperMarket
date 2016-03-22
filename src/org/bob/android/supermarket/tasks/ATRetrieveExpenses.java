@@ -70,7 +70,7 @@ public class ATRetrieveExpenses extends AsyncTask<Void, ExpenseBean, ArrayList<B
     @Override
     protected ArrayList<BaseSMBean> doInBackground(Void... voids)
     {
-        Cursor cursor = ApplicationSM.getInstance().getContentResolver().query(DBConstants.URI_JOIN_EXPENSE_SHOP, DBConstants.PROJECTION_EXPENSE_LIST, null, null, DBConstants.FIELD_EXPENSE_DATE);
+        Cursor cursor = ApplicationSM.getInstance().getContentResolver().query(DBConstants.URI_VIEW_EXPENSE_SHOP, DBConstants.PROJECTION_EXPENSE_LIST, null, null, DBConstants.FIELD_EXPENSE_DATE);
         if (cursor == null || cursor.getCount() < 1)
         {
             Logger.writeLog("Nessuna spesa censita!");
@@ -85,7 +85,7 @@ public class ATRetrieveExpenses extends AsyncTask<Void, ExpenseBean, ArrayList<B
 
         try
         {
-            return BeanFactory.createBulkSMBean(DBConstants.URI_JOIN_EXPENSE_SHOP, cursor);
+            return BeanFactory.createBulkSMBean(DBConstants.URI_VIEW_EXPENSE_SHOP, cursor);
         }
         catch (SuperMarketException ex)
         {

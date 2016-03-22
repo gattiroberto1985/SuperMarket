@@ -91,6 +91,11 @@ public class SMDBHelper extends OrmLiteSqliteOpenHelper
                         " AS " +
                         DBConstants.VIEW_EXPENSE_ARTICLE_FULL_DETAILS);
 
+            db.execSQL("CREATE VIEW " +
+                        DBConstants.VIEW_ARTICLE_PRICE_BY_EXPENSE_NAME +
+                        " AS " +
+                        DBConstants.VIEW_ARTICLE_PRICE_BY_EXPENSE);
+
             Logger.dtb_log("Calling test data insert...");
             TestPersistence.createTestDatas();
         }

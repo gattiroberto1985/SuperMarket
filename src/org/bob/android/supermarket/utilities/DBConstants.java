@@ -38,7 +38,7 @@ public class DBConstants
 
     public final static String AUTHORITY     = "org.bob.android.app.supermarket";
     public final static String DATABASE_NAME = "supermarket_v2.db";
-    public final static int DATABASE_VERSION = 2;
+    public final static int DATABASE_VERSION = 3;
 
 
     /* ********************************************************************* */
@@ -134,8 +134,10 @@ public class DBConstants
     /*                            VIEW DEFINITIONS                           */
     /* ********************************************************************* */
 
+    /**
+     * View with the complete expense + shop datas for each expense.
+     */
     public static final String VIEW_EXPENSE_SHOP_NAME = "expense_shop";
-
     public static final String VIEW_EXPENSE_SHOP = "SELECT e." + DBConstants.FIELD_DEFAULT_ID + ", e." + DBConstants.FIELD_EXPENSE_DATE  +
                                                    ", e." + DBConstants.FIELD_EXPENSE_COST + ", e." + DBConstants.FIELD_EXPENSE_SHOP_ID  +
                                                    ", s." + DBConstants.FIELD_SHOP_DESCRIPTION                                           +
@@ -143,8 +145,10 @@ public class DBConstants
                                                    " ON e." + DBConstants.FIELD_EXPENSE_SHOP_ID + " = s." + DBConstants.FIELD_DEFAULT_ID;
 
 
+    /**
+     * View with the full data of the articles (description, brand and category) of the expenses.
+     */
     public static final String VIEW_EXPENSE_ARTICLE_FULL_DETAILS_NAME = "expense_article_details";
-
     public static final String VIEW_EXPENSE_ARTICLE_FULL_DETAILS =
         "SELECT " +
             "ea." + DBConstants.FIELD_DEFAULT_ID                       + ", " +
@@ -165,86 +169,103 @@ public class DBConstants
         "JOIN " + DBConstants.TABLE_CATEGORIES_NAME + " c " +
             "ON a."  + DBConstants.FIELD_ARTICLE_CATEGORY_ID        + " = c." + DBConstants.FIELD_DEFAULT_ID;
 
-
+    public static final String VIEW_ARTICLE_PRICE_BY_EXPENSE_NAME = "article_prices_trend";
+    public static final String VIEW_ARTICLE_PRICE_BY_EXPENSE      =
+        "SELECT " +
+            "ea." + DBConstants.FIELD_DEFAULT_ID                       + ", " +
+         // "ea." + DBConstants.FIELD_EXPENSE_ARTICLE_ARTICLE_ID       + ", " +
+            "ea." + DBConstants.FIELD_EXPENSE_ARTICLE_ARTICLE_COST     + ", " +
+            "s."  + DBConstants.FIELD_SHOP_DESCRIPTION                 + ", " +
+            "e."  + DBConstants.FIELD_EXPENSE_DATE                     + " " +
+        "FROM " + DBConstants.TABLE_EXPENSE_ARTICLES_NAME + " ea " +
+        "JOIN " + DBConstants.TABLE_EXPENSES_NAME + " e " +
+            "ON e." + DBConstants.FIELD_DEFAULT_ID + " = ea." + DBConstants.FIELD_EXPENSE_ARTICLE_EXPENSE_ID + " " +
+        "JOIN " + DBConstants.TABLE_SHOPS_NAME + " s " +
+            "ON s." + DBConstants.FIELD_DEFAULT_ID + " = e." + DBConstants.FIELD_EXPENSE_SHOP_ID;
 
     /* ********************************************************************* */
     /*                     CONTENT PROVIDER CONSTANTS                        */
     /* ********************************************************************* */
 
-    /* ARTICLES */
-    // uri indicator
+    /* Uri string, Uri and uri indicator */
+    // ARTICLES
+    public final static String STR_URI_ARTICLES_CONTENT              = DBConstants.TABLE_ARTICLES_NAME;
+    //public final static String STR_URI_ARTICLES_DISTINCT_CATEGORY_ID = DBConstants.TABLE_ARTICLES_NAME + ".CD";
+    //public final static String STR_URI_ARTICLES_DISTINCT_BRAND_ID    = DBConstants.TABLE_ARTICLES_NAME + ".BD";
+    // BRANDS
+    public final static String STR_URI_BRANDS_CONTENT                = DBConstants.TABLE_BRANDS_NAME;
+    // CATEGORIES
+    public final static String STR_URI_CATEGORIES_CONTENT            = DBConstants.TABLE_CATEGORIES_NAME;
+    // SHOPS
+    public final static String STR_URI_SHOPS_CONTENT                 = DBConstants.TABLE_SHOPS_NAME;
+    // EXPENSES
+    public final static String STR_URI_EXPENSES_CONTENT              = DBConstants.TABLE_EXPENSES_NAME;
+    // EXPENSE_ARTICLES
+    public final static String STR_URI_EXPENSE_ARTICLES_CONTENT      = DBConstants.TABLE_EXPENSE_ARTICLES_NAME;
+    // VIEWS
+    public final static String STR_URI_VIEW_EXPENSE_SHOP             = DBConstants.VIEW_EXPENSE_SHOP_NAME;
+    // Get all articles from an expense
+    public final static String STR_URI_VIEW_EXPENSE_ARTICLES         = DBConstants.VIEW_EXPENSE_ARTICLE_FULL_DETAILS_NAME;
+    // Get all expenses data for a single article
+    public final static String STR_URI_VIEW_ARTICLE_PRICE_TREND      = DBConstants.VIEW_ARTICLE_PRICE_BY_EXPENSE_NAME;
+
+    /* Uri */
+    public final static Uri URI_ARTICLES_CONTENT                = Uri.parse("content://" + DBConstants.AUTHORITY + "/" + DBConstants.STR_URI_ARTICLES_CONTENT                );
+    public final static Uri URI_BRANDS_CONTENT                  = Uri.parse("content://" + DBConstants.AUTHORITY + "/" + DBConstants.STR_URI_BRANDS_CONTENT                  );
+    public final static Uri URI_CATEGORIES_CONTENT              = Uri.parse("content://" + DBConstants.AUTHORITY + "/" + DBConstants.STR_URI_CATEGORIES_CONTENT              );
+    public final static Uri URI_SHOPS_CONTENT                   = Uri.parse("content://" + DBConstants.AUTHORITY + "/" + DBConstants.STR_URI_SHOPS_CONTENT                   );
+    public final static Uri URI_EXPENSES_CONTENT                = Uri.parse("content://" + DBConstants.AUTHORITY + "/" + DBConstants.STR_URI_EXPENSES_CONTENT                );
+    public final static Uri URI_EXPENSE_ARTICLES_CONTENT        = Uri.parse("content://" + DBConstants.AUTHORITY + "/" + DBConstants.STR_URI_EXPENSE_ARTICLES_CONTENT        );
+  //public final static Uri URI_ARTICLES_DISTINCT_CATEGORY_ID   = Uri.parse("content://" + DBConstants.AUTHORITY + "/" + DBConstants.STR_URI_ARTICLES_DISTINCT_CATEGORY_ID   );
+  //public final static Uri URI_ARTICLES_DISTINCT_BRAND_ID      = Uri.parse("content://" + DBConstants.AUTHORITY + "/" + DBConstants.STR_URI_ARTICLES_DISTINCT_BRAND_ID      );
+    public final static Uri URI_VIEW_EXPENSE_SHOP               = Uri.parse("content://" + DBConstants.AUTHORITY + "/" + DBConstants.STR_URI_VIEW_EXPENSE_SHOP               );
+    public final static Uri URI_VIEW_EXPENSE_ARTICLES           = Uri.parse("content://" + DBConstants.AUTHORITY + "/" + DBConstants.STR_URI_VIEW_EXPENSE_ARTICLES           );
+    public final static Uri URI_VIEW_ARTICLE_PRICE_TREND        = Uri.parse("content://" + DBConstants.AUTHORITY + "/" + DBConstants.STR_URI_VIEW_ARTICLE_PRICE_TREND        );
+    // Adding uri for specific id of expense in the view expense-shop
+    public final static Uri URI_VIEW_EXPENSE_SHOP_BY_EXP        = Uri.parse("content://" + DBConstants.AUTHORITY + "/" + DBConstants.STR_URI_VIEW_EXPENSE_SHOP        + "/#" );
+    // Adding uri for specific id of expense in the full expense article list
+    public final static Uri URI_VIEW_EXPENSE_ARTICLES_BY_EXP    = Uri.parse("content://" + DBConstants.AUTHORITY + "/" + DBConstants.STR_URI_VIEW_EXPENSE_ARTICLES    + "/#" );
+    // Adding uri for specific id of article in the price trend view
+    public final static Uri URI_VIEW_ARTICLE_PRICE_TREND_BY_ART = Uri.parse("content://" + DBConstants.AUTHORITY + "/" + DBConstants.STR_URI_VIEW_ARTICLE_PRICE_TREND + "/#" );
+
+    /* Uri indicators */
+    // Tables
     public final static int URI_INDICATOR_ARTICLES_COLLECTION           = 10;
     public final static int URI_INDICATOR_ARTICLES                      = 11;
-    public final static int URI_INDICATOR_ARTICLES_DISTINCT_CATEGORY_ID = 12;
-    public final static int URI_INDICATOR_ARTICLES_DISTINCT_BRAND_ID    = 13;
-    // uri
-    public final static Uri URI_ARTICLES_CONTENT              = Uri.parse("content://" + AUTHORITY + "/" + DBConstants.TABLE_ARTICLES_NAME);
-    public final static Uri URI_ARTICLES_DISTINCT_CATEGORY_ID = Uri.parse("content://" + AUTHORITY + "/" + TABLE_ARTICLES_NAME + ".CD");
-    public final static Uri URI_ARTICLES_DISTINCT_BRAND_ID    = Uri.parse("content://" + AUTHORITY + "/" + TABLE_ARTICLES_NAME + ".BD");
-    // content type
-    public final static String CONTENT_TYPE_ARTICLE      = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd." + TABLE_ARTICLES_NAME;
-    public final static String CONTENT_ITEM_TYPE_ARTICLE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd." + TABLE_ARTICLES_NAME + ".element";
-
-
-    /* BRANDS */
-    // uri indicator
-    public final static int URI_INDICATOR_BRANDS_COLLECTION = 20;
-    public final static int URI_INDICATOR_BRANDS            = 21;
-    // uri
-    public final static Uri URI_BRANDS_CONTENT = Uri.parse("content://" + AUTHORITY + "/" + DBConstants.TABLE_BRANDS_NAME);
-    // content type
-    public final static String CONTENT_TYPE_BRAND = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd." + TABLE_BRANDS_NAME;
-    public final static String CONTENT_ITEM_TYPE_BRAND = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd." + TABLE_BRANDS_NAME + ".element";
-
-
-    /* CATEGORIES */
-    // uri indicator
-    public final static int URI_INDICATOR_CATEGORIES_COLLECTION= 30;
-    public final static int URI_INDICATOR_CATEGORIES = 31;
-    public final static int URI_INDICATOR_CATEGORIES_DISTINCT_APPLY_TO = 32;
-    // uri
-    public final static Uri URI_CATEGORIES_CONTENT= Uri.parse("content://" + AUTHORITY + "/" + DBConstants.TABLE_CATEGORIES_NAME);
-    // content type
-    public final static String CONTENT_TYPE_CATEGORY = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd." + TABLE_CATEGORIES_NAME;
-    public final static String CONTENT_ITEM_TYPE_CATEGORY = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd." + TABLE_CATEGORIES_NAME + ".element";
-
-
-    /* EXPENSE_ARTICLES */
-    // uri indicator
-    public final static int URI_INDICATOR_EXPENSE_ARTICLES_COLLECTION = 40;
-    public final static int URI_INDICATOR_EXPENSE_ARTICLES = 41;
-    public final static int URI_INDICATOR_JOIN_EXPENSE_ARTICLE = 42;
-    // uri
-    public final static Uri URI_EXPENSE_ARTICLES_CONTENT= Uri.parse("content://" + AUTHORITY + "/" + DBConstants.TABLE_EXPENSE_ARTICLES_NAME);
-    // content type
-    public final static String CONTENT_TYPE_EXPENSE_ARTICLE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd." + TABLE_EXPENSE_ARTICLES_NAME;
+  //public final static int URI_INDICATOR_ARTICLES_DISTINCT_CATEGORY_ID = 12;
+  //public final static int URI_INDICATOR_ARTICLES_DISTINCT_BRAND_ID    = 13;
+    public final static int URI_INDICATOR_BRANDS_COLLECTION             = 20;
+    public final static int URI_INDICATOR_BRANDS                        = 21;
+    public final static int URI_INDICATOR_CATEGORIES_COLLECTION         = 30;
+    public final static int URI_INDICATOR_CATEGORIES                    = 31;
+  //public final static int URI_INDICATOR_CATEGORIES_DISTINCT_APPLY_TO  = 32;
+    public final static int URI_INDICATOR_EXPENSE_ARTICLES_COLLECTION   = 40;
+    public final static int URI_INDICATOR_EXPENSE_ARTICLES              = 41;
+    public final static int URI_INDICATOR_EXPENSES_COLLECTION           = 50;
+    public final static int URI_INDICATOR_EXPENSES                      = 51;
+    public final static int URI_INDICATOR_SHOPS_COLLECTION              = 60;
+    public final static int URI_INDICATOR_SHOPS                         = 61;
+    // Views
+    public final static int URI_INDICATOR_VIEW_EXPENSE_SHOP               = 99;
+    public final static int URI_INDICATOR_VIEW_EXPENSE_ARTICLES           = 98;
+    public final static int URI_INDICATOR_VIEW_ARTICLE_PRICE_TREND        = 97;
+    public final static int URI_INDICATOR_VIEW_EXPENSE_SHOP_BY_EXP        = 96;
+    public final static int URI_INDICATOR_VIEW_EXPENSE_ARTICLES_BY_EXP    = 95;
+    public final static int URI_INDICATOR_VIEW_ARTICLE_PRICE_TREND_BY_ART = 94;
+    /* Content types */
+    public final static String CONTENT_TYPE_ARTICLE              = ContentResolver.CURSOR_DIR_BASE_TYPE  + "/vnd." + TABLE_ARTICLES_NAME;
+    public final static String CONTENT_ITEM_TYPE_ARTICLE         = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd." + TABLE_ARTICLES_NAME + ".element";
+    public final static String CONTENT_TYPE_BRAND                = ContentResolver.CURSOR_DIR_BASE_TYPE  + "/vnd." + TABLE_BRANDS_NAME;
+    public final static String CONTENT_ITEM_TYPE_BRAND           = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd." + TABLE_BRANDS_NAME + ".element";
+    public final static String CONTENT_TYPE_CATEGORY             = ContentResolver.CURSOR_DIR_BASE_TYPE  + "/vnd." + TABLE_CATEGORIES_NAME;
+    public final static String CONTENT_ITEM_TYPE_CATEGORY        = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd." + TABLE_CATEGORIES_NAME + ".element";
+    public final static String CONTENT_TYPE_EXPENSE_ARTICLE      = ContentResolver.CURSOR_DIR_BASE_TYPE  + "/vnd." + TABLE_EXPENSE_ARTICLES_NAME;
     public final static String CONTENT_ITEM_TYPE_EXPENSE_ARTICLE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd." + TABLE_EXPENSE_ARTICLES_NAME + ".element";
-
-
-    /* EXPENSES */
-    // uri indicator
-    public final static int URI_INDICATOR_EXPENSES_COLLECTION = 50;
-    public final static int URI_INDICATOR_EXPENSES = 51;
-    public final static int URI_INDICATOR_EXPENSES_DISTINCT_DATE = 52;
-    public final static int URI_INDICATOR_EXPENSES_DISTINCT_SHOP = 53;
-    public final static int URI_INDICATOR_EXPENSES_JOIN_SHOP = 54;
-    public final static int URI_INDICATOR_EXPENSES_JOIN_EXPENSE_ARTICLE = 55;
-    // uri
-    public final static Uri URI_EXPENSES_CONTENT = Uri.parse("content://" + AUTHORITY + "/" + DBConstants.TABLE_EXPENSES_NAME);
-    public final static Uri URI_JOIN_EXPENSE_SHOP = Uri.parse("content://" + AUTHORITY + "/" + TABLE_EXPENSES_NAME + "_" + TABLE_SHOPS_NAME);
-    public final static Uri URI_JOIN_EXPENSE_ARTICLE = Uri.parse("content://" + AUTHORITY + "/" + TABLE_EXPENSES_NAME + "_" + TABLE_ARTICLES_NAME);
-    // content type
-    public final static String CONTENT_TYPE_EXPENSE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd." + TABLE_EXPENSES_NAME;
-    public final static String CONTENT_ITEM_TYPE_EXPENSE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd." + TABLE_EXPENSES_NAME + ".element";
-
-
-    /* SHOPS */
-    public final static int URI_INDICATOR_SHOPS_COLLECTION = 60;
-    public final static int URI_INDICATOR_SHOPS = 61;
-    public final static Uri URI_SHOPS_CONTENT = Uri.parse("content://" + AUTHORITY + "/" + DBConstants.TABLE_SHOPS_NAME);
-    public final static String CONTENT_TYPE_SHOP = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd." + TABLE_SHOPS_NAME;
-    public final static String CONTENT_ITEM_TYPE_SHOP = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd." + TABLE_SHOPS_NAME + ".element";
-    public final static String CONTENT_JOIN_SHOP_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd." + TABLE_EXPENSES_NAME +"_" + TABLE_SHOPS_NAME + ".element";
+    public final static String CONTENT_TYPE_EXPENSE              = ContentResolver.CURSOR_DIR_BASE_TYPE  + "/vnd." + TABLE_EXPENSES_NAME;
+    public final static String CONTENT_ITEM_TYPE_EXPENSE         = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd." + TABLE_EXPENSES_NAME + ".element";
+    public final static String CONTENT_TYPE_SHOP                 = ContentResolver.CURSOR_DIR_BASE_TYPE  + "/vnd." + TABLE_SHOPS_NAME;
+    public final static String CONTENT_ITEM_TYPE_SHOP            = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd." + TABLE_SHOPS_NAME + ".element";
+    public final static String CONTENT_JOIN_SHOP_ITEM_TYPE       = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd." + TABLE_EXPENSES_NAME +"_" + TABLE_SHOPS_NAME + ".element";
 
 
     /**
@@ -257,42 +278,29 @@ public class DBConstants
      */
     static
     {
-        // Aggiungo gli uri relativi alle tabelle
-        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.TABLE_ARTICLES_NAME        , DBConstants.URI_INDICATOR_ARTICLES_COLLECTION        );
-        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.TABLE_BRANDS_NAME          , DBConstants.URI_INDICATOR_BRANDS_COLLECTION          );
-        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.TABLE_CATEGORIES_NAME      , DBConstants.URI_INDICATOR_CATEGORIES_COLLECTION      );
-        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.TABLE_EXPENSE_ARTICLES_NAME, DBConstants.URI_INDICATOR_EXPENSE_ARTICLES_COLLECTION);
-        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.TABLE_EXPENSES_NAME        , DBConstants.URI_INDICATOR_EXPENSES_COLLECTION        );
-        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.TABLE_SHOPS_NAME           , DBConstants.URI_INDICATOR_SHOPS_COLLECTION           );
+        // Uri di tabelle
+        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.STR_URI_ARTICLES_CONTENT               , DBConstants.URI_INDICATOR_ARTICLES_COLLECTION            );
+        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.STR_URI_BRANDS_CONTENT                 , DBConstants.URI_INDICATOR_BRANDS_COLLECTION              );
+        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.STR_URI_CATEGORIES_CONTENT             , DBConstants.URI_INDICATOR_CATEGORIES_COLLECTION          );
+        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.STR_URI_EXPENSE_ARTICLES_CONTENT       , DBConstants.URI_INDICATOR_EXPENSE_ARTICLES_COLLECTION    );
+        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.STR_URI_EXPENSES_CONTENT               , DBConstants.URI_INDICATOR_EXPENSES_COLLECTION            );
+        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.STR_URI_SHOPS_CONTENT                  , DBConstants.URI_INDICATOR_SHOPS_COLLECTION               );
+        // Uri viste
+        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.STR_URI_VIEW_EXPENSE_ARTICLES          , DBConstants.URI_INDICATOR_VIEW_EXPENSE_ARTICLES          );
+        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.STR_URI_VIEW_EXPENSE_SHOP              , DBConstants.URI_INDICATOR_VIEW_EXPENSE_SHOP              );
+        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.STR_URI_VIEW_ARTICLE_PRICE_TREND       , DBConstants.URI_INDICATOR_VIEW_ARTICLE_PRICE_TREND       );
+        // Uri di singola riga su tabelle
+        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.STR_URI_ARTICLES_CONTENT + "/#"        , DBConstants.URI_INDICATOR_ARTICLES                       );
+        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.STR_URI_BRANDS_CONTENT + "/#"          , DBConstants.URI_INDICATOR_BRANDS                         );
+        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.STR_URI_CATEGORIES_CONTENT + "/#"      , DBConstants.URI_INDICATOR_CATEGORIES                     );
+        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.STR_URI_EXPENSE_ARTICLES_CONTENT + "/#", DBConstants.URI_INDICATOR_EXPENSE_ARTICLES               );
+        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.STR_URI_EXPENSES_CONTENT + "/#"        , DBConstants.URI_INDICATOR_EXPENSES                       );
+        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.STR_URI_SHOPS_CONTENT + "/#"           , DBConstants.URI_INDICATOR_SHOPS                          );
+        // Uri di parzializzazione viste
+        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.STR_URI_VIEW_EXPENSE_SHOP        + "/#", DBConstants.URI_INDICATOR_VIEW_EXPENSE_SHOP_BY_EXP       );
+        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.STR_URI_VIEW_EXPENSE_ARTICLES    + "/#", DBConstants.URI_INDICATOR_VIEW_EXPENSE_ARTICLES_BY_EXP   );
+        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.STR_URI_VIEW_ARTICLE_PRICE_TREND + "/#", DBConstants.URI_INDICATOR_VIEW_ARTICLE_PRICE_TREND_BY_ART);
 
-        // join tra expenses e expenseArticle
-        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.TABLE_EXPENSES_NAME + "_" + DBConstants.TABLE_EXPENSE_ARTICLES_NAME, DBConstants.URI_INDICATOR_EXPENSES_JOIN_EXPENSE_ARTICLE);
-        // join tra expenses e shop
-        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.TABLE_EXPENSES_NAME + "_" + DBConstants.TABLE_SHOPS_NAME, DBConstants.URI_INDICATOR_EXPENSES_JOIN_SHOP);
-        // join tra articles ed expenseArticle
-        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.TABLE_EXPENSES_NAME + "_" + DBConstants.TABLE_ARTICLES_NAME, DBConstants.URI_INDICATOR_JOIN_EXPENSE_ARTICLE);
-
-        // Aggiungo gli uri relativi alle singole righe delle tabelle
-        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.TABLE_ARTICLES_NAME + "/#"        , DBConstants.URI_INDICATOR_ARTICLES);
-        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.TABLE_BRANDS_NAME + "/#"          , DBConstants.URI_INDICATOR_BRANDS);
-        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.TABLE_CATEGORIES_NAME + "/#"      , DBConstants.URI_INDICATOR_CATEGORIES);
-        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.TABLE_EXPENSE_ARTICLES_NAME + "/#", DBConstants.URI_INDICATOR_EXPENSE_ARTICLES);
-        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.TABLE_EXPENSES_NAME + "/#"        , DBConstants.URI_INDICATOR_EXPENSES);
-        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.TABLE_SHOPS_NAME + "/#"           , DBConstants.URI_INDICATOR_SHOPS);
-
-		/*// Aggiungo gli uri particolari di ciascuna tabella
-		// tabella article: distinct per brand e per category
-		sURIMatcher.addURI(DBConstants.AUTHORITY, ArticlePMD.ArticleTableMetaData.TABLE_NAME + ".BD", ArticlePMD.DISTINCT_BRAND_ID_URI_INDICATOR);
-		sURIMatcher.addURI(DBConstants.AUTHORITY, ArticlePMD.ArticleTableMetaData.TABLE_NAME + ".CD", ArticlePMD.DISTINCT_CATEGORY_ID_URI_INDICATOR);
-		sURIMatcher.addURI(DBConstants.AUTHORITY, ExpenseArticlePMD.ExpenseArticleTableMetaData.TABLE_NAME + ".PA", ExpenseArticlePMD.EXPENSE_ARTICLE_PARTIAL_INFO_URI_INDICATOR);
-
-		// tabella category: distinct per apply_to
-		sURIMatcher.addURI(DBConstants.AUTHORITY, CategoryPMD.CategoryTableMetaData.TABLE_NAME + ".CAT", CategoryPMD.DISTINCT_APPLY_TO_URI_INDICATOR);
-
-		// Tabella expense: distinct per data e per negozio
-		sURIMatcher.addURI(DBConstants.AUTHORITY, ExpensePMD.ExpenseTableMetaData.TABLE_NAME + ".ED", ExpensePMD.DISTINCT_DATE_URI_INDICATOR);
-		sURIMatcher.addURI(DBConstants.AUTHORITY, ExpensePMD.ExpenseTableMetaData.TABLE_NAME + ".ES", ExpensePMD.DISTINCT_SHOP_URI_INDICATOR);
-		*/
     }
 
 }
