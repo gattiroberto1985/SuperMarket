@@ -192,6 +192,7 @@ public class AdapterExpenseArticles extends ArrayAdapter<ExpenseArticleBean>
 	@Override
 	public void clear()
 	{
+        super.clear();
 		this.expenseArticleList.clear();
 		this.notifyDataSetChanged();
 	}
@@ -220,7 +221,6 @@ public class AdapterExpenseArticles extends ArrayAdapter<ExpenseArticleBean>
         // . . . if item is not in list, then return -1
         return -1;
     }
-
 
     /* ********************************************************************* */
     /*                              CLASS METHODS                            */
