@@ -107,12 +107,12 @@ public final class Logger
     {
         switch ( level )
         {
-            case VERBOSE: Log.v(tag, stage + message); break;
-            case DEBUG  : Log.d(tag, stage + message); break;
-            case INFO   : Log.i(tag, stage + message); break;
-            case WARNING: Log.w(tag, stage + message); break;
-            case ERROR  : Log.e(tag, stage + message); break;
-            default     : Log.i(tag, Stages.STAGE_APP + message);
+            case VERBOSE: Log.v(tag, stage.stage + message); break;
+            case DEBUG  : Log.d(tag, stage.stage + message); break;
+            case INFO   : Log.i(tag, stage.stage + message); break;
+            case WARNING: Log.w(tag, stage.stage + message); break;
+            case ERROR  : Log.e(tag, stage.stage + message); break;
+            default     : Log.i(tag, Stages.STAGE_APP.stage + message);
         }
     }
 

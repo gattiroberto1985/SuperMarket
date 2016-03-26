@@ -55,12 +55,12 @@ public class ATRetrieveExpenseArticles extends AsyncTask<Void, ExpenseArticleBea
 
     private String failureMessage = "";
 
-    private int expenseId = -1;
+    private ExpenseBean expense = null;
 
-    public ATRetrieveExpenseArticles(ListAdapter aa, int expenseId)
+    public ATRetrieveExpenseArticles(ListAdapter aa, ExpenseBean expense)
     {
         this.alAdapter = (AdapterExpenseArticles) aa;
-        this.expenseId = expenseId;
+        this.expense = expense;
     }
 
     @Override
@@ -68,7 +68,9 @@ public class ATRetrieveExpenseArticles extends AsyncTask<Void, ExpenseArticleBea
     {
         Logger.writeLog("Dimensione lista: " + (list == null ? "NULL" : String.valueOf(list.size()) ) );
         Toast.makeText(ApplicationSM.getInstance().getApplicationContext(), "Articoli recuperati con successo!", Toast.LENGTH_SHORT).show();
-
+        for ( BaseSMBean bsmb : list)
+            this.expense.addExpenseItem((ExpenseArticleBean) bsmb);
+        this.expense.setCost();
         this.alAdapter.translateAndSetList(list);
         this.alAdapter.notifyDataSetChanged();
     }
@@ -96,7 +98,7 @@ public class ATRetrieveExpenseArticles extends AsyncTask<Void, ExpenseArticleBea
                 DBConstants.URI_VIEW_EXPENSE_ARTICLES,
                 DBConstants.PROJECTION_EXPENSE_ARTICLE_LIST,
                 DBConstants.FIELD_EXPENSE_ARTICLE_EXPENSE_ID,
-                new String[] { String.valueOf(this.expenseId) },
+                new String[] { String.valueOf(this.expense.getId()) },
                 DBConstants.FIELD_EXPENSE_ARTICLE_ARTICLE_ID);
 
         if ( cursor == null || cursor.getCount() < 1 )

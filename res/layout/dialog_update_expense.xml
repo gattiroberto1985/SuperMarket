@@ -40,7 +40,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/STR_SET_SHOP"
-            android:id="@+id/dialog_update_expense_actv_shop"/>
+            android:id="@+id/dialog_update_expense_actv_shop"
+            android:completionThreshold="1"/>
 
     <!-- Date field -->
     <EditText

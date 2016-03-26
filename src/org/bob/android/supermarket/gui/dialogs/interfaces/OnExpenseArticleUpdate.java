@@ -100,7 +100,6 @@ public class OnExpenseArticleUpdate implements DialogInterface.OnClickListener {
      * This method exec the update or insert of a new expense in the list.
      *
      * @param eab the expense articled modified/inserted
-     *
      */
     private void updateExpenseArticle(ExpenseArticleBean eab)
     {
@@ -110,7 +109,8 @@ public class OnExpenseArticleUpdate implements DialogInterface.OnClickListener {
 
         if ( aea.getPosition( eab ) != -1 )
         {
-            aea.add( eab );
+            aea.remove( this.oldEab );
+            aea.insert(eab, position2update );
         }
         else
             Toast.makeText(this.frg.getActivity(), R.string.TOAST_DOUBLE_EXPENSE_ARTICLE, Toast.LENGTH_LONG).show();

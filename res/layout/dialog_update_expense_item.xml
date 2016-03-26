@@ -36,7 +36,8 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:hint="@string/STR_DEFAULT_CATEGORY"
-          android:id="@+id/dialog_update_expense_article_category"/>
+          android:id="@+id/dialog_update_expense_article_category"
+          android:completionThreshold="1"/>
 
 
     <!-- Brand -->
@@ -44,14 +45,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/STR_DEFAULT_BRAND"
-            android:id="@+id/dialog_update_expense_article_brand"/>
+            android:id="@+id/dialog_update_expense_article_brand"
+            android:completionThreshold="1"/>
 
     <!-- Article -->
     <AutoCompleteTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/STR_DEFAULT_DESCRIPTION"
-            android:id="@+id/dialog_update_expense_article_article"/>
+            android:id="@+id/dialog_update_expense_article_article"
+            android:completionThreshold="1"/>
 
     <!-- Quantity -->
     <EditText

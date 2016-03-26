@@ -25,10 +25,13 @@
 package org.bob.android.supermarket.utilities;
 
 import android.app.AlertDialog;
+import android.os.Environment;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+import org.bob.android.supermarket.ApplicationSM;
 import org.bob.android.supermarket.R;
 import org.bob.android.supermarket.exceptions.SuperMarketException;
 import org.bob.android.supermarket.logger.Logger;
@@ -36,11 +39,10 @@ import org.bob.android.supermarket.persistence.beans.BeanFactory;
 import org.bob.android.supermarket.persistence.beans.ExpenseArticleBean;
 import org.bob.android.supermarket.persistence.beans.ExpenseBean;
 import org.bob.android.supermarket.persistence.beans.ShopBean;
+import org.bob.android.supermarket.persistence.cp.SMDBHelper;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.channels.FileChannel;
 import java.util.*;
 
 /**
@@ -142,4 +144,33 @@ public final class Utilities
 		return new Date( Date.parse(dateStr) );
 	}
 
+	/**
+	 * The method copy the SQL database to the external sd card.
+	 *
+	 * @throws IOException
+	 */
+	public static String copyDatabaseToExtSdCard() throws IOException {
+		File sd = Environment.getExternalStorageDirectory();
+		File data = Environment.getDataDirectory();
+
+		if (sd.canWrite()) {
+			String currentDBPath = "/data/data/" + ApplicationSM.getInstance().getPackageName() + "/databases/" + DBConstants.DATABASE_NAME;
+			File devFolder = new File(sd, "DEVELOPER/" + ApplicationSM.getInstance().getPackageName());
+			if ( ! devFolder.exists() )
+				devFolder.mkdirs();
+			String backupDBPath = DBConstants.DATABASE_NAME + "." + String.valueOf( (new Date()).getTime() );
+			File currentDB = new File(currentDBPath);
+			File backupDB = new File(devFolder, backupDBPath);
+
+			if (currentDB.exists()) {
+				FileChannel src = new FileInputStream(currentDB).getChannel();
+				FileChannel dst = new FileOutputStream(backupDB).getChannel();
+				dst.transferFrom(src, 0, src.size());
+				src.close();
+				dst.close();
+				return backupDB.getAbsolutePath();
+			}
+		}
+		return null;
+	}
 }

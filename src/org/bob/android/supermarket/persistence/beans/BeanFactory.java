@@ -127,6 +127,8 @@ public class BeanFactory
 
     private static ExpenseBean insertExpenseBean(ExpenseBean eb) throws SuperMarketException
     {
+        // Setting the cost of the expense . . .
+        eb.setCost();
         // Checking shop and inserting it if not existent . . .
         ShopBean sb = (ShopBean) BeanFactory.queryBean(eb.getShop());
         eb.setShop(sb);
@@ -147,8 +149,10 @@ public class BeanFactory
     {
         int rowsUpdated = -1;
         Uri uri = null;
-        if ( bean2update instanceof ExpenseBean )
+        if ( bean2update instanceof ExpenseBean ) {
             uri = DBConstants.URI_EXPENSES_CONTENT;
+            ((ExpenseBean) bean2update).setCost();
+        }
 
         if ( uri == null )
             throw new SuperMarketException("ERROR: updateBean not implemented for class '" + bean2update.getClass().getName() + "'!");

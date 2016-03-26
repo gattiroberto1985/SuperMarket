@@ -209,6 +209,28 @@ public class DBConstants
     // Get all expenses data for a single article
     public final static String STR_URI_VIEW_ARTICLE_PRICE_TREND      = DBConstants.VIEW_ARTICLE_PRICE_BY_EXPENSE_NAME;
 
+
+    public final static String STR_FULL_URI_ARTICLES_CONTENT              = "content://" + DBConstants.AUTHORITY + "/" + DBConstants.TABLE_ARTICLES_NAME;
+    // BRANDS
+    public final static String STR_FULL_URI_BRANDS_CONTENT                = "content://" + DBConstants.AUTHORITY + "/" + DBConstants.TABLE_BRANDS_NAME;
+    // CATEGORIES
+    public final static String STR_FULL_URI_CATEGORIES_CONTENT            = "content://" + DBConstants.AUTHORITY + "/" + DBConstants.TABLE_CATEGORIES_NAME;
+    // SHOPS
+    public final static String STR_FULL_URI_SHOPS_CONTENT                 = "content://" + DBConstants.AUTHORITY + "/" + DBConstants.TABLE_SHOPS_NAME;
+    // EXPENSES
+    public final static String STR_FULL_URI_EXPENSES_CONTENT              = "content://" + DBConstants.AUTHORITY + "/" + DBConstants.TABLE_EXPENSES_NAME;
+    // EXPENSE_ARTICLES
+    public final static String STR_FULL_URI_EXPENSE_ARTICLES_CONTENT      = "content://" + DBConstants.AUTHORITY + "/" + DBConstants.TABLE_EXPENSE_ARTICLES_NAME;
+    // VIEWS
+    public final static String STR_FULL_URI_VIEW_EXPENSE_SHOP             = "content://" + DBConstants.AUTHORITY + "/" + DBConstants.VIEW_EXPENSE_SHOP_NAME;
+    // Get all articles from an expense
+    public final static String STR_FULL_URI_VIEW_EXPENSE_ARTICLES         = "content://" + DBConstants.AUTHORITY + "/" + DBConstants.VIEW_EXPENSE_ARTICLE_FULL_DETAILS_NAME;
+    // Get all expenses data for a single article
+    public final static String STR_FULL_URI_VIEW_ARTICLE_PRICE_TREND      = "content://" + DBConstants.AUTHORITY + "/" + DBConstants.VIEW_ARTICLE_PRICE_BY_EXPENSE_NAME;
+
+
+
+
     /* Uri */
     public final static Uri URI_ARTICLES_CONTENT                = Uri.parse("content://" + DBConstants.AUTHORITY + "/" + DBConstants.STR_URI_ARTICLES_CONTENT                );
     public final static Uri URI_BRANDS_CONTENT                  = Uri.parse("content://" + DBConstants.AUTHORITY + "/" + DBConstants.STR_URI_BRANDS_CONTENT                  );

@@ -34,6 +34,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import org.bob.android.supermarket.ApplicationSM;
 import org.bob.android.supermarket.R;
 import org.bob.android.supermarket.exceptions.SuperMarketException;
@@ -46,6 +47,8 @@ import org.bob.android.supermarket.tasks.ATRetrieveExpenses;
 import org.bob.android.supermarket.utilities.Constants;
 import org.bob.android.supermarket.utilities.DBConstants;
 import org.bob.android.supermarket.utilities.Utilities;
+
+import java.io.IOException;
 
 /**
 
@@ -258,6 +261,17 @@ public class FragmentExpenseList extends ListFragment
                 AlertDialog dialog = DialogFactory.updateExpenseDialog(this, null);
                 dialog.show();
                 return true;
+            case R.id.menu_export_db: {
+                try {
+                    String ofile = Utilities.copyDatabaseToExtSdCard();
+                    Logger.app_log("DB exported: " + ofile);
+                    if (ofile != null)
+                        Toast.makeText(this.getActivity(), "Database exported to: " + ofile, Toast.LENGTH_LONG).show();
+                } catch (IOException ex) {
+                    Logger.app_log("ERROR: error on creating database in sd card!");
+                }
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }

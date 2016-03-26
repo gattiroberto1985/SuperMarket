@@ -26,6 +26,7 @@
 <resources>
     <string name="TITLE_ACTIONBAR_SEARCH_BAR"                >Search for shop or date . . .</string>
     <string name="TITLE_ACTIONBAR_ADD_EXPENSE"               >Add Expense . . . </string>
+    <string name="TITLE_ACTIONBAR_EXPORT_DATABASE"           >Export db to sd card</string>
     <string name="DIALOG_ADD_EXPENSE_TITLE"                  >Add New Expense</string>
     <string name="DIALOG_ADD_EXPENSE_MESSAGE"                >Insert datas of the new expense</string>
     <string name="DIALOG_DELETE_EXPENSE_MESSAGE"             >Proceed with deletion of expense?</string>

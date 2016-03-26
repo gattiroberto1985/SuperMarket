@@ -38,6 +38,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import org.bob.android.supermarket.R;
 import org.bob.android.supermarket.gui.adapters.AdapterExpenseArticles;
+import org.bob.android.supermarket.gui.anims.SwipeDismissListViewTouchListener;
 import org.bob.android.supermarket.gui.dialogs.DialogFactory;
 import org.bob.android.supermarket.logger.Logger;
 import org.bob.android.supermarket.persistence.beans.ExpenseArticleBean;
@@ -61,6 +62,14 @@ public class FragmentExpenseDetail extends ListFragment
 	 */
 	private ExpenseBean expenseSelected;
 
+    /**
+     * TextView with the expense cost.
+     */
+    private TextView expenseCostTv;
+
+    /**
+     * Flag for the loaded/unloaded articles.
+     */
 	private boolean flagLoadedExpenseArticles = false;
 
     /**
@@ -93,11 +102,15 @@ public class FragmentExpenseDetail extends ListFragment
 		( (TextView) this.getActivity().findViewById(R.id.dtl_hdr_surname)).setText(this.selectedContact.getSurname());
 		( (TextView) this.getActivity().findViewById(R.id.dtl_hdr_birthday)).setText(Utilities.DATE_FORMATTER.format(new java.util.Date(this.selectedContact.getBirthday())));*/
 		this.pd = ProgressDialog.show(this.getActivity(), getString(R.string.PROGRESS_DIALOG_LOAD_EXPENSE_ARTICLE_TITLE), getString(R.string.PROGRESS_DIALOG_LOAD_EXPENSE_ARTICLE_TEXT));
-		this.task = new ATRetrieveExpenseArticles(this.articlesLV.getAdapter(), this.expenseSelected.getId());
+		this.task = new ATRetrieveExpenseArticles(this.articlesLV.getAdapter(), this.expenseSelected);
 		task.execute();
 	}
 
-
+    private void updateExpenseCost()
+    {
+        double newPrice = this.expenseSelected.getCost();
+        this.expenseCostTv.setText(Constants.DM_FORMATTER.format(newPrice));
+    }
 	/* --------------------------------------------------------------------- *
 	 *                            OVERRIDDEN METHODS                         *
 	 * --------------------------------------------------------------------- */
@@ -136,6 +149,39 @@ public class FragmentExpenseDetail extends ListFragment
 
         this.articlesLV = (ListView) v.findViewById(android.R.id.list);
 		this.articlesLV.setOnItemClickListener(new OnArticleSelectedListener());
+
+
+		// Create a ListView-specific touch listener. ListViews are given special treatment because
+		// by default they handle touches for their list items... i.e. they're in charge of drawing
+		// the pressed state (the list selector), handling list item clicks, etc.
+		SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(this.articlesLV,
+						new SwipeDismissListViewTouchListener.DismissCallbacks() {
+							@Override
+							public boolean canDismiss(int position) {
+								return true;
+							}
+
+							@Override
+							public void onDismiss(ListView listView, int[] reverseSortedPositions)
+                            {
+								for (int position : reverseSortedPositions)
+                                {
+                                    ExpenseArticleBean eab = (ExpenseArticleBean) articlesLV.getAdapter().getItem(position);
+                                    ((AdapterExpenseArticles) articlesLV.getAdapter()).remove(eab);
+                                    expenseSelected.removeExpenseItem(eab);
+                                    FragmentExpenseDetail.this.updateExpenseCost();
+								}
+								( (AdapterExpenseArticles) articlesLV.getAdapter()).notifyDataSetChanged();
+							}
+						});
+		this.articlesLV.setOnTouchListener(touchListener);
+		// Setting this scroll listener is required to ensure that during ListView scrolling,
+		// we don't look for swipes.
+		this.articlesLV.setOnScrollListener(touchListener.makeScrollListener());
+
+
+
+
 		if ( savedInstanceState != null )
 		{
             Logger.lfc_log("Recupero la spesa dal savedBundle...");
@@ -147,7 +193,8 @@ public class FragmentExpenseDetail extends ListFragment
 			this.expenseSelected = (ExpenseBean) this.getActivity().getIntent().getSerializableExtra(Constants.KEY_SELECTED_EXPENSE);
 		}
 		// Setting data of expense header
-		( (TextView) v.findViewById(R.id.view_exp_header_cost)).setText(String.valueOf(this.expenseSelected.getCost())                     );
+        this.expenseCostTv = (TextView) v.findViewById(R.id.view_exp_header_cost);
+		( this.expenseCostTv                                  ).setText(Constants.DM_FORMATTER.format(this.expenseSelected.getCost())      );
 		( (TextView) v.findViewById(R.id.view_exp_header_shop)).setText(String.valueOf(this.expenseSelected.getShop().getDescription())    );
 		( (TextView) v.findViewById(R.id.view_exp_header_date)).setText(Constants.GLOBAL_DATE_FORMAT.format(this.expenseSelected.getDate()));
 
@@ -173,7 +220,7 @@ public class FragmentExpenseDetail extends ListFragment
 					this.getString(R.string.PROGRESS_DIALOG_LOAD_EXPENSE_ARTICLE_TITLE),
 					this.getString(R.string.PROGRESS_DIALOG_LOAD_EXPENSE_ARTICLE_TEXT),
 					true);*/
-			this.task = new ATRetrieveExpenseArticles(this.articlesLV.getAdapter(), this.expenseSelected.getId());
+			this.task = new ATRetrieveExpenseArticles(this.articlesLV.getAdapter(), this.expenseSelected);
 			task.execute();
 		}
 	}

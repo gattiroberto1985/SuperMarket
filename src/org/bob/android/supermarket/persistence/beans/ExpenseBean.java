@@ -125,6 +125,32 @@ public class ExpenseBean extends BaseSMBean
     public final void addExpenseItem(ExpenseArticleBean eab)
     {
         this.articles.add(eab);
+        this.changeCost(eab.getArticleCost() * eab.getArticleQuantity());
+    }
+
+    public final void removeExpenseItem(ExpenseArticleBean eab)
+    {
+        int index = this.articles.indexOf(eab);
+        if ( index == -1 )
+        {
+            throw new RuntimeException("ERROR: unable to find expense article in the list!");
+        }
+
+        this.articles.remove(index);
+        this.changeCost(-1 * eab.getArticleQuantity() * eab.getArticleCost());
+    }
+
+    /**
+     * The method change the cost of the expense according to the
+     * parameter. The sign of the argument define the positive or
+     * negative variation, so the method will always add the param
+     * to the total cost.
+     *
+     * @param variation
+     */
+    private final void changeCost(double variation)
+    {
+        this.setCost(this.cost + variation);
     }
 
     /* ********************************************************************* */
@@ -155,8 +181,14 @@ public class ExpenseBean extends BaseSMBean
         this.cost = 0;
         if ( this.articles != null )
         {
-            for ( ExpenseArticleBean eab : this.articles ) this.cost += (eab.getArticleCost() * eab.getArticleQuantity());
+            for ( ExpenseArticleBean eab : this.articles )
+            {
+                double cost2add = eab.getArticleCost() * eab.getArticleQuantity();
+                Logger.app_log(".. Adding " + String.valueOf(cost2add) + " to expense cost . . .");
+                this.cost += cost2add;
+            }
         }
+        Logger.app_log("Setting cost of the expense to: " + String.valueOf(this.cost));
     }
 
     public final int getId() { return this.id; }

@@ -33,6 +33,7 @@ import android.widget.TextView;
 import org.bob.android.supermarket.ApplicationSM;
 import org.bob.android.supermarket.R;
 import org.bob.android.supermarket.gui.activities.ActivityExpenseList;
+import org.bob.android.supermarket.gui.watchers.TwoDecimalTextWatcher;
 import org.bob.android.supermarket.logger.Logger;
 import org.bob.android.supermarket.persistence.beans.BaseSMBean;
 import org.bob.android.supermarket.persistence.beans.ExpenseBean;
@@ -91,11 +92,12 @@ public class AdapterExpenses extends ArrayAdapter<ExpenseBean>
     @Override
     public long getItemId(int position)
     {
-        return super.getItemId(position);
+        return this.expensesList.get(position).getId();
     }
 
     @Override
     public void add(ExpenseBean object) {
+        super.add(object);
         this.expensesList.add(object);
         this.notifyDataSetChanged();
     }
@@ -108,6 +110,7 @@ public class AdapterExpenses extends ArrayAdapter<ExpenseBean>
             i++;
             if ( eb.getId() == object.getId() )
             {
+                super.remove(object);
                 this.expensesList.remove(i);
                 break;
             }
@@ -132,7 +135,7 @@ public class AdapterExpenses extends ArrayAdapter<ExpenseBean>
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        Logger.lfc_log("getView su AdapterexpensesList");
+        Logger.lfc_log("getView su AdapterExpensesList");
         ExpenseBean expense = this.getItem(position);
         VHExpense vh;
         if ( convertView == null )
@@ -140,17 +143,16 @@ public class AdapterExpenses extends ArrayAdapter<ExpenseBean>
             vh = new VHExpense();
             convertView = ApplicationSM.getLayoutInflater().inflate(R.layout.view_expense_header, parent, false);
             vh.expId = (TextView) convertView.findViewById(R.id.view_exp_header_id);
-            vh.expId.setTag(R.id.KEY_VIEW_TAG_EXPENSE, expense);
             vh.cost = (TextView) convertView.findViewById(R.id.view_exp_header_cost);
             vh.shop = (TextView) convertView.findViewById(R.id.view_exp_header_shop);
-            vh.shop.setTag(R.id.KEY_VIEW_TAG_SHOP, expense.getShop());
             vh.date = (TextView) convertView.findViewById(R.id.view_exp_header_date);
             convertView.setTag(R.id.KEY_VIEW_HOLDER, vh);
         }
         vh = (VHExpense) convertView.getTag(R.id.KEY_VIEW_HOLDER);
         vh.expId.setText(String.valueOf(expense.getId()));
-        vh.cost.setText(String.valueOf(expense.getCost()));
-        vh.shop.setText(String.valueOf(   ( (ShopBean)vh.shop.getTag(R.id.KEY_VIEW_TAG_SHOP)).getDescription()));
+        vh.expId.setTag(R.id.KEY_VIEW_TAG_EXPENSE, expense);
+        vh.cost.setText(Constants.DM_FORMATTER.format(expense.getCost()));
+        vh.shop.setText(expense.getShop().getDescription());
         vh.date.setText( Constants.GLOBAL_DATE_FORMAT.format( expense.getFormattedDate() ) );
         return convertView;
     }
@@ -158,6 +160,7 @@ public class AdapterExpenses extends ArrayAdapter<ExpenseBean>
     @Override
     public void clear()
     {
+        super.clear();
         this.expensesList.clear();
         this.notifyDataSetChanged();
     }
@@ -189,7 +192,7 @@ public class AdapterExpenses extends ArrayAdapter<ExpenseBean>
         }
         this.expensesList = new ArrayList<ExpenseBean>(list.size());
         for ( BaseSMBean bean : list )
-            this.expensesList.add((ExpenseBean) bean);
+            this.add((ExpenseBean) bean);
         Logger.app_log("Lista popolata.");
     }
 

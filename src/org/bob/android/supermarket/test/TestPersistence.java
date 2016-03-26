@@ -24,6 +24,7 @@
 
 package org.bob.android.supermarket.test;
 
+import android.net.Uri;
 import org.bob.android.supermarket.ApplicationSM;
 import org.bob.android.supermarket.logger.Logger;
 import org.bob.android.supermarket.persistence.beans.*;
@@ -133,6 +134,8 @@ public class TestPersistence
                 eb.addExpenseItem(eab);
                 ApplicationSM.getInstance().getContentResolver().insert(DBConstants.URI_EXPENSE_ARTICLES_CONTENT, eab.getContentValues());
             }
+            eb.setCost();
+            ApplicationSM.getInstance().getContentResolver().update(Uri.parse(DBConstants.STR_FULL_URI_EXPENSES_CONTENT + "/" + String.valueOf(i) ), eb.getContentValues(), null, null);
             Logger.tst_log("Expense created");
         }
         Logger.tst_log("articles created!");

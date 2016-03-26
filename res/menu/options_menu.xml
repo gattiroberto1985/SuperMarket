@@ -34,4 +34,10 @@
         android:title="@string/TITLE_ACTIONBAR_ADD_EXPENSE"
         android:icon="@android:drawable/ic_menu_add"
         android:showAsAction="collapseActionView|ifRoom" />
+
+    <item android:id="@+id/menu_export_db"
+          android:title="@string/TITLE_ACTIONBAR_EXPORT_DATABASE"
+          android:icon="@android:drawable/ic_menu_save"
+          android:showAsAction="collapseActionView|ifRoom" />
+
 </menu>

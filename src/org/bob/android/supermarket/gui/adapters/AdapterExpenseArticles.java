@@ -36,6 +36,7 @@ import org.bob.android.supermarket.logger.Logger;
 import org.bob.android.supermarket.persistence.beans.BaseSMBean;
 import org.bob.android.supermarket.persistence.beans.ExpenseArticleBean;
 import org.bob.android.supermarket.persistence.beans.ExpenseBean;
+import org.bob.android.supermarket.utilities.Constants;
 
 import java.util.ArrayList;
 
@@ -90,7 +91,6 @@ public class AdapterExpenseArticles extends ArrayAdapter<ExpenseArticleBean>
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
-	    View rowView = convertView;
 		ViewHolder viewHolder;
         ExpenseArticleBean ea;
         if ( position >= 0 )
@@ -102,29 +102,28 @@ public class AdapterExpenseArticles extends ArrayAdapter<ExpenseArticleBean>
         {
             throw new RuntimeException("ERRORE: articolo di spesa non recuperato nella lista!");
         }
-	    if (rowView == null) 
+	    if (convertView == null)
 	    {
-	        rowView = ApplicationSM.getLayoutInflater().inflate(R.layout.view_expense_detail_item, parent, false);
+			convertView = ApplicationSM.getLayoutInflater().inflate(R.layout.view_expense_detail_item, parent, false);
 			viewHolder = new ViewHolder();
-	        viewHolder.category = (TextView) rowView.findViewById(R.id.view_exp_item_category);
-	        viewHolder.brand	 = (TextView) rowView.findViewById(R.id.view_exp_item_brand);
-	        viewHolder.description = (TextView) rowView.findViewById(R.id.view_exp_item_desc);
-	        viewHolder.unitCost = (TextView) rowView.findViewById(R.id.view_exp_item_single_price);
-	        viewHolder.quantity = (TextView) rowView.findViewById(R.id.view_exp_item_quantity);
-	        viewHolder.totalCost = (TextView) rowView.findViewById(R.id.view_exp_item_total_price);
+	        viewHolder.category = (TextView) convertView.findViewById(R.id.view_exp_item_category);
+	        viewHolder.brand	 = (TextView) convertView.findViewById(R.id.view_exp_item_brand);
+	        viewHolder.description = (TextView) convertView.findViewById(R.id.view_exp_item_desc);
+	        viewHolder.unitCost = (TextView) convertView.findViewById(R.id.view_exp_item_single_price);
+	        viewHolder.quantity = (TextView) convertView.findViewById(R.id.view_exp_item_quantity);
+	        viewHolder.totalCost = (TextView) convertView.findViewById(R.id.view_exp_item_total_price);
             // Setting tags...
-            viewHolder.category.setTag(R.id.KEY_VIEW_TAG_CATEGORY, ea.getArticle().getCategory());
-            viewHolder.brand.setTag(R.id.KEY_VIEW_TAG_BRAND, ea.getArticle().getBrand());
-	        rowView.setTag(R.id.KEY_VIEW_HOLDER, viewHolder);
+			convertView.setTag(R.id.KEY_VIEW_HOLDER, viewHolder);
 	    }
-		viewHolder = (ViewHolder) rowView.getTag(R.id.KEY_VIEW_HOLDER);
+		viewHolder = (ViewHolder) convertView.getTag(R.id.KEY_VIEW_HOLDER);
 		viewHolder.category.setText(ea.getArticle().getCategory().getDescription());
 		viewHolder.brand.setText(ea.getArticle().getBrand().getDescription());
 		viewHolder.description.setText(ea.getArticle().getDescription());
-		viewHolder.unitCost.setText(String.valueOf(ea.getArticleCost()));
+		viewHolder.unitCost.setText(Constants.DM_FORMATTER.format(ea.getArticleCost()));
 		viewHolder.quantity.setText(String.valueOf(ea.getArticleQuantity()));
-		viewHolder.totalCost.setText(this.getContext().getString(R.string.STR_DEFAULT_TOTAL_PRICE) + String.format("%.2f", ea.getFullCost()));
-	    return rowView;
+		viewHolder.totalCost.setText(this.getContext().getString(R.string.STR_DEFAULT_TOTAL_PRICE) + Constants.DM_FORMATTER.format(ea.getFullCost()));
+        convertView.setTag(R.id.KEY_VIEW_TAG_EXPENSE_ARTICLE, ea);
+	    return convertView;
 	}
 	
 	/**
@@ -145,7 +144,7 @@ public class AdapterExpenseArticles extends ArrayAdapter<ExpenseArticleBean>
 	@Override
 	public long getItemId(int position)
 	{
-		return super.getItemId(position);
+		return this.expenseArticleList.get(position).getId();
 	}
 
 	@Override
@@ -153,8 +152,8 @@ public class AdapterExpenseArticles extends ArrayAdapter<ExpenseArticleBean>
 	{
 		// [ ADD_EXPENSE_ARTICLE ]
 		super.add(eab);
-		Logger.writeLog("Aggiungo articolo di spesa: " + eab.toString());
 		this.expenseArticleList.add(eab);
+		Logger.writeLog("Aggiungo articolo di spesa: " + eab.toString());
 	}
 	
 	/**
@@ -242,7 +241,9 @@ public class AdapterExpenseArticles extends ArrayAdapter<ExpenseArticleBean>
         }
         this.expenseArticleList = new ArrayList<ExpenseArticleBean>(list.size());
         for ( BaseSMBean bean : list )
-            this.expenseArticleList.add((ExpenseArticleBean) bean);
+        {
+            this.add((ExpenseArticleBean) bean);
+        }
         Logger.app_log("Lista popolata.");
     }
 
