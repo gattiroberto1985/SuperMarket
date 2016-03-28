@@ -37,5 +37,6 @@ public abstract class BaseSMBean implements Serializable
     public abstract void setId(int id);
     public abstract int getId();
     public abstract ContentValues getContentValues();
+    public abstract String getObjectDescription();
 
 }

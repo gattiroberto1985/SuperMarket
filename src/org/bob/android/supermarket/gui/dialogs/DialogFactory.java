@@ -32,7 +32,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import org.bob.android.supermarket.ApplicationSM;
 import org.bob.android.supermarket.R;
+import org.bob.android.supermarket.gui.adapters.ACTVAdapter;
 import org.bob.android.supermarket.gui.dialogs.interfaces.OnExpenseArticleUpdate;
 import org.bob.android.supermarket.gui.dialogs.interfaces.OnExpenseDelete;
 import org.bob.android.supermarket.gui.dialogs.interfaces.OnExpenseUpdate;
@@ -72,6 +74,10 @@ public class DialogFactory {
         etCost.addTextChangedListener(new TwoDecimalTextWatcher(etCost));
         etQnty.addTextChangedListener(new TwoDecimalTextWatcher(etQnty));
 
+        actvCategory.setAdapter(new ACTVAdapter(frg.getActivity(), ApplicationSM.categories));
+        actvBrand   .setAdapter(new ACTVAdapter(frg.getActivity(), ApplicationSM.brands));
+        actvArticle .setAdapter(new ACTVAdapter(frg.getActivity(), ApplicationSM.articles));
+        //actvShop    .setAdapter(new ACTVAdapter(frg.getActivity(), ApplicationSM.shops     ));
         // Checking if expense article is to modify . . .
         if ( eab != null )
         {
@@ -118,6 +124,7 @@ public class DialogFactory {
         // Creating view for the dialog . . .
         View dialogView = inflater.inflate(R.layout.dialog_update_expense, null);
         AutoCompleteTextView actvShop = (AutoCompleteTextView) dialogView.findViewById(R.id.dialog_update_expense_actv_shop);
+        actvShop.setAdapter(new ACTVAdapter(frg.getActivity(), ApplicationSM.shops));
         EditText date = (EditText) dialogView.findViewById(R.id.dialog_update_expense_et_date);
         date.addTextChangedListener(new DateTextWatcher(date));
         // Checking if expense is to modify . . .
@@ -136,11 +143,12 @@ public class DialogFactory {
                 .setMessage(R.string.DIALOG_ADD_EXPENSE_MESSAGE)
                 // Setting title . . .
                 .setTitle(R.string.DIALOG_ADD_EXPENSE_TITLE)
-                        // Setting OK button . . .
-                .setPositiveButton(android.R.string.ok, oeu)
-                        // Setting KO button . . .
-                .setNegativeButton(android.R.string.cancel, oeu);
-
+                        // Setting OK (save and, eventually, open) button . . .
+                .setPositiveButton(R.string.DIALOG_OK, oeu)
+                        // Setting KO (remove) button . . .
+                .setNegativeButton(R.string.DIALOG_DELETE, oeu)
+                        // Setting Neutral (exit dialog) button . .
+                .setNeutralButton(R.string.DIALOG_EXIT, oeu);
         return builder.create();
     }
 

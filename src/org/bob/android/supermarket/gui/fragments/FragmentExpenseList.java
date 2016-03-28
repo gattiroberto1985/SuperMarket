@@ -311,7 +311,8 @@ class OnExpenseLongClickListener implements OnItemLongClickListener
         //try {
         TextView idView = (TextView) view.findViewById(R.id.view_exp_header_id);
             ExpenseBean expenseToRemove = (ExpenseBean)  idView.getTag(R.id.KEY_VIEW_TAG_EXPENSE); //GuiUtils.getExpenseBeanFromView(view);
-            AlertDialog deleteExpDialog = DialogFactory.deleteExpenseDialog(frg, expenseToRemove);
+            //AlertDialog deleteExpDialog = DialogFactory.deleteExpenseDialog(frg, expenseToRemove);
+            AlertDialog deleteExpDialog = DialogFactory.updateExpenseDialog(frg, expenseToRemove);
             deleteExpDialog.show();
         /*}
         catch ( SuperMarketException ex )

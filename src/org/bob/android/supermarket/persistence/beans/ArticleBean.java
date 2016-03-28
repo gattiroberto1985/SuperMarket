@@ -125,4 +125,9 @@ public class ArticleBean extends BaseSMBean
         cv.put(DBConstants.FIELD_ARTICLE_DESCRIPTION, this.getDescription());
         return cv;
     }
+
+    @Override
+    public String getObjectDescription() {
+        return this.getDescription();
+    }
 }

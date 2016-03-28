@@ -101,7 +101,13 @@ Tbd
   elemento desiderato (se esiste ho già la sua posizione) e implementare una
   piccola animazione per evidenziare la posizione all'utente.
 
-
+- id: ` [ RETRIEVE_OBJECTS ] `: rivedere il processo di recupero dei vari
+  oggetti (articoli, brand, categorie e negozi). Al momento vengono recuperate
+  solo le loro descrizioni e in caso di aggiunta/rimozione di oggetti a db non
+  c'e' un meccanismo di refresh delle liste.
+  Valutare l'inserimento di una sorta di binding tra la tabella db e le le liste
+  di oggetti, intesi stavolta come `BaseSMBean` e aggiungere il relativo oggetto
+  come tag alla view della lista di autocompletamento.
 
 # Riferimenti
 

@@ -222,6 +222,10 @@ public class ExpenseBean extends BaseSMBean
         return cv;
     }
 
+    @Override
+    public String getObjectDescription() {
+        return this.getShop().getObjectDescription() + " in " + Constants.GLOBAL_DATE_FORMAT.format(this.getDate()) + " for a cost of " + Constants.DM_FORMATTER.format(this.getCost());
+    }
 
     @Override
     public boolean equals(Object o) {

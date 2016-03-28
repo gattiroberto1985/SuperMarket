@@ -72,6 +72,10 @@ public class ArticlePriceTrendBean extends BaseSMBean {
         return this.id;
     }
 
+    @Override
+    public String getObjectDescription() {
+        return this.getId() + " @@ " + this.getShopDesc();
+    }
 
     /* ********************************************************************* */
     /*                       GETTER AND SETTER METHODS                       */

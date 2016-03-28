@@ -34,6 +34,7 @@ import org.bob.android.supermarket.R;
 import org.bob.android.supermarket.exceptions.SuperMarketException;
 import org.bob.android.supermarket.gui.GuiUtils;
 import org.bob.android.supermarket.gui.activities.ActivityExpenseList;
+import org.bob.android.supermarket.gui.dialogs.DialogFactory;
 import org.bob.android.supermarket.gui.fragments.FragmentExpenseList;
 import org.bob.android.supermarket.logger.Logger;
 import org.bob.android.supermarket.persistence.beans.BeanFactory;
@@ -71,6 +72,11 @@ public class OnExpenseUpdate implements DialogInterface.OnClickListener {
                 break;
             }
             case DialogInterface.BUTTON_NEGATIVE:
+            {
+                DialogFactory.deleteExpenseDialog(this.frg, this.currentExpense).show();
+                break;
+            }
+            case DialogInterface.BUTTON_NEUTRAL:
                 break;
             default:
                 //Log.e(TAG, "Scelta non valida!");

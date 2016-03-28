@@ -26,14 +26,13 @@ package org.bob.android.supermarket;
 
 import android.app.Application;
 import android.app.Service;
-import android.content.ContentResolver;
-import android.content.res.Resources;
 import android.view.LayoutInflater;
 import org.bob.android.supermarket.logger.Logger;
-import org.bob.android.supermarket.persistence.cp.SuperMarketCP;
+import org.bob.android.supermarket.tasks.ATRetrieveObjects;
 import org.bob.android.supermarket.utilities.DBConstants;
 
-import java.util.ResourceBundle;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -60,17 +59,31 @@ public class ApplicationSM extends Application
         return singleton;
     }
 
+    public static List<String> shops      = new ArrayList<String>();
+    public static List<String> categories = new ArrayList<String>();
+    public static List<String> brands     = new ArrayList<String>();
+    public static List<String> articles   = new ArrayList<String>();
+
     @Override
     public void onCreate()
     {
         super.onCreate();
         Logger.lfc_log("Creating application class for SuperMarket...");
         ApplicationSM.singleton = this;
+        ApplicationSM.retrieveObjects();
     }
 
     /* ********************************************************************* */
     /*                               CLASS METHODS                           */
     /* ********************************************************************* */
+
+    public static void retrieveObjects()
+    {
+        ( new ATRetrieveObjects(DBConstants.URI_ARTICLES_CONTENT  ) ).execute();
+        ( new ATRetrieveObjects(DBConstants.URI_CATEGORIES_CONTENT) ).execute();
+        ( new ATRetrieveObjects(DBConstants.URI_BRANDS_CONTENT    ) ).execute();
+        ( new ATRetrieveObjects(DBConstants.URI_SHOPS_CONTENT     ) ).execute();
+    }
 
     /**
      * Ritorna un LayoutInflater da utilizzare per le view.

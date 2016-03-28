@@ -109,6 +109,11 @@ public class ShopBean extends BaseSMBean
     }
 
     @Override
+    public String getObjectDescription() {
+        return this.getDescription();
+    }
+
+    @Override
     public boolean equals(Object o) {
 
         if ( ! ( o instanceof ShopBean ) )

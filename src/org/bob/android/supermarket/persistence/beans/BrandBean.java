@@ -105,4 +105,8 @@ public class BrandBean extends BaseSMBean
         return cv;
     }
 
+    @Override
+    public String getObjectDescription() {
+        return this.getDescription();
+    }
 }

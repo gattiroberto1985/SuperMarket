@@ -113,4 +113,8 @@ public class CategoryBean extends BaseSMBean
         return cv;
     }
 
+    @Override
+    public String getObjectDescription() {
+        return this.getDescription();
+    }
 }

@@ -142,4 +142,8 @@ public class ExpenseArticleBean extends BaseSMBean
         return cv;
     }
 
+    @Override
+    public String getObjectDescription() {
+        return this.getArticle().getObjectDescription() + ": " + this.getArticleCost() + " for " + this.getArticleQuantity();
+    }
 }
