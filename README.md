@@ -109,8 +109,24 @@ Tbd
   di oggetti, intesi stavolta come `BaseSMBean` e aggiungere il relativo oggetto
   come tag alla view della lista di autocompletamento.
 
+- id: ` [ SWIPE_TO_DISMISS ] `: al momento in ogni direzione dello slide, viene
+  rimosso l'item. Valutare di inserire un meccanismo di long tap sull'item che
+  mostri le opzioni di rimozione e di modifica (leggero scroll verso sx e due
+  icone una sopra l'altra con bidone e freccia verso sx [ rimozione ] e matita
+  con freccia verso dx [ modifica ] ).
+
+- id: ` [ MATERIAL_DESIGN ] `: modificare l'app per evitare le diverse activity
+  ed utilizzare il paradigma material design.
+
+- id: ` [ NAVIGATION_BAR ] `: inserire una navigation bar sulla action bar.
 # Riferimenti
 
 - ` [ ADD_EXPENSE_ARTICLE ] `:
     - http://stackoverflow.com/questions/14479078/smoothscrolltopositionfromtop-is-not-always-working-like-it-should/20997828#20997828
     - ...
+- ` [ SWIPE_TO_DISMISS ] `:
+    - http://stackoverflow.com/a/2564751
+
+- ` [ MATERIAL_DESIGN ] `:
+    - http://www.google.com/design/spec/material-design/introduction.html#introduction-goals
+    - http://developer.android.com/training/material/theme.html

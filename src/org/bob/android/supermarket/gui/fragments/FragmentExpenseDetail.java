@@ -94,6 +94,12 @@ public class FragmentExpenseDetail extends ListFragment
 
 	public void setSelectedExpense(ExpenseBean eb)
 	{
+		// Checking if exists a previous selected expense to save . . .
+		if ( this.expenseSelected != null )
+		{
+			Logger.app_log("Previous expense selected! Should i save it?");
+			DialogFactory.saveExpenseDialog(this, this.expenseSelected);
+		}
 		this.expenseSelected = eb;
 		// Setting delle informazioni di testata della spesa
 		// Recupero degli articoli di spesa
@@ -111,6 +117,12 @@ public class FragmentExpenseDetail extends ListFragment
         double newPrice = this.expenseSelected.getCost();
         this.expenseCostTv.setText(Constants.DM_FORMATTER.format(newPrice));
     }
+
+	public void saveExpense()
+	{
+
+	}
+
 	/* --------------------------------------------------------------------- *
 	 *                            OVERRIDDEN METHODS                         *
 	 * --------------------------------------------------------------------- */

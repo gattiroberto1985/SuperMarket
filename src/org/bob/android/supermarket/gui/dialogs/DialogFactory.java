@@ -178,4 +178,27 @@ public class DialogFactory {
         return builder.create();
     }
 
+    public static final AlertDialog saveExpenseDialog(Fragment frg, ExpenseBean eb)
+    {
+        // Checking if expense is to delete . . .
+        if ( eb == null )
+        {
+            Logger.app_log("No expense to save!");
+            return null;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(frg.getActivity());
+        // Setting alert dialog by cascade calling of 'set' methods . . .
+        OnExpenseUpdate oed = new OnExpenseUpdate( (FragmentExpenseList) frg, eb);
+        builder
+                // Setting message . . .
+                .setMessage(R.string.DIALOG_SAVE_EXPENSE_MESSAGE)
+                        // Setting title . . .
+                .setTitle(R.string.DIALOG_SAVE_EXPENSE_TITLE)
+                        // Setting OK button . . .
+                .setPositiveButton(android.R.string.ok, oed)
+                        // Setting KO button . . .
+                .setNegativeButton(android.R.string.cancel, oed);
+
+        return builder.create();
+    }
 }

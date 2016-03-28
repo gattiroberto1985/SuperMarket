@@ -53,10 +53,13 @@ public class OnExpenseUpdate implements DialogInterface.OnClickListener {
 
     private FragmentExpenseList frg;
 
-    public OnExpenseUpdate(FragmentExpenseList frg, ExpenseBean curExpense)
+    private boolean writeDb;
+
+    public OnExpenseUpdate(FragmentExpenseList frg, ExpenseBean curExpense, boolean writeDb)
     {
         this.frg = frg;
         this.currentExpense = curExpense;
+        this.writeDb = writeDb;
     }
 
 
@@ -90,7 +93,6 @@ public class OnExpenseUpdate implements DialogInterface.OnClickListener {
     /* ********************************************************************* */
     /*                             CLASS METHODS                             */
     /* ********************************************************************* */
-
 
     /**
      * Update/Create method for an expense. It checks if the new expense is
@@ -146,6 +148,7 @@ public class OnExpenseUpdate implements DialogInterface.OnClickListener {
         }
 
     }
+
 
 }
 

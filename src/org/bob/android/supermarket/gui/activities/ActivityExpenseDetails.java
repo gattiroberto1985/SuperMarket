@@ -34,6 +34,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import org.bob.android.supermarket.R;
+import org.bob.android.supermarket.gui.dialogs.DialogFactory;
 import org.bob.android.supermarket.gui.fragments.FragmentExpenseDetail;
 import org.bob.android.supermarket.logger.Logger;
 
@@ -204,4 +205,8 @@ public class ActivityExpenseDetails extends Activity
         }
 	}
 
+    @Override
+    public void onBackPressed() {
+        ( ( FragmentExpenseDetail) this.getFragmentManager().findFragmentById(R.id.expenseDetail_fragment) ).saveExpense();
+    }
 }
