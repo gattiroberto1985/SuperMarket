@@ -119,6 +119,9 @@ Tbd
   ed utilizzare il paradigma material design.
 
 - id: ` [ NAVIGATION_BAR ] `: inserire una navigation bar sulla action bar.
+
+- id: ` [ CLEAN_DATABASE ] `: prevedere l'inserimento di un tasto di pulizia del
+  database che rimuova dalle varie tabelle tutti gli elementi orfani;
 # Riferimenti
 
 - ` [ ADD_EXPENSE_ARTICLE ] `:

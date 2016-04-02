@@ -68,8 +68,9 @@ public class ATRetrieveExpenseArticles extends AsyncTask<Void, ExpenseArticleBea
     {
         Logger.writeLog("Dimensione lista: " + (list == null ? "NULL" : String.valueOf(list.size()) ) );
         Toast.makeText(ApplicationSM.getInstance().getApplicationContext(), "Articoli recuperati con successo!", Toast.LENGTH_SHORT).show();
-        for ( BaseSMBean bsmb : list)
-            this.expense.addExpenseItem((ExpenseArticleBean) bsmb);
+        if ( list != null )
+            for ( BaseSMBean bsmb : list)
+                this.expense.addExpenseItem((ExpenseArticleBean) bsmb);
         this.expense.setCost();
         this.alAdapter.translateAndSetList(list);
         this.alAdapter.notifyDataSetChanged();

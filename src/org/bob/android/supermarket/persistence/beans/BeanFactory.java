@@ -50,6 +50,9 @@ public class BeanFactory
         if ( bean2delete instanceof ExpenseBean )
             return BeanFactory.deleteExpenseBean((ExpenseBean) bean2delete);
 
+        if ( bean2delete instanceof ExpenseArticleBean )
+            return BeanFactory.deleteExpenseArticleBean( ( ExpenseArticleBean ) bean2delete );
+
         throw new SuperMarketException("ERROR: method 'deleteBean' not yet implemented for class '" + bean2delete.getClass().getName() + "'!");
     }
 
@@ -65,6 +68,19 @@ public class BeanFactory
         // Proceeding with the removal of the expense . . .
         return ApplicationSM.getInstance().getContentResolver().delete(
                 Uri.parse(DBConstants.URI_EXPENSES_CONTENT + "/" + String.valueOf(eb.getId())), null, null);
+    }
+
+    private static int deleteExpenseArticleBean(ExpenseArticleBean eab) throws SuperMarketException
+    {
+        if ( eab == null )
+            throw new SuperMarketException("ERROR: eab is null!");
+
+        if ( eab.getId() < 0 )
+            throw new SuperMarketException("ERROR: id is not valid: '" + eab.getId() + "'!");
+
+        // Proceeding with the removal of the expense . . .
+        return ApplicationSM.getInstance().getContentResolver().delete(
+                Uri.parse(DBConstants.URI_EXPENSE_ARTICLES_CONTENT + "/" + String.valueOf(eab.getId())), null, null);
     }
 
     public static Object insertOrUpdateBean(BaseSMBean bean) throws SuperMarketException
@@ -149,9 +165,13 @@ public class BeanFactory
     {
         int rowsUpdated = -1;
         Uri uri = null;
-        if ( bean2update instanceof ExpenseBean ) {
-            uri = DBConstants.URI_EXPENSES_CONTENT;
-            ((ExpenseBean) bean2update).setCost();
+        if ( bean2update instanceof ExpenseBean )
+        {
+            uri = Uri.parse(DBConstants.URI_EXPENSES_CONTENT + "/" + String.valueOf(bean2update.getId()));
+            if ( ( (ExpenseBean) bean2update).getArticles() != null )
+            {
+                BeanFactory.updateExpenseArticleList((ExpenseBean)bean2update);
+            }
         }
 
         if ( uri == null )
@@ -166,6 +186,26 @@ public class BeanFactory
                             DBConstants.FIELD_DEFAULT_ID + " = ?",
                             new String[]{String.valueOf(bean2update.getId())}
                     );
+    }
+
+    /**
+     * The method updates or inserts the expense articles in the list.
+     * @param eb
+     * @throws SuperMarketException
+     */
+    private static void updateExpenseArticleList(ExpenseBean eb) throws SuperMarketException
+    {
+        // TODO: how to correctly update the expense?
+        // Case 1: coming from an expense header update dialog
+        // Case 2: coming from an expense article list update screen
+        //  --> when expense article list is null -> updating header
+        //  --> when expense article list not null -> updating full expense
+        // updating full expense, so saving (by inserting or updating)
+        // the expenseArticleList
+        for ( ExpenseArticleBean eab : eb.getArticles() )
+        {
+            BeanFactory.insertOrUpdateBean(eab);
+        }
     }
 
     /* ********************************************************************* */

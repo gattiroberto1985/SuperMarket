@@ -26,7 +26,6 @@ package org.bob.android.supermarket.gui.fragments;
 
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.ListFragment;
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -45,7 +44,9 @@ import org.bob.android.supermarket.persistence.beans.ExpenseArticleBean;
 import org.bob.android.supermarket.persistence.beans.ExpenseBean;
 import org.bob.android.supermarket.tasks.ATRetrieveExpenseArticles;
 import org.bob.android.supermarket.utilities.Constants;
-import org.bob.android.supermarket.utilities.Utilities;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FragmentExpenseDetail extends ListFragment
 {
@@ -98,7 +99,7 @@ public class FragmentExpenseDetail extends ListFragment
 		if ( this.expenseSelected != null )
 		{
 			Logger.app_log("Previous expense selected! Should i save it?");
-			DialogFactory.saveExpenseDialog(this, this.expenseSelected);
+			DialogFactory.saveExpenseDialog(this, this.expenseSelected, null);
 		}
 		this.expenseSelected = eb;
 		// Setting delle informazioni di testata della spesa
@@ -120,7 +121,49 @@ public class FragmentExpenseDetail extends ListFragment
 
 	public void saveExpense()
 	{
+        // Getting articles list from listadapter . . .
+        AdapterExpenseArticles aea = (AdapterExpenseArticles) this.articlesLV.getAdapter();
+        List<ExpenseArticleBean> fullList = aea.getItemList();
+        List<ExpenseArticleBean> addedOrUpdated = new ArrayList<ExpenseArticleBean>();
+        List<ExpenseArticleBean> removed        = new ArrayList<ExpenseArticleBean>();
 
+        // Checking added/updated
+        if ( fullList != null )
+        {
+            for ( ExpenseArticleBean eab : fullList )
+            {
+                if ( this.expenseSelected.getArticles().indexOf(eab) == -1 )
+                {
+                    // added or updated article!
+                    addedOrUpdated.add(eab);
+                }
+            }
+        }
+
+        // Checking removed . . .
+        if ( this.expenseSelected.getArticles() != null )
+        {
+            for ( ExpenseArticleBean eab : this.expenseSelected.getArticles() )
+            {
+                if ( fullList.indexOf(eab) == -1 )
+                {
+                    // removed!
+                    removed.add(eab);
+                }
+            }
+        }
+        // Updating expense article in memory (at worst nothing happens. . .)
+        this.expenseSelected.setArticles(fullList != null ? fullList : new ArrayList<ExpenseArticleBean>(0));
+        DialogFactory.saveExpenseDialog(this, this.expenseSelected, removed).show();
+
+        // Controaggiornamento della lista di partenza!
+        /*
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("result",result);
+            setResult(RESULT_OK,returnIntent);
+            finish();
+         */
+        //Logger.app_log("Saved expense!");
 	}
 
 	/* --------------------------------------------------------------------- *

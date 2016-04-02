@@ -39,6 +39,7 @@ import org.bob.android.supermarket.persistence.beans.ExpenseBean;
 import org.bob.android.supermarket.utilities.Constants;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Adapter per la listview con la lista di articoli di una spesa
@@ -246,5 +247,14 @@ public class AdapterExpenseArticles extends ArrayAdapter<ExpenseArticleBean>
         }
         Logger.app_log("Lista popolata.");
     }
+
+	/**
+	 * The method returns the full list of article.
+	 * @return the full list of articles
+	 */
+	public List<ExpenseArticleBean> getItemList()
+	{
+		return this.expenseArticleList;
+	}
 
 }

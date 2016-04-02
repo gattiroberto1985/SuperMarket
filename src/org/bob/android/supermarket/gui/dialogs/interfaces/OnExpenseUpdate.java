@@ -25,6 +25,7 @@
 package org.bob.android.supermarket.gui.dialogs.interfaces;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.widget.CheckBox;
@@ -33,15 +34,20 @@ import org.bob.android.supermarket.ApplicationSM;
 import org.bob.android.supermarket.R;
 import org.bob.android.supermarket.exceptions.SuperMarketException;
 import org.bob.android.supermarket.gui.GuiUtils;
+import org.bob.android.supermarket.gui.activities.ActivityExpenseDetails;
 import org.bob.android.supermarket.gui.activities.ActivityExpenseList;
 import org.bob.android.supermarket.gui.dialogs.DialogFactory;
+import org.bob.android.supermarket.gui.fragments.FragmentExpenseDetail;
 import org.bob.android.supermarket.gui.fragments.FragmentExpenseList;
 import org.bob.android.supermarket.logger.Logger;
 import org.bob.android.supermarket.persistence.beans.BeanFactory;
+import org.bob.android.supermarket.persistence.beans.ExpenseArticleBean;
 import org.bob.android.supermarket.persistence.beans.ExpenseBean;
 import org.bob.android.supermarket.persistence.beans.ShopBean;
 import org.bob.android.supermarket.utilities.DBConstants;
 import org.bob.android.supermarket.utilities.Utilities;
+
+import java.util.List;
 
 /**
  * Created by roberto.gatti on 07/03/2016.
@@ -51,15 +57,26 @@ public class OnExpenseUpdate implements DialogInterface.OnClickListener {
 
     private ExpenseBean currentExpense;
 
-    private FragmentExpenseList frg;
+    private Fragment frg;
 
-    private boolean writeDb;
+    private boolean fullSave;
 
-    public OnExpenseUpdate(FragmentExpenseList frg, ExpenseBean curExpense, boolean writeDb)
+    private List<ExpenseArticleBean> removed;
+
+    public OnExpenseUpdate(Fragment frg, ExpenseBean curExpense)
     {
         this.frg = frg;
         this.currentExpense = curExpense;
-        this.writeDb = writeDb;
+        this.fullSave = false;
+        this.removed = null;
+    }
+
+    public OnExpenseUpdate(Fragment frg, ExpenseBean curExpense, boolean saveExpenseArticles, List<ExpenseArticleBean> removed)
+    {
+        this.frg = frg;
+        this.currentExpense = curExpense;
+        this.fullSave = saveExpenseArticles;
+        this.removed = removed;
     }
 
 
@@ -76,13 +93,22 @@ public class OnExpenseUpdate implements DialogInterface.OnClickListener {
             }
             case DialogInterface.BUTTON_NEGATIVE:
             {
-                DialogFactory.deleteExpenseDialog(this.frg, this.currentExpense).show();
                 break;
             }
             case DialogInterface.BUTTON_NEUTRAL:
+            {
+                DialogFactory.deleteExpenseDialog(this.frg, this.currentExpense).show();
+
                 break;
+            }
             default:
                 //Log.e(TAG, "Scelta non valida!");
+        }
+        if ( this.frg instanceof FragmentExpenseDetail )
+        {
+            FragmentExpenseDetail fg = (FragmentExpenseDetail) this.frg;
+            if ( fg.getActivity() instanceof ActivityExpenseDetails )
+                frg.getActivity().onBackPressed();
         }
         return;
     }
@@ -93,6 +119,7 @@ public class OnExpenseUpdate implements DialogInterface.OnClickListener {
     /* ********************************************************************* */
     /*                             CLASS METHODS                             */
     /* ********************************************************************* */
+
 
     /**
      * Update/Create method for an expense. It checks if the new expense is
@@ -107,48 +134,61 @@ public class OnExpenseUpdate implements DialogInterface.OnClickListener {
     public void handleEdit(AlertDialog di)
     {
         try {
-            ExpenseBean newExpBean = GuiUtils.getExpenseBeanFromView(di);
-            boolean openAfterEdit = ((CheckBox) di.findViewById(R.id.dialog_update_expense_flag_open)).isChecked();
-            newExpBean.setArticles(this.currentExpense.getArticles());
-            //newExpBean.setCost();
-            this.updateExpense(newExpBean); // the newExpBean shares the id with the old
-
-            // if openAfterEdit flag is checked, then the expense will be opened
-            if (openAfterEdit) {
-                Logger.lfc_log("Opening expense details . . .");
-                ((ActivityExpenseList) this.frg.getActivity()).onExpenseSelected(newExpBean);
-            }
+            if ( ! this.fullSave )
+                this.saveExpenseHeader(di);
+            else
+                this.saveFullExpense();
         }
         catch (SuperMarketException ex )
-        {
-
-        }
-    }
-
-
-    /**
-     * This method exec the update or insert of a new expense in the database.
-     *
-     * @param eb the expense to update/create.
-     *
-     */
-    private void updateExpense(ExpenseBean eb)
-    {
-        //Logger.app_log("Trying to update expense with id '" + eb.getId() + "' . . .");
-        try
-        {
-            BeanFactory.insertOrUpdateBean(eb);
-            // Notifying change to the listview . . .
-            this.frg.getListViewAdapter().add(eb);
-        }
-        catch ( SuperMarketException ex )
         {
             Toast.makeText(this.frg.getActivity(), "ERRORE: " + ex.getMessage(), Toast.LENGTH_LONG).show();
             return;
         }
-
     }
 
+    /**
+     * This method handles the changing in the expense header, by a change in the
+     * shop or in the date. No changes in the articles are admitted nor handled!
+     * @param di
+     * @throws SuperMarketException
+     */
+    private void saveExpenseHeader(AlertDialog di) throws SuperMarketException
+    {
+        ExpenseBean newExpBean = GuiUtils.getExpenseBeanFromView(di);
+        boolean openAfterEdit = ((CheckBox) di.findViewById(R.id.dialog_update_expense_flag_open)).isChecked();
+        newExpBean.setArticles(this.currentExpense.getArticles());
+        //newExpBean.setCost();
+        BeanFactory.insertOrUpdateBean(newExpBean);
+        // Notifying change to the listview . . .
+        ( ( FragmentExpenseList ) this.frg).getListViewAdapter().add(newExpBean);
+        // if openAfterEdit flag is checked, then the expense will be opened
+        if (openAfterEdit) {
+            Logger.lfc_log("Opening expense details . . .");
+            ((ActivityExpenseList) this.frg.getActivity()).onExpenseSelected(newExpBean);
+        }
+    }
+
+    private void saveFullExpense() throws SuperMarketException
+    {
+        try
+        {
+            // deleting old expense article
+            if ( this.removed != null )
+            {
+                for (ExpenseArticleBean bean2remove : this.removed)
+                {
+                    BeanFactory.deleteBean(bean2remove);
+                }
+            }
+            // Adding/updating existent expenseArticles and expense header
+            BeanFactory.insertOrUpdateBean(this.currentExpense);
+        }
+        catch ( SuperMarketException ex )
+        {
+            Logger.app_log("ERRORE: " + ex.getMessage());
+            throw ex;
+        }
+    }
 
 }
 

@@ -29,11 +29,19 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <!-- Expense Id (if available) -->
+    <!-- [ Hidden ] Expense Id (if available) -->
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="invisible"
             android:id="@+id/dialog_update_expense_expense_id"/>
+
+    <!-- [ Hidden ] Expense cost -->
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:id="@+id/dialog_update_expense_expense_cost"/>
 
     <!-- Shop Actv -->
     <AutoCompleteTextView

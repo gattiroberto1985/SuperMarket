@@ -29,10 +29,7 @@ package org.bob.android.supermarket.gui.activities;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import org.bob.android.supermarket.R;
 import org.bob.android.supermarket.gui.dialogs.DialogFactory;
 import org.bob.android.supermarket.gui.fragments.FragmentExpenseDetail;
@@ -207,6 +204,16 @@ public class ActivityExpenseDetails extends Activity
 
     @Override
     public void onBackPressed() {
-        ( ( FragmentExpenseDetail) this.getFragmentManager().findFragmentById(R.id.expenseDetail_fragment) ).saveExpense();
+        super.onBackPressed();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)
+        {
+            ( ( FragmentExpenseDetail) this.getFragmentManager().findFragmentById(R.id.frg_expense_detail) ).saveExpense();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

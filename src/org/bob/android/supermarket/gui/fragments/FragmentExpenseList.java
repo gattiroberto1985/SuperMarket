@@ -35,17 +35,13 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import org.bob.android.supermarket.ApplicationSM;
 import org.bob.android.supermarket.R;
-import org.bob.android.supermarket.exceptions.SuperMarketException;
-import org.bob.android.supermarket.gui.GuiUtils;
 import org.bob.android.supermarket.gui.adapters.AdapterExpenses;
 import org.bob.android.supermarket.gui.dialogs.DialogFactory;
 import org.bob.android.supermarket.logger.Logger;
 import org.bob.android.supermarket.persistence.beans.ExpenseBean;
 import org.bob.android.supermarket.tasks.ATRetrieveExpenses;
 import org.bob.android.supermarket.utilities.Constants;
-import org.bob.android.supermarket.utilities.DBConstants;
 import org.bob.android.supermarket.utilities.Utilities;
 
 import java.io.IOException;
@@ -258,7 +254,7 @@ public class FragmentExpenseList extends ListFragment
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.menu_add_expense:
-                AlertDialog dialog = DialogFactory.updateExpenseDialog(this, null);
+                AlertDialog dialog = DialogFactory.updateExpenseHeaderDialog(this, null);
                 dialog.show();
                 return true;
             case R.id.menu_export_db: {
@@ -312,7 +308,7 @@ class OnExpenseLongClickListener implements OnItemLongClickListener
         TextView idView = (TextView) view.findViewById(R.id.view_exp_header_id);
             ExpenseBean expenseToRemove = (ExpenseBean)  idView.getTag(R.id.KEY_VIEW_TAG_EXPENSE); //GuiUtils.getExpenseBeanFromView(view);
             //AlertDialog deleteExpDialog = DialogFactory.deleteExpenseDialog(frg, expenseToRemove);
-            AlertDialog deleteExpDialog = DialogFactory.updateExpenseDialog(frg, expenseToRemove);
+            AlertDialog deleteExpDialog = DialogFactory.updateExpenseHeaderDialog(frg, expenseToRemove);
             deleteExpDialog.show();
         /*}
         catch ( SuperMarketException ex )

@@ -26,8 +26,6 @@ package org.bob.android.supermarket.gui.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.ListFragment;
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
@@ -46,6 +44,8 @@ import org.bob.android.supermarket.logger.Logger;
 import org.bob.android.supermarket.persistence.beans.ExpenseArticleBean;
 import org.bob.android.supermarket.persistence.beans.ExpenseBean;
 import org.bob.android.supermarket.utilities.Constants;
+
+import java.util.List;
 
 /**
  *
@@ -116,7 +116,7 @@ public class DialogFactory {
      * @param frg the parent fragment
      * @return a dialog for create/update an expense
      */
-    public static final AlertDialog updateExpenseDialog(Fragment frg, ExpenseBean expense)
+    public static final AlertDialog updateExpenseHeaderDialog(Fragment frg, ExpenseBean expense)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(frg.getActivity());
         // Getting layout inflater and creating view with correct layout . . .
@@ -146,9 +146,9 @@ public class DialogFactory {
                         // Setting OK (save and, eventually, open) button . . .
                 .setPositiveButton(R.string.DIALOG_OK, oeu)
                         // Setting KO (remove) button . . .
-                .setNegativeButton(R.string.DIALOG_DELETE, oeu)
+                .setNegativeButton(R.string.DIALOG_EXIT, oeu)
                         // Setting Neutral (exit dialog) button . .
-                .setNeutralButton(R.string.DIALOG_EXIT, oeu);
+                .setNeutralButton(R.string.DIALOG_DELETE, oeu);
         return builder.create();
     }
 
@@ -178,7 +178,7 @@ public class DialogFactory {
         return builder.create();
     }
 
-    public static final AlertDialog saveExpenseDialog(Fragment frg, ExpenseBean eb)
+    public static final AlertDialog saveExpenseDialog(Fragment frg, ExpenseBean eb, List<ExpenseArticleBean> removed)
     {
         // Checking if expense is to delete . . .
         if ( eb == null )
@@ -188,7 +188,7 @@ public class DialogFactory {
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(frg.getActivity());
         // Setting alert dialog by cascade calling of 'set' methods . . .
-        OnExpenseUpdate oed = new OnExpenseUpdate( (FragmentExpenseList) frg, eb);
+        OnExpenseUpdate oed = new OnExpenseUpdate(frg, eb, true, removed);
         builder
                 // Setting message . . .
                 .setMessage(R.string.DIALOG_SAVE_EXPENSE_MESSAGE)
@@ -201,4 +201,5 @@ public class DialogFactory {
 
         return builder.create();
     }
+
 }

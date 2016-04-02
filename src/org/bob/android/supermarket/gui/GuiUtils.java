@@ -155,16 +155,18 @@ public class GuiUtils {
         ExpenseBean eb;
         try
         {
-            TextView tvId               = ( TextView )             view.findViewById(R.id.dialog_update_expense_expense_id);
-            EditText etDate             = ( EditText )             view.findViewById(R.id.dialog_update_expense_et_date   );
-            AutoCompleteTextView etShop = ( AutoCompleteTextView ) view.findViewById(R.id.dialog_update_expense_actv_shop );
-            CheckBox             cbOpen = ( CheckBox )             view.findViewById(R.id.dialog_update_expense_flag_open );
+            TextView tvId               = ( TextView )             view.findViewById(R.id.dialog_update_expense_expense_id  );
+            TextView ebCostTv           = ( TextView )             view.findViewById(R.id.dialog_update_expense_expense_cost);
+            EditText etDate             = ( EditText )             view.findViewById(R.id.dialog_update_expense_et_date     );
+            AutoCompleteTextView etShop = ( AutoCompleteTextView ) view.findViewById(R.id.dialog_update_expense_actv_shop   );
+            CheckBox             cbOpen = ( CheckBox )             view.findViewById(R.id.dialog_update_expense_flag_open   );
             ShopBean sb = new ShopBean(-1, etShop.getText().toString());
             Date expDate = Utilities.checkDate(etDate.getText().toString());
+            double ebCost = Double.parseDouble(ebCostTv.getText().toString());
 
             if ( tvId.getTag(R.id.KEY_VIEW_TAG_EXPENSE ) == null )
             {
-                eb = new ExpenseBean(-1, expDate.getTime(), sb, -1.0);
+                eb = new ExpenseBean(-1, expDate.getTime(), sb, ebCost);
             }
             else
             {

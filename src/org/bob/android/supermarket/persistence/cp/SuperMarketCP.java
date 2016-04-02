@@ -109,166 +109,6 @@ public class SuperMarketCP extends ContentProvider
 		}
 	}
 
-	/**
-	 * Il metodo ritorna un array con la tabella e i criteri di selezione dell'oggetto.  
-	 * @param uri
-	 * @param selection
-	 * @return
-	 */
-	/*private String[] decodeUriIndicator(Uri uri, String selection)
-	{
-		String table = "";
-		String whereClause = "";
-		Logger.dtb_log("uri: " + uri.toString());
-		Logger.dtb_log("urimatch: " + DBConstants.sURIMatcher.match(uri));
-		switch ( DBConstants.sURIMatcher.match(uri) )
-		{
-		case ArticlePMD.ARTICLE_URI_INDICATOR:
-			table = ArticlePMD.ArticleTableMetaData.TABLE_NAME;
-			whereClause = whereClause.concat(ArticlePMD.ArticleTableMetaData._ID);
-			break;
-		case BrandPMD.BRAND_URI_INDICATOR:
-			table = BrandPMD.BrandTableMetaData.TABLE_NAME;
-			whereClause = whereClause.concat(BrandPMD.BrandTableMetaData._ID);
-			break;
-		case ShopPMD.SHOP_URI_INDICATOR:
-			table = ShopPMD.ShopTableMetaData.TABLE_NAME;
-			whereClause = whereClause.concat(ShopPMD.ShopTableMetaData._ID);
-			break;		
-		case CategoryPMD.CATEGORY_URI_INDICATOR:
-			table = CategoryPMD.CategoryTableMetaData.TABLE_NAME;
-			whereClause = whereClause.concat(CategoryPMD.CategoryTableMetaData._ID);
-			break;
-		case ExpensePMD.EXPENSE_URI_INDICATOR:
-			table = ExpensePMD.ExpenseTableMetaData.TABLE_NAME;
-			whereClause = whereClause.concat(ExpensePMD.ExpenseTableMetaData._ID);
-			break;
-		case ExpenseArticlePMD.EXPENSE_ARTICLE_URI_INDICATOR:
-			table = ExpenseArticlePMD.ExpenseArticleTableMetaData.TABLE_NAME;
-			whereClause = whereClause.concat(ArticlePMD.ArticleTableMetaData._ID);
-			//break;
-			return new String[] { table, whereClause } ;
-		case ExpenseArticlePMD.EXPENSE_ARTICLE_PARTIAL_INFO_URI_INDICATOR:
-			table = ExpenseArticlePMD.ExpenseArticleTableMetaData.TABLE_NAME + " ea, " + 
-		            ArticlePMD.ArticleTableMetaData.TABLE_NAME + " a, " +
-					CategoryPMD.CategoryTableMetaData.TABLE_NAME + " c, " + 
-		            BrandPMD.BrandTableMetaData.TABLE_NAME + " b";
-			whereClause = "ea." + ExpenseArticleTableMetaData.ARTICLE_ID + " = " + ArticleTableMetaData._ID 
-					    + "a."  + ArticleTableMetaData.BRAND_ID + " = " + BrandTableMetaData._ID 
-					    + "a."  + ArticleTableMetaData.CATEGORY_ID + " = " + CategoryTableMetaData._ID;
-			return new String [] { table, whereClause } ;
-		case ExpenseArticlePMD.EXPENSE_ID_URI_INDICATOR:
-			table = ExpenseArticleTableMetaData.TABLE_NAME;
-			whereClause = whereClause.concat(ExpenseArticlePMD.ExpenseArticleTableMetaData.EXPENSE_ID);
-			break;
-		default: 
-				Logger.dtb_log(" |--> uri is not item indicator...");
-				table = null;
-				whereClause = null;
-		}
-		if ( table != null )
-		{
-			String idValue = uri.getPathSegments().get(uri.getPathSegments().size() - 1 );
-			whereClause = whereClause.concat("=").concat(idValue);
-				if ( ! TextUtils.isEmpty(selection) )
-				{
-					whereClause.concat(" AND (").concat(selection).concat( " )");
-				}
-		}		
-		return (table == null ? null : new String[] { table, whereClause } );
-	}*/
-	
-	/**
-	 * Il metodo valida e controlla l'uri relativo ad una collection.
-	 * @param uri
-	 * @param selection
-	 * @return
-	 */
-	/*private String[] decodeUriCollectionIndicator(Uri uri, String selection)
-	{
-		String table = "";
-		String contentUri = "";
-		switch ( DBConstants.sURIMatcher.match(uri) )
-		{
-		case ArticlePMD.ARTICLE_COLLECTION_URI_INDICATOR:
-			table = ArticlePMD.ArticleTableMetaData.TABLE_NAME;
-			contentUri = ArticlePMD.CONTENT_URI.toString();
-			break;
-		case ArticlePMD.DISTINCT_CATEGORY_ID_URI_INDICATOR:
-			table = ArticleTableMetaData.TABLE_NAME + " a, " + CategoryTableMetaData.TABLE_NAME + " c";
-			contentUri = ArticlePMD.DISTINCT_CATEGORY_ID_URI.toString();
-			break;
-		case BrandPMD.BRAND_COLLECTION_URI_INDICATOR:
-			table = BrandPMD.BrandTableMetaData.TABLE_NAME;
-			contentUri = BrandPMD.CONTENT_URI.toString();
-			break;
-		case CategoryPMD.CATEGORY_COLLECTION_URI_INDICATOR:
-			table = CategoryPMD.CategoryTableMetaData.TABLE_NAME;
-			contentUri = CategoryPMD.CONTENT_URI.toString();
-			break;
-		case ShopPMD.SHOP_COLLECTION_URI_INDICATOR:
-			table = ShopPMD.ShopTableMetaData.TABLE_NAME;
-			contentUri = ShopPMD.CONTENT_URI.toString();
-			break;
-		case ExpensePMD.EXPENSE_COLLECTION_URI_INDICATOR:
-			table = ExpensePMD.ExpenseTableMetaData.TABLE_NAME;
-			contentUri = ExpensePMD.CONTENT_URI.toString();
-			break;		
-		case ExpensePMD.JOIN_EXPENSE_SHOP_URI_INDICATOR:
-			table = ShopPMD.ShopTableMetaData.TABLE_NAME + " shops, " + ExpenseTableMetaData.TABLE_NAME + " expenses";
-			contentUri = ExpensePMD.JOIN_SHOP_URI.toString(); //whereClause.concat(ShopPMD.ShopTableMetaData._ID);	
-			break;
-		case ExpensePMD.JOIN_EXPENSE_ARTICLE_URI_INDICATOR:
-			table = ExpenseArticlePMD.ExpenseArticleTableMetaData.TABLE_NAME + " ea, " + 
-		            ArticlePMD.ArticleTableMetaData.TABLE_NAME + " a, " +
-					CategoryPMD.CategoryTableMetaData.TABLE_NAME + " c, " + 
-		            BrandPMD.BrandTableMetaData.TABLE_NAME + " b";
-			contentUri = ExpensePMD.JOIN_ARTICLE_URI.toString(); //whereClause.concat(ShopPMD.ShopTableMetaData._ID);	
-			break;			
-		case ExpenseArticlePMD.EXPENSE_ARTICLE_COLLECTION_URI_INDICATOR:
-			table = ExpenseArticlePMD.ExpenseArticleTableMetaData.TABLE_NAME;
-			contentUri = ExpenseArticlePMD.CONTENT_URI.toString(); //whereClause.concat(ShopPMD.ShopTableMetaData._ID);	
-			break;		
-		default: 
-			Logger.dtb_log(" |--> uri is not item collection indicator... WTF??");
-			table = null;
-		}
-		return ( table == null ? null : new String[] { table, contentUri } );
-	}	*/
-
-	/**
-	 * Il metodo esegue il controllo sulla validita' dei valori riportati nel 
-	 * ContentValues.
-	 * @param uri
-	 * @param values
-	 * @return
-	 */
-	/*private boolean checkObject(Uri uri, ContentValues values) throws SuperMarketException
-	{
-		boolean result = false;
-		try
-		{
-			switch (DBConstants.sURIMatcher.match(uri))
-			{
-			case ArticlePMD.ARTICLE_COLLECTION_URI_INDICATOR:   result = BeanFactory.validate('A', values); break;
-			case BrandPMD.BRAND_COLLECTION_URI_INDICATOR:       result = BeanFactory.validate('B', values); break;
-			case CategoryPMD.CATEGORY_COLLECTION_URI_INDICATOR: result = BeanFactory.validate('C', values); break;
-			case ShopPMD.SHOP_COLLECTION_URI_INDICATOR:         result = BeanFactory.validate('S', values); break;
-			case ExpensePMD.EXPENSE_COLLECTION_URI_INDICATOR:   result = BeanFactory.validate('E', values); break;
-			case ExpenseArticlePMD.EXPENSE_ARTICLE_COLLECTION_URI_INDICATOR
-															:   result = BeanFactory.validate('X', values); break;
-			default:
-				throw new SuperMarketException("ERRORE: uri non valido: '" + uri + "'");
-			}
-			return result;
-		}
-		catch ( SuperMarketException ex )
-		{
-			Logger.dtb_log("ERRORE: dati non corretti nella mappa coi valori passati!");
-			throw ex;
-		}
-	}*/
-
     /**
      * Il metodo, a partire dall'uri, fornisce in output la classe corretta da passare
      * ad ORMLite.
@@ -320,21 +160,8 @@ public class SuperMarketCP extends ContentProvider
         try
         {
             Dao<Object, Integer> dao = this.dbh.getDao(clazz);
-            /*if ( DBConstants.sURIMatcher.match(uri) == DBConstants.RELATION_CONTACT_ID_URI_INDICATOR )
-            {
-                DeleteBuilder<Object, Integer> db = dao.deleteBuilder();
-                Where where = db.where();
-                where.eq(DBConstants.RELATION_CONTACT_ID_FIELD_NAME, id);
-                db.setWhere(where);
-                int removed = db.delete();
-                Logger.dtb_log( "Rimosse " + removed + " relazioni!");
-                return removed;
-            }
-            else
-            {*/
-                output = dao.deleteById(id);
-                Logger.dtb_log( "Dao rimosso!");
-            //}
+			output = dao.deleteById(id);
+            Logger.dtb_log( "Dao rimosso!");
         }
         catch ( SQLException ex )
         {
@@ -350,51 +177,6 @@ public class SuperMarketCP extends ContentProvider
         }
         return output;
 	}
-
-    /*public Uri insert(Uri uri, BaseSMBean smbean)
-    {
-        Logger.dtb_log("Content Provider: insert");
-        Class clazz = this.getClassFromURI(uri);
-        int id = -1;
-        try
-        {
-            Dao<BaseSMBean, Integer> dao = this.dbh.getDao(clazz);
-            dao.create(smbean);
-            Logger.dtb_log("Dao creato, procedo con il recupero dell'id...");
-            id = dao.extractId(smbean);
-        }
-        catch ( SQLException ex )
-        {
-            Logger.dtb_log("ERRORE: impossibile inserire l'oggetto a db!", Logger.Level.ERROR);
-            Logger.dtb_log("        " + ex.getMessage(), Logger.Level.ERROR);
-            ex.printStackTrace();
-        }
-        Logger.dtb_log("Ritorno l'uri: ' " + Uri.withAppendedPath(uri, String.valueOf(id)) + "'");
-        this.getContext().getContentResolver().notifyChange(Uri.withAppendedPath(uri, String.valueOf(id)), null);
-        return Uri.withAppendedPath(uri, String.valueOf(id));
-
-    }
-
-    public int update(Uri uri, BaseSMBean bean, String selection, String[] selectionArgs)
-    {
-        Logger.dtb_log(  "Content Provider: update");
-        Class clazz = this.getClassFromURI(uri);
-        int output = -1;
-        try
-        {
-            Dao<BaseSMBean, Integer> dao = this.dbh.getDao(clazz);
-            output = dao.update(bean);
-            Logger.dtb_log(  "Dao aggiornato!");
-        }
-        catch ( SQLException ex )
-        {
-            Logger.dtb_log(  "ERRORE: impossibile aggiornare l'oggetto a db!");
-            Logger.dtb_log(  "        " + ex.getMessage());
-            ex.printStackTrace();
-        }
-        this.getContext().getContentResolver().notifyChange(uri, null);
-        return output;
-    }*/
 
 	/**
 	 * Override del metodo insert.
@@ -441,8 +223,6 @@ public class SuperMarketCP extends ContentProvider
 		else
 			outCursor = this.queryNonClassURI(uri, projection, whereClauses, whereValues, sortOrder);
 		return outCursor;
-
-        //Cursor cursor = this.checkForNonClassURI(uri, projection, whereClauses, whereValues, sortOrder)
 	}
 
 	/**

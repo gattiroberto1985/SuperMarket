@@ -124,12 +124,16 @@ public class ExpenseBean extends BaseSMBean
 
     public final void addExpenseItem(ExpenseArticleBean eab)
     {
+        if ( this.articles == null )
+            this.articles = new ArrayList<ExpenseArticleBean>();
         this.articles.add(eab);
         this.changeCost(eab.getArticleCost() * eab.getArticleQuantity());
     }
 
     public final void removeExpenseItem(ExpenseArticleBean eab)
     {
+        assert this.articles != null;
+
         int index = this.articles.indexOf(eab);
         if ( index == -1 )
         {
@@ -169,10 +173,17 @@ public class ExpenseBean extends BaseSMBean
         this.shopId = this.getShop().getId();
     }
 
+    /**
+     * This methods reset the articles to the new list passed as
+     * argument.
+     *
+     * @param articles
+     */
     public final void setArticles(List<ExpenseArticleBean> articles)
     {
-        if ( articles == null ) this.articles = new ArrayList<ExpenseArticleBean>();
-        else this.articles = articles;
+        if ( this.articles != null )
+            this.articles.clear();
+        this.articles = articles;
     }
 
     public final void setCost(double cost) { this.cost = cost; }
