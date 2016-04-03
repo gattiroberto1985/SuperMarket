@@ -41,6 +41,7 @@ import org.bob.android.supermarket.persistence.beans.ShopBean;
 import org.bob.android.supermarket.utilities.Constants;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AdapterExpenses extends ArrayAdapter<ExpenseBean>
 {
@@ -196,6 +197,13 @@ public class AdapterExpenses extends ArrayAdapter<ExpenseBean>
         Logger.app_log("Lista popolata.");
     }
 
-
+    /**
+     * The method returns the full list of expenses.
+     * @return the full list of expenses
+     */
+    public List<ExpenseBean> getItemList()
+    {
+        return this.expensesList;
+    }
 
 }

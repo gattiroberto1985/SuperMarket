@@ -27,6 +27,7 @@
     <string name="TITLE_ACTIONBAR_SEARCH_BAR"                >Search for shop or date . . .</string>
     <string name="TITLE_ACTIONBAR_ADD_EXPENSE"               >Add Expense . . . </string>
     <string name="TITLE_ACTIONBAR_EXPORT_DATABASE"           >Export db to sd card</string>
+    <string name="TITLE_ACTIONBAR_ADD_EXPENSE_ARTICLE"       >Add Expense Article. . . </string>
     <string name="DIALOG_OK"                                 >Ok</string>
     <string name="DIALOG_DELETE"                             >Delete</string>
     <string name="DIALOG_EXIT"                               >Exit</string>

@@ -26,15 +26,15 @@ package org.bob.android.supermarket.gui.fragments;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListFragment;
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import org.bob.android.supermarket.R;
 import org.bob.android.supermarket.gui.adapters.AdapterExpenseArticles;
 import org.bob.android.supermarket.gui.anims.SwipeDismissListViewTouchListener;
@@ -44,7 +44,9 @@ import org.bob.android.supermarket.persistence.beans.ExpenseArticleBean;
 import org.bob.android.supermarket.persistence.beans.ExpenseBean;
 import org.bob.android.supermarket.tasks.ATRetrieveExpenseArticles;
 import org.bob.android.supermarket.utilities.Constants;
+import org.bob.android.supermarket.utilities.Utilities;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,10 +115,10 @@ public class FragmentExpenseDetail extends ListFragment
 		task.execute();
 	}
 
-    private void updateExpenseCost()
+    public void updateExpenseCost(double diff)
     {
-        double newPrice = this.expenseSelected.getCost();
-        this.expenseCostTv.setText(Constants.DM_FORMATTER.format(newPrice));
+        double oldPrice = Double.parseDouble(this.expenseCostTv.getText().toString());
+        this.expenseCostTv.setText(Constants.DM_FORMATTER.format(oldPrice + diff));
     }
 
 	public void saveExpense()
@@ -128,7 +130,7 @@ public class FragmentExpenseDetail extends ListFragment
         List<ExpenseArticleBean> removed        = new ArrayList<ExpenseArticleBean>();
 
         // Checking added/updated
-        if ( fullList != null )
+        if ( fullList != null && this.expenseSelected.getArticles() != null )
         {
             for ( ExpenseArticleBean eab : fullList )
             {
@@ -155,16 +157,14 @@ public class FragmentExpenseDetail extends ListFragment
         // Updating expense article in memory (at worst nothing happens. . .)
         this.expenseSelected.setArticles(fullList != null ? fullList : new ArrayList<ExpenseArticleBean>(0));
         DialogFactory.saveExpenseDialog(this, this.expenseSelected, removed).show();
-
-        // Controaggiornamento della lista di partenza!
-        /*
-            Intent returnIntent = new Intent();
-            returnIntent.putExtra("result",result);
-            setResult(RESULT_OK,returnIntent);
-            finish();
-         */
         //Logger.app_log("Saved expense!");
 	}
+
+    public int getSelectedExpenseId() {
+        return this.expenseSelected.getId();
+    }
+
+    public ExpenseBean getExpenseSelected() { return this.expenseSelected; }
 
 	/* --------------------------------------------------------------------- *
 	 *                            OVERRIDDEN METHODS                         *
@@ -193,6 +193,7 @@ public class FragmentExpenseDetail extends ListFragment
 			Logger.lfc_log("|--> Recupero la spesa selezionata dal bundle di salvataggio...");
 			this.expenseSelected = (ExpenseBean) this.getArguments().getSerializable(Constants.KEY_SELECTED_EXPENSE);
 		}
+        this.setHasOptionsMenu(true);
 		//this.getDataFromDB();
 	}
 
@@ -222,9 +223,9 @@ public class FragmentExpenseDetail extends ListFragment
 								for (int position : reverseSortedPositions)
                                 {
                                     ExpenseArticleBean eab = (ExpenseArticleBean) articlesLV.getAdapter().getItem(position);
+									double diff = -1 * ( eab.getFullCost() );
                                     ((AdapterExpenseArticles) articlesLV.getAdapter()).remove(eab);
-                                    expenseSelected.removeExpenseItem(eab);
-                                    FragmentExpenseDetail.this.updateExpenseCost();
+                                    FragmentExpenseDetail.this.updateExpenseCost(diff);
 								}
 								( (AdapterExpenseArticles) articlesLV.getAdapter()).notifyDataSetChanged();
 							}
@@ -293,8 +294,27 @@ public class FragmentExpenseDetail extends ListFragment
 	{
 		super.onPause();
 	}
-	
-	/* --------------------------------------------------------------------- *
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Logger.app_log("OnOptionsItemSelected detailfragment");
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.menu_add_expense_article:
+                AlertDialog dialog = DialogFactory.updateExpenseArticleDialog(this, null);
+                dialog.show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+    }
+
+    /* --------------------------------------------------------------------- *
 	 *                               UTILITIES                               *
 	 * --------------------------------------------------------------------- */		
 

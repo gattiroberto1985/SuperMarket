@@ -241,12 +241,25 @@ public class ExpenseBean extends BaseSMBean
     @Override
     public boolean equals(Object o) {
 
+        if ( o == null )
+            return false;
+
         if ( ! ( o instanceof ExpenseBean ) )
             return false;
 
         ExpenseBean eb = ( ExpenseBean ) o;
 
-        // Se id e' -1 --> false
+        if ( eb.getId() == this.getId() && this.getId() != -1 )
+            return true;
+
+        if ( ! this.getShop().equals(eb.getShop() ) )
+            return false;
+
+        if ( this.getDate() != eb.getDate() )
+            return false;
+
+        return true;
+        /*// Se id e' -1 --> false
         if ( eb.getId() == -1 )
             return false;
 
@@ -260,7 +273,7 @@ public class ExpenseBean extends BaseSMBean
             return false;
 
 
-        return true;
+        return true;*/
     }
 }
 

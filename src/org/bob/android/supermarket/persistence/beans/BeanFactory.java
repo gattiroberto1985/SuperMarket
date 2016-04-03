@@ -123,6 +123,9 @@ public class BeanFactory
         if ( bean2insert instanceof ShopBean )
             return BeanFactory.insertShopBean((ShopBean) bean2insert);
 
+        if ( bean2insert instanceof ExpenseArticleBean )
+            return BeanFactory.insertExpenseArticleBean((ExpenseArticleBean) bean2insert);
+
         /*if ( uri == null ) */
         throw new SuperMarketException("ERROR: insertBean not implemented for class '" + bean2insert.getClass().getName() + "'!");
 
@@ -154,6 +157,14 @@ public class BeanFactory
         return eb;
     }
 
+    private static ExpenseArticleBean insertExpenseArticleBean(ExpenseArticleBean eab)
+    {
+        Uri newIns = ApplicationSM.getInstance().getContentResolver().insert(DBConstants.URI_EXPENSE_ARTICLES_CONTENT, eab.getContentValues());
+        int newId = Integer.parseInt(newIns.getLastPathSegment().toString());
+        eab.setId(newId);
+        return eab;
+    }
+
     /**
      * Update method for the bean of the application.
      *
@@ -163,7 +174,6 @@ public class BeanFactory
      */
     public static int updateBean(BaseSMBean bean2update) throws SuperMarketException
     {
-        int rowsUpdated = -1;
         Uri uri = null;
         if ( bean2update instanceof ExpenseBean )
         {
@@ -172,6 +182,11 @@ public class BeanFactory
             {
                 BeanFactory.updateExpenseArticleList((ExpenseBean)bean2update);
             }
+        }
+
+        if ( bean2update instanceof ExpenseArticleBean )
+        {
+            uri = Uri.parse(DBConstants.URI_EXPENSE_ARTICLES_CONTENT + "/" + String.valueOf(bean2update.getId()));
         }
 
         if ( uri == null )
@@ -183,8 +198,8 @@ public class BeanFactory
                     .getContentResolver()
                     .update(uri,
                             bean2update.getContentValues(),
-                            DBConstants.FIELD_DEFAULT_ID + " = ?",
-                            new String[]{String.valueOf(bean2update.getId())}
+                            DBConstants.FIELD_DEFAULT_ID + " = ?",            // Maybe this and next row
+                            new String[]{String.valueOf(bean2update.getId())} // are useless by update implementation...
                     );
     }
 

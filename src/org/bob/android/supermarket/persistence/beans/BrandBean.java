@@ -109,4 +109,23 @@ public class BrandBean extends BaseSMBean
     public String getObjectDescription() {
         return this.getDescription();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if ( o == null )
+            return false;
+
+        if ( !( o instanceof BrandBean ) )
+            return false;
+
+        BrandBean bb = (BrandBean) o;
+
+        if ( bb.getId() == this.getId() && this.getId() != -1 )
+            return true;
+
+        if ( this.getDescription().equals(bb.getDescription()))
+            return true;
+
+        return false;
+    }
 }

@@ -156,7 +156,8 @@ public class OnExpenseUpdate implements DialogInterface.OnClickListener {
     {
         ExpenseBean newExpBean = GuiUtils.getExpenseBeanFromView(di);
         boolean openAfterEdit = ((CheckBox) di.findViewById(R.id.dialog_update_expense_flag_open)).isChecked();
-        newExpBean.setArticles(this.currentExpense.getArticles());
+        if ( this.currentExpense != null )
+            newExpBean.setArticles(this.currentExpense.getArticles());
         //newExpBean.setCost();
         BeanFactory.insertOrUpdateBean(newExpBean);
         // Notifying change to the listview . . .

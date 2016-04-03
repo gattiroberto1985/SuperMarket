@@ -28,12 +28,15 @@ package org.bob.android.supermarket.gui.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.*;
 import org.bob.android.supermarket.R;
 import org.bob.android.supermarket.gui.dialogs.DialogFactory;
 import org.bob.android.supermarket.gui.fragments.FragmentExpenseDetail;
 import org.bob.android.supermarket.logger.Logger;
+import org.bob.android.supermarket.persistence.beans.ExpenseBean;
+import org.bob.android.supermarket.utilities.Constants;
 
 public class ActivityExpenseDetails extends Activity
 {
@@ -56,7 +59,10 @@ public class ActivityExpenseDetails extends Activity
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        return super.onCreateOptionsMenu(menu);
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_expense_details_menu, menu);
+        return true;
     }
 
     /**
@@ -118,12 +124,12 @@ public class ActivityExpenseDetails extends Activity
         super.onDestroy();
     }
 
-    @Override
+    /*@Override
     public boolean onMenuItemSelected(int featureId, MenuItem item)
     {
         Logger.lfc_log( this.getClass().getSimpleName() + " -- onMenuItemSelected");
         return super.onMenuItemSelected(featureId, item);
-    }
+    }*/
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
@@ -138,6 +144,7 @@ public class ActivityExpenseDetails extends Activity
         Logger.lfc_log( this.getClass().getSimpleName() + " -- onContextItemSelected");
         return super.onContextItemSelected(item);
     }
+
 
     /**
      * Called when the activity is first created.
@@ -154,57 +161,15 @@ public class ActivityExpenseDetails extends Activity
         setContentView(R.layout.activity_expense_detail);
     }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) 
-    {
-    	Logger.lfc_log(this.getClass().getName() +  "SuperMarketExpenseDetailActivity: onOptionsItemSelected called.");
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        switch ( id ) 
-        {
-        	/*case R.id.menu_add_article :
-        	{
-        		Log.i(TAG, "Richiesto inserimento articolo...");
-        		return ((FragmentExpenseDetail) this.getFragmentManager().findFragmentById(R.id.expenseDetail_fragment)).addOrUpdateArticle(null, -1); //showArticle(null, -1);
-        		//return ActionManager.getInstance().exec(new ActionAddArticle(this));
-        	}
-        	case R.id.menu_validate_expense:
-        	{
-        		Log.i(TAG, "Richiesta validazione spesa...");
-        		return ((FragmentExpenseDetail) this.getFragmentManager().findFragmentById(R.id.expenseDetail_fragment)).checkExpense();
-        		//return ActionManager.getInstance().exec(new ActionUpdateExpense(this));
-        	}
-        	case R.id.menu_undo_action:
-        	{
-        		Log.i(TAG, "Undo dell'ultima azione eseguita!");
-        		int res = ActionManager.getInstance().undo();
-        		String message = "";
-        		if ( res == -1 )     message = "Nessuna azione da annullare!";
-        		else if ( res == 0 ) message = "Azione annullata con successo!";
-        		else if ( res == 1 ) message = "Problemi nell'undo dell'azione!";
-        		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-        		return true;
-        	}
-        	case R.id.menu_redo_action:
-        	{
-        		Log.i(TAG, "Redo dell'ultima azione eseguita!");
-        		int res = ActionManager.getInstance().redo(); 
-        		String message = "";
-        		if ( res == -1 )     message = "Nessuna azione da rieseguire!";
-        		else if ( res == 0 ) message = "Azione rieseguita con successo!";
-        		else if ( res == 1 ) message = "Problemi nella redo dell'azione!";
-        		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-        		return true;
-        	}*/
-        	default: return super.onOptionsItemSelected(item);
-        }
-	}
-
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        // Controaggiornamento della lista di partenza!
+        Intent returnIntent = new Intent();
+        ExpenseBean eb = ( (FragmentExpenseDetail) this.getFragmentManager().findFragmentById(R.id.frg_expense_detail)).getExpenseSelected();
+        returnIntent.putExtra(Constants.KEY_SELECTED_EXPENSE_UPDATED,eb);
+        setResult(RESULT_OK,returnIntent);
+        super.finishActivity(Constants.KEY_CHANGED_EXPENSE_REQUEST_CODE);
+        //super.onBackPressed();
     }
 
     @Override

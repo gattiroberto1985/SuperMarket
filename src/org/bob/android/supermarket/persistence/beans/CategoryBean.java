@@ -117,4 +117,23 @@ public class CategoryBean extends BaseSMBean
     public String getObjectDescription() {
         return this.getDescription();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if ( o == null )
+            return false;
+
+        if ( !( o instanceof CategoryBean ) )
+            return false;
+
+        CategoryBean cb = ( CategoryBean ) o;
+
+        if ( cb.getId() == this.getId() && this.getId() != -1 )
+            return true;
+
+        if ( cb.getDescription().equals( this.getDescription() ) )
+            return true;
+
+        return false;
+    }
 }

@@ -158,7 +158,7 @@ public final class Utilities
 			File devFolder = new File(sd, "DEVELOPER/" + ApplicationSM.getInstance().getPackageName());
 			if ( ! devFolder.exists() )
 				devFolder.mkdirs();
-			String backupDBPath = DBConstants.DATABASE_NAME + "." + String.valueOf( (new Date()).getTime() );
+			String backupDBPath = DBConstants.DATABASE_NAME; // + "." + String.valueOf( (new Date()).getTime() );
 			File currentDB = new File(currentDBPath);
 			File backupDB = new File(devFolder, backupDBPath);
 

@@ -26,6 +26,7 @@ package org.bob.android.supermarket.gui.dialogs.interfaces;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.view.View;
 import android.widget.Toast;
 import org.bob.android.supermarket.R;
 import org.bob.android.supermarket.exceptions.SuperMarketException;
@@ -34,6 +35,7 @@ import org.bob.android.supermarket.gui.adapters.AdapterExpenseArticles;
 import org.bob.android.supermarket.gui.fragments.FragmentExpenseDetail;
 import org.bob.android.supermarket.persistence.beans.BeanFactory;
 import org.bob.android.supermarket.persistence.beans.ExpenseArticleBean;
+import org.bob.android.supermarket.utilities.Constants;
 
 /**
  * Created by roberto.gatti on 07/03/2016.
@@ -86,6 +88,9 @@ public class OnExpenseArticleUpdate implements DialogInterface.OnClickListener {
         try {
 
             ExpenseArticleBean newExpBean = GuiUtils.getExpenseArticleBeanFromView(di);
+            if ( newExpBean.getExpenseId() == -1 )
+                newExpBean.setExpenseId(this.frg.getSelectedExpenseId());
+            //ExpenseArticleBean oldExpBean = (ExpenseArticleBean) di.findViewById(R.id.dialog_update_expense_article_view).getTag(R.id.KEY_VIEW_TAG_EXPENSE_ARTICLE);
             this.updateExpenseArticle(newExpBean); // the newExpBean shares the id with the old
             // ((ActivityExpenseList) this.frg.getActivity()).onExpenseSelected(newExpBean);
         }
@@ -109,11 +114,19 @@ public class OnExpenseArticleUpdate implements DialogInterface.OnClickListener {
 
         if ( aea.getPosition( eab ) != -1 )
         {
+            // Updating old expesne article
             aea.remove( this.oldEab );
             aea.insert(eab, position2update );
+            // Aggiungo la differenza tra il nuovo costo e il vecchio costo
+            this.frg.updateExpenseCost(eab.getFullCost() - this.oldEab.getFullCost());
         }
         else
-            Toast.makeText(this.frg.getActivity(), R.string.TOAST_DOUBLE_EXPENSE_ARTICLE, Toast.LENGTH_LONG).show();
+        {
+            // Adding new expense article
+            aea.add(eab);
+            this.frg.updateExpenseCost(eab.getFullCost());
+        }
+            //Toast.makeText(this.frg.getActivity(), R.string.TOAST_DOUBLE_EXPENSE_ARTICLE, Toast.LENGTH_LONG).show();
 
 
     }    

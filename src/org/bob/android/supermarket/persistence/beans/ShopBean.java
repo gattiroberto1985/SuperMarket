@@ -116,6 +116,9 @@ public class ShopBean extends BaseSMBean
     @Override
     public boolean equals(Object o) {
 
+        if ( o == null )
+            return false;
+
         if ( ! ( o instanceof ShopBean ) )
             return false;
 

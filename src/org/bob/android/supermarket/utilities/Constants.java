@@ -53,8 +53,10 @@ public class Constants
     /*                             INFRASTRUCTURE INFOS                      */
     /* ********************************************************************* */
 
-    public static final String KEY_SELECTED_EXPENSE = "expense_selected";
-    public static final String KEY_SELECTED_ARTICLE = "article_selected";
+    public static final String KEY_SELECTED_EXPENSE             = "expense_selected";
+    public static final String KEY_SELECTED_ARTICLE             = "article_selected";
+    public static final String KEY_SELECTED_EXPENSE_UPDATED     = "expense_updated";
+    public static final int    KEY_CHANGED_EXPENSE_REQUEST_CODE = 1001;
 
     /**
      * Enum type con gli oggetti validi per l'applicazione.

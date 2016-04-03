@@ -84,8 +84,8 @@ public class GuiUtils {
             }
 
             return new ExpenseArticleBean(
-                                eab.getId(),
-                                eab.getExpenseId(),
+                                eab == null ? -1 : eab.getId(),
+                                eab == null ? -1 : eab.getExpenseId(),
                                 art,
                                 Double.valueOf(etCost.getText().toString()),
                                 Double.valueOf(etQnty.getText().toString()));
@@ -159,10 +159,11 @@ public class GuiUtils {
             TextView ebCostTv           = ( TextView )             view.findViewById(R.id.dialog_update_expense_expense_cost);
             EditText etDate             = ( EditText )             view.findViewById(R.id.dialog_update_expense_et_date     );
             AutoCompleteTextView etShop = ( AutoCompleteTextView ) view.findViewById(R.id.dialog_update_expense_actv_shop   );
-            CheckBox             cbOpen = ( CheckBox )             view.findViewById(R.id.dialog_update_expense_flag_open   );
+            //CheckBox             cbOpen = ( CheckBox )             view.findViewById(R.id.dialog_update_expense_flag_open   );
             ShopBean sb = new ShopBean(-1, etShop.getText().toString());
             Date expDate = Utilities.checkDate(etDate.getText().toString());
-            double ebCost = Double.parseDouble(ebCostTv.getText().toString());
+            double ebCost = 0;
+            if ( ! ebCostTv.getText().toString().equals("") ) Double.parseDouble(ebCostTv.getText().toString());
 
             if ( tvId.getTag(R.id.KEY_VIEW_TAG_EXPENSE ) == null )
             {

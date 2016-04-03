@@ -36,6 +36,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.bob.android.supermarket.R;
+import org.bob.android.supermarket.exceptions.SuperMarketException;
 import org.bob.android.supermarket.gui.adapters.AdapterExpenses;
 import org.bob.android.supermarket.gui.dialogs.DialogFactory;
 import org.bob.android.supermarket.logger.Logger;
@@ -98,6 +99,29 @@ public class FragmentExpenseList extends ListFragment
             this.pd = null;
         }
         this.flagLoadedExpenses = true;
+    }
+
+    public void updateExpense( ExpenseBean eb ) throws SuperMarketException
+    {
+        if ( eb == null )
+            return;
+        if ( eb.getId() <= 0 )
+            throw new SuperMarketException("ERROR: expense bean id is not valid: '" + eb.getId() + "'!");
+
+        AdapterExpenses ae = (AdapterExpenses) this.expenseLV.getAdapter();
+        if ( ae.getItemList() == null )
+            throw new SuperMarketException("ERROR: trying to update an unexisting expense!");
+
+        for ( int i = 0; i < ae.getItemList().size(); i++ )
+        {
+            if ( ae.getItemId(i) == eb.getId() )
+            {
+                ae.remove(ae.getItem(i));
+                ae.insert(eb, i);
+                break;
+            }
+        }
+
     }
 
     /* ********************************************************************* */

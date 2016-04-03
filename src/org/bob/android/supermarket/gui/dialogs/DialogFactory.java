@@ -135,7 +135,7 @@ public class DialogFactory {
             date.setText(expense.getFormattedDate().toString());
         }
         // Setting alert dialog by cascade calling of 'set' methods . . .
-        OnExpenseUpdate oeu = new OnExpenseUpdate( (FragmentExpenseList) frg, expense);
+        OnExpenseUpdate oeu = new OnExpenseUpdate( frg, expense);
         builder
                 // Setting view . . .
                 .setView(dialogView)

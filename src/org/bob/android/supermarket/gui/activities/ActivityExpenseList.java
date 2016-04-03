@@ -26,11 +26,12 @@ package org.bob.android.supermarket.gui.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.*;
+import android.widget.Toast;
 import org.bob.android.supermarket.R;
+import org.bob.android.supermarket.exceptions.SuperMarketException;
 import org.bob.android.supermarket.gui.fragments.FragmentExpenseDetail;
 import org.bob.android.supermarket.gui.fragments.FragmentExpenseList;
 import org.bob.android.supermarket.logger.Logger;
@@ -69,7 +70,7 @@ public class ActivityExpenseList extends Activity implements FragmentExpenseList
     {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
+        inflater.inflate(R.menu.activity_expense_list_menu, menu);
         return true;
     }
 
@@ -168,6 +169,30 @@ public class ActivityExpenseList extends Activity implements FragmentExpenseList
         setContentView(R.layout.activity_expense_list);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        try {
+            if (requestCode == 1) {
+
+                if (resultCode == RESULT_OK) {
+                    FragmentExpenseList frg = (FragmentExpenseList) this.getFragmentManager().findFragmentById(R.id.frg_expense_list);
+                    frg.updateExpense((ExpenseBean) data.getExtras().get(Constants.KEY_SELECTED_EXPENSE_UPDATED));
+                }
+            /*if (resultCode == RESULT_CANCELED)
+            {
+                //Do nothing?
+            }*/
+            }
+        }
+        catch ( SuperMarketException ex )
+        {
+            Logger.app_log("ERROR: SuperMarketException caught!");
+            Logger.app_log("     : " + ex.getMessage());
+            Toast.makeText(this, "ERRORE: " + ex.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
     /* ********************************************************************* */
     /*                           IMPLEMENT METHODS                           */
     /* ********************************************************************* */
@@ -183,7 +208,7 @@ public class ActivityExpenseList extends Activity implements FragmentExpenseList
             // Portrait
             Intent intent = new Intent(this.getApplicationContext(), ActivityExpenseDetails.class);
             intent.putExtra(Constants.KEY_SELECTED_EXPENSE, eb);
-            this.startActivity(intent);
+            this.startActivityForResult(intent, Constants.KEY_CHANGED_EXPENSE_REQUEST_CODE);
         }
         else
         {

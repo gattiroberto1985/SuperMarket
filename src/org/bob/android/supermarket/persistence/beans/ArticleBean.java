@@ -130,4 +130,30 @@ public class ArticleBean extends BaseSMBean
     public String getObjectDescription() {
         return this.getDescription();
     }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if ( o == null )
+            return false;
+
+        if ( !( o instanceof ArticleBean ) )
+            return false;
+
+        ArticleBean ab = ( ArticleBean ) o;
+
+        // Exiting with true if the ids are equals and different from -1
+        if ( ab.getId() == this.getId() && this.getId() != -1 )
+            return true;
+
+        if (
+            this.getBrand()   .equals( ab.getBrand()    ) &&
+            this.getCategory().equals( ab.getCategory() ) &&
+            this.getDescription().equals(ab.getDescription())
+            )
+                return true;
+
+        return false;
+
+    }
 }
