@@ -118,6 +118,19 @@ public class ExpenseBean extends BaseSMBean
         this.setArticles(null);
     }
 
+    /**
+     * Costruttore per copia.
+     *
+     * @param eb
+     */
+    public ExpenseBean(ExpenseBean eb)
+    {
+        this.setId(eb.getId());
+        this.setDate(eb.getDate());
+        this.setShop(eb.getShop());
+        this.setArticles(eb.getArticles());
+    }
+
     /* ********************************************************************* */
     /*                             CLASS METHODS                             */
     /* ********************************************************************* */
@@ -157,6 +170,22 @@ public class ExpenseBean extends BaseSMBean
         this.setCost(this.cost + variation);
     }
 
+    /**
+     * Gets the ExpenseArticleBean in the expense by id.
+     *
+     * @param eabId The id of the eab to search.
+     * @return the eab with the id specified, null otherwise.
+     */
+    public ExpenseArticleBean getArticle(int eabId) {
+        Logger.app_log("Searching for eab with id '" + eabId + "' . . .");
+        for ( ExpenseArticleBean eab : this.getArticles() )
+        {
+            if ( eab.getId() == eabId )
+                return eab;
+        }
+        return null;
+    }
+
     /* ********************************************************************* */
     /*                       GETTER AND SETTER METHODS                       */
     /* ********************************************************************* */
@@ -181,9 +210,12 @@ public class ExpenseBean extends BaseSMBean
      */
     public final void setArticles(List<ExpenseArticleBean> articles)
     {
-        if ( this.articles != null )
-            this.articles.clear();
-        this.articles = articles;
+        int size = articles == null ? 0 : articles.size();
+        this.articles = new ArrayList<ExpenseArticleBean>(size);
+        if ( articles != null )
+            for ( ExpenseArticleBean eab : articles )
+                this.articles.add(eab);
+        this.setCost();
     }
 
     public final void setCost(double cost) { this.cost = cost; }

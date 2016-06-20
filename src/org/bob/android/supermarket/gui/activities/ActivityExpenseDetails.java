@@ -169,6 +169,7 @@ public class ActivityExpenseDetails extends Activity
         returnIntent.putExtra(Constants.KEY_SELECTED_EXPENSE_UPDATED,eb);
         setResult(RESULT_OK,returnIntent);
         super.finishActivity(Constants.KEY_CHANGED_EXPENSE_REQUEST_CODE);
+        super.finish();
         //super.onBackPressed();
     }
 

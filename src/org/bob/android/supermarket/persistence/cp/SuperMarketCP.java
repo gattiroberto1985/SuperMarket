@@ -314,7 +314,11 @@ public class SuperMarketCP extends ContentProvider
 			QueryBuilder<Object, Integer> qb = red.queryBuilder();
 
 			if ( whereClauses != null )
-				qb.where().eq(whereClauses, whereValues[0]);
+			{
+				String[] fields = whereClauses.split(",");
+				for ( int i = 0; i < fields.length; i++ )
+					qb.where().eq(fields[i], whereValues[i]);
+			}
 
 			if ( sortOrder != null )
 				qb.orderBy(sortOrder, true);

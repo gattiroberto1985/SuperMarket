@@ -173,7 +173,7 @@ public class ActivityExpenseList extends Activity implements FragmentExpenseList
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         try {
-            if (requestCode == 1) {
+            if (requestCode == Constants.KEY_CHANGED_EXPENSE_REQUEST_CODE) {
 
                 if (resultCode == RESULT_OK) {
                     FragmentExpenseList frg = (FragmentExpenseList) this.getFragmentManager().findFragmentById(R.id.frg_expense_list);

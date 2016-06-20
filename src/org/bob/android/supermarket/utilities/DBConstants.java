@@ -130,6 +130,15 @@ public class DBConstants
             DBConstants.FIELD_CATEGORY_DESCRIPTION
     };
 
+    public final static String[] PROJECTION_ARTICLE_DETAILS_BEAN    =
+            new String[] {
+                    FIELD_DEFAULT_ID,
+                    FIELD_ARTICLE_BRAND_ID,
+                    FIELD_ARTICLE_CATEGORY_ID,
+                    FIELD_ARTICLE_DESCRIPTION,
+                    FIELD_CATEGORY_DESCRIPTION,
+                    FIELD_BRAND_DESCRIPTION};
+
     /* ********************************************************************* */
     /*                            VIEW DEFINITIONS                           */
     /* ********************************************************************* */
@@ -183,6 +192,20 @@ public class DBConstants
         "JOIN " + DBConstants.TABLE_SHOPS_NAME + " s " +
             "ON s." + DBConstants.FIELD_DEFAULT_ID + " = e." + DBConstants.FIELD_EXPENSE_SHOP_ID;
 
+    public static final String VIEW_ARTICLE_FULL_DETAILS_NAME = "articles_details";
+    public static final String VIEW_ARTICLE_FULL_DETAILS =
+        "SELECT " +
+                "a." + DBConstants.FIELD_DEFAULT_ID           + ", "  +
+                "a." + DBConstants.FIELD_ARTICLE_DESCRIPTION  + ", "  +
+                "a." + DBConstants.FIELD_ARTICLE_CATEGORY_ID  + ", "  +
+                "a." + DBConstants.FIELD_ARTICLE_BRAND_ID     + ", "  +
+                "c." + DBConstants.FIELD_CATEGORY_DESCRIPTION + ", "  +
+                "b." + DBConstants.FIELD_BRAND_DESCRIPTION    + " "   +
+                "FROM " + DBConstants.TABLE_ARTICLES_NAME     + " a " +
+                "JOIN " + DBConstants.TABLE_CATEGORIES_NAME   + " c " +
+                    "ON c." + DBConstants.FIELD_DEFAULT_ID    + " = a." + DBConstants.FIELD_ARTICLE_CATEGORY_ID + " " +
+                "JOIN " + DBConstants.TABLE_BRANDS_NAME       + " b " +
+                    "ON b." + DBConstants.FIELD_DEFAULT_ID    + " = a." + DBConstants.FIELD_ARTICLE_BRAND_ID + " ";
     /* ********************************************************************* */
     /*                     CONTENT PROVIDER CONSTANTS                        */
     /* ********************************************************************* */
@@ -208,6 +231,8 @@ public class DBConstants
     public final static String STR_URI_VIEW_EXPENSE_ARTICLES         = DBConstants.VIEW_EXPENSE_ARTICLE_FULL_DETAILS_NAME;
     // Get all expenses data for a single article
     public final static String STR_URI_VIEW_ARTICLE_PRICE_TREND      = DBConstants.VIEW_ARTICLE_PRICE_BY_EXPENSE_NAME;
+    // Get all details of the articles
+    public final static String STR_URI_VIEW_ARTICLE_DETAILS          = DBConstants.VIEW_ARTICLE_FULL_DETAILS_NAME;
 
 
     public final static String STR_FULL_URI_ARTICLES_CONTENT              = "content://" + DBConstants.AUTHORITY + "/" + DBConstants.TABLE_ARTICLES_NAME;
@@ -274,6 +299,7 @@ public class DBConstants
     public final static int URI_INDICATOR_VIEW_EXPENSE_SHOP_BY_EXP        = 96;
     public final static int URI_INDICATOR_VIEW_EXPENSE_ARTICLES_BY_EXP    = 95;
     public final static int URI_INDICATOR_VIEW_ARTICLE_PRICE_TREND_BY_ART = 94;
+    public final static int URI_INDICATOR_VIEW_ARTICLE_DETAILS            = 93;
     /* Content types */
     public final static String CONTENT_TYPE_ARTICLE              = ContentResolver.CURSOR_DIR_BASE_TYPE  + "/vnd." + TABLE_ARTICLES_NAME;
     public final static String CONTENT_ITEM_TYPE_ARTICLE         = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd." + TABLE_ARTICLES_NAME + ".element";
@@ -311,6 +337,7 @@ public class DBConstants
         sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.STR_URI_VIEW_EXPENSE_ARTICLES          , DBConstants.URI_INDICATOR_VIEW_EXPENSE_ARTICLES          );
         sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.STR_URI_VIEW_EXPENSE_SHOP              , DBConstants.URI_INDICATOR_VIEW_EXPENSE_SHOP              );
         sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.STR_URI_VIEW_ARTICLE_PRICE_TREND       , DBConstants.URI_INDICATOR_VIEW_ARTICLE_PRICE_TREND       );
+        sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.STR_URI_VIEW_ARTICLE_DETAILS           , DBConstants.URI_INDICATOR_VIEW_ARTICLE_DETAILS           );
         // Uri di singola riga su tabelle
         sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.STR_URI_ARTICLES_CONTENT + "/#"        , DBConstants.URI_INDICATOR_ARTICLES                       );
         sURIMatcher.addURI(DBConstants.AUTHORITY, DBConstants.STR_URI_BRANDS_CONTENT + "/#"          , DBConstants.URI_INDICATOR_BRANDS                         );

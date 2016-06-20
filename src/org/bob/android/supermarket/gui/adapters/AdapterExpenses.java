@@ -104,6 +104,13 @@ public class AdapterExpenses extends ArrayAdapter<ExpenseBean>
     }
 
     @Override
+    public void insert(ExpenseBean object, int index) {
+        super.insert(object, index);
+        this.expensesList.add(index, object);
+        this.notifyDataSetChanged();
+    }
+
+    @Override
     public void remove(ExpenseBean object) {
         int i = -1;
         for ( ExpenseBean eb : this.expensesList )

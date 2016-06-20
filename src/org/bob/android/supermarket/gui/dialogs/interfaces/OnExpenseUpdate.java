@@ -183,6 +183,7 @@ public class OnExpenseUpdate implements DialogInterface.OnClickListener {
             }
             // Adding/updating existent expenseArticles and expense header
             BeanFactory.insertOrUpdateBean(this.currentExpense);
+            ( (FragmentExpenseDetail) this.frg).updateExpense(this.currentExpense);
         }
         catch ( SuperMarketException ex )
         {

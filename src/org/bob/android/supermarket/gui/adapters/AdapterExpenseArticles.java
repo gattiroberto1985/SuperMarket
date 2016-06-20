@@ -164,7 +164,6 @@ public class AdapterExpenseArticles extends ArrayAdapter<ExpenseArticleBean>
 	@Override
 	public void remove(ExpenseArticleBean eab)
 	{
-		super.remove(eab);
 		for( int i = 0; i < this.expenseArticleList.size(); i++ )
 		{
 			ExpenseArticleBean _ea = this.expenseArticleList.get(i);
@@ -172,6 +171,7 @@ public class AdapterExpenseArticles extends ArrayAdapter<ExpenseArticleBean>
 			if ( eab.hashCode() == _ea.hashCode() )
 			{
                 Logger.writeLog("   |-- Rimozione ok! Trovato l'articolo da rimuovere!");
+				super.remove(eab);
 				this.expenseArticleList.remove(i);
 				//this.notifyDataSetChanged();
                 Logger.writeLog("   |-- Rimozione dal dataset eseguita!");

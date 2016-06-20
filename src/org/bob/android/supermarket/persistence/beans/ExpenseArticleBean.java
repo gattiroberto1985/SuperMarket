@@ -100,6 +100,33 @@ public class ExpenseArticleBean extends BaseSMBean
     }
 
     /* ********************************************************************* */
+    /*                                CLASS METHODS                          */
+    /* ********************************************************************* */
+
+    /**
+     * The method checks if the data of the eab is equal to the datas in the
+     * other eab.
+     *
+     * @param eab
+     * @return
+     */
+    public boolean _equals(ExpenseArticleBean eab)
+    {
+        if ( eab == null )
+            return false;
+        if ( this.getId() != eab.getId() )
+            return false;
+        if ( this.getArticle() != eab.getArticle() )
+            return false;
+        if ( this.getArticleCost() == eab.getArticleCost() )
+            return false;
+        if ( this.getArticleQuantity() == eab.getArticleQuantity() )
+            return false;
+        return true;
+    }
+
+
+    /* ********************************************************************* */
     /*                       GETTER AND SETTER METHODS                       */
     /* ********************************************************************* */
 
@@ -145,5 +172,10 @@ public class ExpenseArticleBean extends BaseSMBean
     @Override
     public String getObjectDescription() {
         return this.getArticle().getObjectDescription() + ": " + this.getArticleCost() + " for " + this.getArticleQuantity();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
     }
 }

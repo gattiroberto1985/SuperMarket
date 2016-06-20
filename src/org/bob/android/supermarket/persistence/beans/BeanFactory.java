@@ -104,8 +104,31 @@ public class BeanFactory
         if ( bean2query instanceof ShopBean )
             return BeanFactory.getShop((ShopBean) bean2query);
 
+        if ( bean2query instanceof BrandBean )
+            return BeanFactory.getBrand( (BrandBean) bean2query);
+
+        if ( bean2query instanceof ArticleBean )
+            return BeanFactory.getArticle( (ArticleBean) bean2query);
+
+        /*if ( bean2query instanceof ExpenseArticleBean )
+            return BeanFactory.getExpenseArticle( (ExpenseArticleBean) bean2query);
+
+        if ( bean2query instanceof ExpenseBean )
+            return BeanFactory.getExpense( (ExpenseBean) bean2query);*/
+
+        if ( bean2query instanceof CategoryBean )
+            return BeanFactory.getCategory( (CategoryBean) bean2query);
+
         throw new SuperMarketException("ERROR: method 'queryBean' not yet implemented for class '" + bean2query.getClass().getName() + "'!");
     }
+
+    /*public static BaseSMBean queryOrInsertBean(BaseSMBean bean2query) throws SuperMarketException
+    {
+        BaseSMBean bean2return = BeanFactory.queryBean(bean2query);
+        if ( bean2query == null )
+            bean2return = ( BaseSMBean) BeanFactory.insertOrUpdateBean(bean2query);
+        return bean2return;
+    }*/
 
     /**
      * Insert method for a bean of the application.
@@ -125,6 +148,15 @@ public class BeanFactory
 
         if ( bean2insert instanceof ExpenseArticleBean )
             return BeanFactory.insertExpenseArticleBean((ExpenseArticleBean) bean2insert);
+
+        if ( bean2insert instanceof ArticleBean )
+            return BeanFactory.insertArticleBean( (ArticleBean) bean2insert);
+
+        if ( bean2insert instanceof BrandBean )
+            return BeanFactory.insertBrandBean( (BrandBean) bean2insert);
+
+        if ( bean2insert instanceof CategoryBean )
+            return BeanFactory.insertCategoryBean( (CategoryBean) bean2insert);
 
         /*if ( uri == null ) */
         throw new SuperMarketException("ERROR: insertBean not implemented for class '" + bean2insert.getClass().getName() + "'!");
@@ -157,12 +189,50 @@ public class BeanFactory
         return eb;
     }
 
-    private static ExpenseArticleBean insertExpenseArticleBean(ExpenseArticleBean eab)
+    private static ExpenseArticleBean insertExpenseArticleBean(ExpenseArticleBean eab) throws SuperMarketException
     {
+        // Checking if article, brand and category . . .
+        if ( eab.getArticle().getId() == -1 )
+            eab.setArticle( ( ArticleBean) BeanFactory.queryBean(eab.getArticle()));
         Uri newIns = ApplicationSM.getInstance().getContentResolver().insert(DBConstants.URI_EXPENSE_ARTICLES_CONTENT, eab.getContentValues());
         int newId = Integer.parseInt(newIns.getLastPathSegment().toString());
         eab.setId(newId);
         return eab;
+    }
+
+    private static ArticleBean insertArticleBean(ArticleBean ab) throws SuperMarketException
+    {
+        if ( ab.getCategory().getId() == -1 )
+            ab.setCategory((CategoryBean) BeanFactory.queryBean(ab.getCategory()));
+        if ( ab.getBrand().getId() == -1 )
+            ab.setBrand( (BrandBean) BeanFactory.queryBean(ab.getBrand()));
+
+        Uri newIns = ApplicationSM.getInstance()
+                        .getContentResolver()
+                        .insert(DBConstants.URI_ARTICLES_CONTENT, ab.getContentValues());
+        int newId = Integer.parseInt(newIns.getLastPathSegment().toString());
+        ab.setId(newId);
+        return ab;
+    }
+
+    private static CategoryBean insertCategoryBean(CategoryBean cb) throws SuperMarketException
+    {
+        Uri newIns = ApplicationSM.getInstance()
+                .getContentResolver()
+                .insert(DBConstants.URI_CATEGORIES_CONTENT, cb.getContentValues());
+        int newId = Integer.parseInt(newIns.getLastPathSegment().toString());
+        cb.setId(newId);
+        return cb;
+    }
+
+    private static BrandBean insertBrandBean(BrandBean bb) throws SuperMarketException
+    {
+        Uri newIns = ApplicationSM.getInstance()
+                .getContentResolver()
+                .insert(DBConstants.URI_BRANDS_CONTENT, bb.getContentValues());
+        int newId = Integer.parseInt(newIns.getLastPathSegment().toString());
+        bb.setId(newId);
+        return bb;
     }
 
     /**
@@ -261,6 +331,142 @@ public class BeanFactory
         return sb;
     }
 
+    public static BrandBean getBrand(BrandBean brand) throws SuperMarketException
+    {
+        try
+        {
+            Cursor c = ApplicationSM.getInstance()
+                        .getContentResolver()
+                        .query(DBConstants.URI_BRANDS_CONTENT,
+                                DBConstants.PROJECTION_BRAND_BEAN,
+                                DBConstants.FIELD_BRAND_DESCRIPTION,
+                                new String[]{brand.getDescription()}, null);
+            if ( ! c.moveToFirst() )
+            {
+                brand = (BrandBean) BeanFactory.insertBean(brand);
+            }
+            else
+                brand = BeanFactory.createBrandBean(c);
+        }
+        catch ( Exception ex )
+        {
+            Logger.app_log("ERRORE: " + ex.getMessage());
+            throw new SuperMarketException(ex);
+        }
+        return brand;
+    }
+
+    public static CategoryBean getCategory(CategoryBean cb) throws SuperMarketException
+    {
+        try
+        {
+            Cursor c = ApplicationSM.getInstance()
+                    .getContentResolver()
+                    .query(DBConstants.URI_CATEGORIES_CONTENT,
+                            DBConstants.PROJECTION_CATEGORY_BEAN,
+                            DBConstants.FIELD_CATEGORY_DESCRIPTION,
+                            new String[]{cb.getDescription()}, null);
+            if ( ! c.moveToFirst() )
+            {
+                cb = (CategoryBean) BeanFactory.insertBean(cb);
+            }
+            else
+                cb = BeanFactory.createCategoryBean(c);
+        }
+        catch ( Exception ex )
+        {
+            Logger.app_log("ERRORE: " + ex.getMessage());
+            throw new SuperMarketException(ex);
+        }
+        return cb;
+    }
+
+    public static ArticleBean getArticle(ArticleBean ab) throws SuperMarketException
+    {
+        try
+        {
+            if ( ab.getCategory().getId() == -1 )
+                ab.setCategory( BeanFactory.getCategory( ab.getCategory() ));
+
+            if ( ab.getBrand().getId() == -1 )
+                ab.setBrand( BeanFactory.getBrand( ab.getBrand() ));
+
+            // Checking article
+            Cursor c = ApplicationSM.getInstance()
+                    .getContentResolver()
+                    .query(Uri.parse(DBConstants.STR_URI_VIEW_ARTICLE_DETAILS),
+                            DBConstants.PROJECTION_ARTICLE_DETAILS_BEAN,
+                            DBConstants.FIELD_ARTICLE_DESCRIPTION + ","
+                                    + DBConstants.FIELD_ARTICLE_BRAND_ID + ","
+                                    + DBConstants.FIELD_ARTICLE_CATEGORY_ID,
+                            new String[]{ab.getDescription(),
+                                         String.valueOf( ab.getBrand().getId()   ),
+                                         String.valueOf( ab.getCategory().getId())}
+                            , null);
+            if ( ! c.moveToFirst() )
+            {
+                ab = (ArticleBean) BeanFactory.insertBean(ab);
+            }
+            else
+                ab = BeanFactory.createArticleBean(c);
+        }
+        catch ( Exception ex )
+        {
+            Logger.app_log("ERRORE: " + ex.getMessage());
+            throw new SuperMarketException(ex);
+        }
+        return ab;
+    }
+
+    /*public ExpenseArticleBean getExpenseArticle(ExpenseArticleBean eab) throws SuperMarketException
+    {
+        try
+        {
+            Cursor c = ApplicationSM.getInstance()
+                    .getContentResolver()
+                    .query(DBConstants.URI_BRANDS_CONTENT,
+                            DBConstants.PROJECTION_BRAND_BEAN,
+                            DBConstants.FIELD_BRAND_DESCRIPTION,
+                            new String[]{brand.getDescription()}, null);
+            if ( ! c.moveToFirst() )
+            {
+                brand = (BrandBean) BeanFactory.insertBean(brand);
+            }
+            else
+                brand = BeanFactory.createBrandBean(c);
+        }
+        catch ( Exception ex )
+        {
+            Logger.app_log("ERRORE: " + ex.getMessage());
+            throw new SuperMarketException(ex);
+        }
+        return brand;
+    }*/
+
+    /*public ExpenseBean getExpense(ExpenseBean eb) throws SuperMarketException
+    {
+        try
+        {
+            Cursor c = ApplicationSM.getInstance()
+                    .getContentResolver()
+                    .query(DBConstants.URI_BRANDS_CONTENT,
+                            DBConstants.PROJECTION_BRAND_BEAN,
+                            DBConstants.FIELD_BRAND_DESCRIPTION,
+                            new String[]{brand.getDescription()}, null);
+            if ( ! c.moveToFirst() )
+            {
+                brand = (BrandBean) BeanFactory.insertBean(brand);
+            }
+            else
+                brand = BeanFactory.createBrandBean(c);
+        }
+        catch ( Exception ex )
+        {
+            Logger.app_log("ERRORE: " + ex.getMessage());
+            throw new SuperMarketException(ex);
+        }
+        return brand;
+    }*/
 
     /* ********************************************************************* */
     /*                        DATABASE LAYER METHODS                         */
@@ -413,6 +619,62 @@ public class BeanFactory
             throw new SuperMarketException("Impossibile recuperare il negozio: " + ex.getMessage(), ex);
         }
     }
+
+    private static ArticleBean createArticleBean(Cursor cursor) throws SuperMarketException
+    {
+        Logger.app_log("Trying creating an ArticleBean from cursor . . .", Logger.Level.VERBOSE);
+        try
+        {
+            int id      = cursor.getInt(cursor.getColumnIndex(DBConstants.FIELD_DEFAULT_ID));
+            String aDsc = cursor.getString(cursor.getColumnIndex(DBConstants.FIELD_ARTICLE_DESCRIPTION));
+            int cId     = cursor.getInt(cursor.getColumnIndex(DBConstants.FIELD_ARTICLE_CATEGORY_ID));
+            String cDsc = cursor.getString(cursor.getColumnIndex(DBConstants.FIELD_CATEGORY_DESCRIPTION));
+            int bId     = cursor.getInt(cursor.getColumnIndex(DBConstants.FIELD_ARTICLE_BRAND_ID));
+            String bDsc = cursor.getString(cursor.getColumnIndex(DBConstants.FIELD_BRAND_DESCRIPTION));
+            return new ArticleBean(id, new BrandBean(bId, bDsc), new CategoryBean(cId, cDsc, 'X'), aDsc);
+        }
+        catch ( Exception ex )
+        {
+            Logger.app_log("ERRORE: eccezione in fase di creazione spesa da cursore!", Logger.Level.ERROR);
+            Logger.app_log("Messaggio: " + ex.getMessage(), Logger.Level.ERROR);
+            throw new SuperMarketException("Impossibile recuperare il negozio: " + ex.getMessage(), ex);
+        }
+    }
+
+    private static CategoryBean createCategoryBean(Cursor cursor) throws SuperMarketException
+    {
+        Logger.app_log("Trying creating an CategoryBean from cursor . . .", Logger.Level.VERBOSE);
+        try
+        {
+            int id     = cursor.getInt(cursor.getColumnIndex(DBConstants.FIELD_DEFAULT_ID));
+            String dsc = cursor.getString(cursor.getColumnIndex(DBConstants.FIELD_CATEGORY_DESCRIPTION));
+            return new CategoryBean(id, dsc, 'X');
+        }
+        catch ( Exception ex )
+        {
+            Logger.app_log("ERRORE: eccezione in fase di creazione CategoryBean da cursore!", Logger.Level.ERROR);
+            Logger.app_log("Messaggio: " + ex.getMessage(), Logger.Level.ERROR);
+            throw new SuperMarketException("Impossibile recuperare il CategoryBean: " + ex.getMessage(), ex);
+        }
+    }
+
+    private static BrandBean createBrandBean(Cursor cursor) throws SuperMarketException
+    {
+        Logger.app_log("Trying creating an BrandBean from cursor . . .", Logger.Level.VERBOSE);
+        try
+        {
+            int id     = cursor.getInt(cursor.getColumnIndex(DBConstants.FIELD_DEFAULT_ID));
+            String dsc = cursor.getString(cursor.getColumnIndex(DBConstants.FIELD_BRAND_DESCRIPTION));
+            return new BrandBean(id, dsc);
+        }
+        catch ( Exception ex )
+        {
+            Logger.app_log("ERRORE: eccezione in fase di creazione BrandBean da cursore!", Logger.Level.ERROR);
+            Logger.app_log("Messaggio: " + ex.getMessage(), Logger.Level.ERROR);
+            throw new SuperMarketException("Impossibile recuperare il BrandBean: " + ex.getMessage(), ex);
+        }
+    }
+
 
     private static ExpenseArticleBean createExpenseArticleBean(Cursor cursor) throws SuperMarketException
     {

@@ -124,39 +124,31 @@ public class FragmentExpenseDetail extends ListFragment
 	public void saveExpense()
 	{
         // Getting articles list from listadapter . . .
+		ExpenseBean newExp = new ExpenseBean(this.expenseSelected);
         AdapterExpenseArticles aea = (AdapterExpenseArticles) this.articlesLV.getAdapter();
-        List<ExpenseArticleBean> fullList = aea.getItemList();
-        List<ExpenseArticleBean> addedOrUpdated = new ArrayList<ExpenseArticleBean>();
-        List<ExpenseArticleBean> removed        = new ArrayList<ExpenseArticleBean>();
+		// New list of articles . . .
+        List<ExpenseArticleBean> newEabList = aea.getItemList();
+		// Old list of articles . . .
+		List<ExpenseArticleBean> oldEabList = this.expenseSelected.getArticles();
+		// Removed articles (to clean the db)
+        List<ExpenseArticleBean> removed   = new ArrayList<ExpenseArticleBean>();
 
-        // Checking added/updated
-        if ( fullList != null && this.expenseSelected.getArticles() != null )
-        {
-            for ( ExpenseArticleBean eab : fullList )
-            {
-                if ( this.expenseSelected.getArticles().indexOf(eab) == -1 )
-                {
-                    // added or updated article!
-                    addedOrUpdated.add(eab);
-                }
-            }
-        }
-
-        // Checking removed . . .
-        if ( this.expenseSelected.getArticles() != null )
-        {
-            for ( ExpenseArticleBean eab : this.expenseSelected.getArticles() )
-            {
-                if ( fullList.indexOf(eab) == -1 )
-                {
-                    // removed!
-                    removed.add(eab);
-                }
-            }
-        }
+		// Checking removed . . .
+		if ( oldEabList != null )
+		{
+			for ( ExpenseArticleBean eab : oldEabList ) {
+				if ( newEabList.indexOf(eab) == -1 )
+				{
+					// removed!
+					removed.add(eab);
+				}
+			}
+		}
+		// Ok, overwriting old list of articles . . .
+		newExp.setArticles(newEabList);
         // Updating expense article in memory (at worst nothing happens. . .)
-        this.expenseSelected.setArticles(fullList != null ? fullList : new ArrayList<ExpenseArticleBean>(0));
-        DialogFactory.saveExpenseDialog(this, this.expenseSelected, removed).show();
+        //this.expenseSelected.setArticles(fullList != null ? fullList : new ArrayList<ExpenseArticleBean>(0));
+        DialogFactory.saveExpenseDialog(this, newExp, removed).show();
         //Logger.app_log("Saved expense!");
 	}
 
@@ -165,6 +157,15 @@ public class FragmentExpenseDetail extends ListFragment
     }
 
     public ExpenseBean getExpenseSelected() { return this.expenseSelected; }
+
+	/**
+	 * The methods update the selected Expense with the new one.
+	 * @param eb
+	 */
+	public void updateExpense(ExpenseBean eb)
+	{
+		this.expenseSelected = eb;
+	}
 
 	/* --------------------------------------------------------------------- *
 	 *                            OVERRIDDEN METHODS                         *
