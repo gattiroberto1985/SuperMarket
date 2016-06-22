@@ -341,7 +341,7 @@ public class BeanFactory
                                 DBConstants.PROJECTION_BRAND_BEAN,
                                 DBConstants.FIELD_BRAND_DESCRIPTION,
                                 new String[]{brand.getDescription()}, null);
-            if ( ! c.moveToFirst() )
+            if ( c == null || ! c.moveToFirst() )
             {
                 brand = (BrandBean) BeanFactory.insertBean(brand);
             }
@@ -366,7 +366,7 @@ public class BeanFactory
                             DBConstants.PROJECTION_CATEGORY_BEAN,
                             DBConstants.FIELD_CATEGORY_DESCRIPTION,
                             new String[]{cb.getDescription()}, null);
-            if ( ! c.moveToFirst() )
+            if ( c == null || ! c.moveToFirst() )
             {
                 cb = (CategoryBean) BeanFactory.insertBean(cb);
             }
@@ -403,7 +403,7 @@ public class BeanFactory
                                          String.valueOf( ab.getBrand().getId()   ),
                                          String.valueOf( ab.getCategory().getId())}
                             , null);
-            if ( ! c.moveToFirst() )
+            if ( c == null || ! c.moveToFirst() )
             {
                 ab = (ArticleBean) BeanFactory.insertBean(ab);
             }

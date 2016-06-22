@@ -176,6 +176,13 @@ public class ExpenseArticleBean extends BaseSMBean
 
     @Override
     public boolean equals(Object o) {
-        return super.equals(o);
+        if ( ! ( o instanceof ExpenseArticleBean) )
+            return false;
+
+        ExpenseArticleBean eab = (ExpenseArticleBean) o;
+        if ( eab.getId() != -1 && eab.getId() == this.getId() )
+            return true;
+
+        return false;
     }
 }
