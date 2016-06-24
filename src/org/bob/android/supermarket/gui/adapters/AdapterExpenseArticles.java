@@ -39,6 +39,7 @@ import org.bob.android.supermarket.persistence.beans.ExpenseBean;
 import org.bob.android.supermarket.utilities.Constants;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -156,7 +157,14 @@ public class AdapterExpenseArticles extends ArrayAdapter<ExpenseArticleBean>
 		this.expenseArticleList.add(eab);
 		Logger.writeLog("Aggiungo articolo di spesa: " + eab.toString());
 	}
-	
+
+	@Override
+	public void addAll(Collection<? extends ExpenseArticleBean> collection) {
+		//super.addAll(collection);
+		for ( ExpenseArticleBean eab : collection )
+			this.add( eab );
+	}
+
 	/**
 	 * Override del metodo remove sulla lista di articoli della spesa.
 	 * @param eab L'oggetto della lista da rimuovere

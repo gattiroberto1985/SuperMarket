@@ -236,9 +236,6 @@ public class FragmentExpenseDetail extends ListFragment
 		// we don't look for swipes.
 		this.articlesLV.setOnScrollListener(touchListener.makeScrollListener());
 
-
-
-
 		if ( savedInstanceState != null )
 		{
             Logger.lfc_log("Recupero la spesa dal savedBundle...");
@@ -258,6 +255,10 @@ public class FragmentExpenseDetail extends ListFragment
 		Logger.lfc_log("Avvio thread di recupero articoli di spesa...");
         this.articlesLV.setAdapter(new AdapterExpenseArticles(this.getActivity()));
         this.articlesLV.setClickable(true);
+		if ( this.expenseSelected.getArticles() == null || this.expenseSelected.getArticles().isEmpty() )
+			this.flagLoadedExpenseArticles = false;
+		else
+			this.flagLoadedExpenseArticles = true;
         /*this.task = new ATRetrieveExpenseArticles(this.articlesLV.getAdapter());
 		this.task.execute();*/
 		return v;
@@ -271,14 +272,20 @@ public class FragmentExpenseDetail extends ListFragment
 		this.setRetainInstance(true);
 		if ( ! this.flagLoadedExpenseArticles )
 		{
-			/*Logger.writeLog("Starting asynctask to retrieve datas from db....");
+			Logger.writeLog("Starting asynctask to retrieve datas from db....");
 			this.pd = ProgressDialog.show(
 					this.getActivity(),
 					this.getString(R.string.PROGRESS_DIALOG_LOAD_EXPENSE_ARTICLE_TITLE),
 					this.getString(R.string.PROGRESS_DIALOG_LOAD_EXPENSE_ARTICLE_TEXT),
-					true);*/
+					true);
+			this.expenseSelected.clearExpenseItems();
 			this.task = new ATRetrieveExpenseArticles(this.articlesLV.getAdapter(), this.expenseSelected);
 			task.execute();
+		}
+		else
+		{
+			Logger.app_log("Adding expense article from the cache . . .");
+			( ( AdapterExpenseArticles ) articlesLV.getAdapter() ).addAll(this.expenseSelected.getArticles());
 		}
 	}
 

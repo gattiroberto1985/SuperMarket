@@ -58,6 +58,15 @@ public class TestPersistence
     public static void createCategories()
     {
         Logger.tst_log("Creating categories");
+        String[] DEFAULT_CATEGORIES = new String[] {
+                "PANETTERIA",
+                "VERDURA",
+                "CARNE",
+                "LATTICINI",
+                "PESCE",
+                "FRUTTA",
+                "IGIENE E PULIZIA"
+        };
         for ( int i = 0; i < 10; i++ )
         {
             CategoryBean object = new CategoryBean(i + 1, "Categoria " + ( i + 1 ), 'A' );

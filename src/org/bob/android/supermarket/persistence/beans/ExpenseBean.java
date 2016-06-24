@@ -112,10 +112,10 @@ public class ExpenseBean extends BaseSMBean
     public ExpenseBean(ContentValues cv)
     {
         this.setId(cv.getAsInteger(DBConstants.FIELD_DEFAULT_ID));
+        this.setArticles(null);
         this.setDate(cv.getAsLong(DBConstants.FIELD_EXPENSE_DATE));
         this.setCost(cv.getAsDouble(DBConstants.FIELD_EXPENSE_COST));
         this.setShopId(cv.getAsInteger(DBConstants.FIELD_EXPENSE_SHOP_ID));
-        this.setArticles(null);
     }
 
     /**
@@ -134,6 +134,13 @@ public class ExpenseBean extends BaseSMBean
     /* ********************************************************************* */
     /*                             CLASS METHODS                             */
     /* ********************************************************************* */
+
+    public final void clearExpenseItems()
+    {
+        if ( this.articles != null )
+            this.articles.clear();
+        this.setCost();
+    }
 
     public final void addExpenseItem(ExpenseArticleBean eab)
     {

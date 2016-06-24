@@ -289,6 +289,7 @@ public class BeanFactory
         // the expenseArticleList
         for ( ExpenseArticleBean eab : eb.getArticles() )
         {
+            Logger.dtb_log("Updating expense article bean with id '" + eab.getId() + "' relative to expense with id '" + eb.getId() + "' . . .");
             BeanFactory.insertOrUpdateBean(eab);
         }
     }
